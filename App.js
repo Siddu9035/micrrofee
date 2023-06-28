@@ -53,7 +53,7 @@ const App = () => {
             title: 'Forgot Password',
           }}
         /> */}
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Fill_User_Details"
           component={FillUserDetails}
           options={{
@@ -68,7 +68,7 @@ const App = () => {
             headerTitleAlign: 'center',
             title: 'Fill User Details',
           }}
-        />
+        /> */}
         <Stack.Screen
           name="Otp"
           component={OtpNavigator}

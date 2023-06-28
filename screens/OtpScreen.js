@@ -12,10 +12,11 @@ import OtpInputs from 'react-native-otp-inputs';
 
 const OtpScreen = ({navigation}) => {
   const [otp, setOtp] = useState('');
-  const [otpError, setError] = useState('');
+  const [otpError, setOtpError] = useState('');
   const [timer, setTimer] = useState(30);
   const [isTimerActive, setTimerActive] = useState(true);
   let intervalId;
+
   useEffect(() => {
     // if timer is active
     if (isTimerActive && timer > 0) {
@@ -35,24 +36,27 @@ const OtpScreen = ({navigation}) => {
   }, [isTimerActive, timer]);
 
   const handleSubmit = () => {
-    if (otp.length < 4) {
-      setError('Enter Valid Otp');
+    if (otp.length < 4 || !/^[0-9]+$/.test(otp)) {
+      setOtpError('Enter Valid Otp');
     } else {
-      setError('');
-      clearInterval(intervalId);
+      setOtpError('');
       setTimer(0);
       navigation.navigate('SetPassword');
     }
   };
+
   const handleOtpChange = text => {
-    setOtp(text);
-    setError('');
+    if (/^[0-9]*$/.test(text)) {
+      setOtp(text);
+      setOtpError('');
+    }
   };
+
   // function for handleresend otp
   const handleResendOtp = () => {
     if (!isTimerActive) {
       setOtp('');
-      setError('');
+      setOtpError('');
       setTimer(30);
       setTimerActive(true);
     }
@@ -159,7 +163,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     width: 60,
     borderColor: '#57BAEF',
-    paddingHorizontal: 20,
+    textAlign: 'center',
     fontSize: 20,
     color: '#20688F',
     fontWeight: '700',
