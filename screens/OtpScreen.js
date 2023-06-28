@@ -46,11 +46,13 @@ const OtpScreen = ({navigation}) => {
   };
 
   const handleOtpChange = text => {
-    if (!isNaN(text)) {
+    const otpRegex = /^[0-9]+$/; // Regex pattern to match only digits
+
+    if (otpRegex.test(text)) {
       setOtp(text);
       setOtpError('');
     } else {
-      setOtpError('Enter Valid Otp');
+      setOtpError('Enter Valid OTP');
     }
   };
   // function for handleresend otp

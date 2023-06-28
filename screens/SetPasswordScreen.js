@@ -5,9 +5,9 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
-import React from 'react';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const SetPasswordScreen = () => {
@@ -21,22 +21,19 @@ const SetPasswordScreen = () => {
   const validatePassword = () => {
     const passwordPattern =
       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,}$/;
-
-     if (!passwordPattern.test(password)) {
+    if (password == '') {
+      setPasswordError('please enter password');
+    } else if (!passwordPattern.test(password)) {
       setPasswordError(
         'Password must be 8 characters long, maximum 20 characters, containing at least one uppercase letter, one lowercase letter, one special character, and one numeric digit.',
       );
-    } else if (password !== confirmPassword) {
-      setPasswordConfirmError('please enter correct confirm password');
-    }
-    else {
+    } else {
       setPasswordError('');
-      setPasswordConfirmError('');
     }
-  }
+  };
+
   const handlePasswordChange = text => {
     setPassword(text);
-    validatePassword();
   };
 
   const handleConfirmPasswordChange = text => {
@@ -44,12 +41,18 @@ const SetPasswordScreen = () => {
     if (password === text) {
       setPasswordConfirmError('');
     }
-  
   };
+
+  const dissmissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.body}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      onPress={dissmissKeyboard}>
       <Image source={require('../assets/logo1.png')} style={styles.img}></Image>
-      <View style={styles.container}>
+      <View style={styles.textInput}>
         <TextInput
           style={styles.Password}
           placeholder="Enter your Password"
@@ -58,13 +61,6 @@ const SetPasswordScreen = () => {
           onChangeText={e => handlePasswordChange(e)}
           onFocus={() => setPasswordError('')}
           onBlur={validatePassword}
-          onPressIn={() => {
-            if (password.trim() === '') {
-              setPasswordError('Password cannot be empty');
-            } else {
-              setPasswordError('');
-            }
-          }}
         />
         <TouchableOpacity
           style={styles.iconContainer}
@@ -75,7 +71,7 @@ const SetPasswordScreen = () => {
       {passwordError !== '' && (
         <Text style={styles.errortext}>{passwordError}</Text>
       )}
-      <View style={styles.container}>
+      <View style={styles.textInput}>
         <TextInput
           style={styles.Password}
           placeholder="Confirm your Password"
@@ -83,14 +79,15 @@ const SetPasswordScreen = () => {
           secureTextEntry={!hidePassConfirm}
           onChangeText={e => handleConfirmPasswordChange(e)}
           onFocus={() => setPasswordConfirmError('')}
-          onPressIn={() => {
-            if (confirmPassword.trim() === '') {
-              setPasswordConfirmError('Enter the confirm password');
+          onBlur={() => {
+            if (confirmPassword == '') {
+              setPasswordConfirmError('please enter confirm password');
+            } else if (password !== confirmPassword) {
+              setPasswordConfirmError('password do not match');
             } else {
               setPasswordConfirmError('');
             }
           }}
-          // onBlur={validatePassword}
         />
         <TouchableOpacity
           style={styles.iconContainer}
@@ -110,12 +107,12 @@ const SetPasswordScreen = () => {
           <Text style={styles.resetpass}>Reset Password</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 export default SetPasswordScreen;
 const styles = StyleSheet.create({
-  body: {
+  container: {
     flex: 1,
     alignItems: 'center',
   },
@@ -141,7 +138,7 @@ const styles = StyleSheet.create({
     paddingRight: 50,
     marginHorizontal: 25,
   },
-  container: {
+  textInput: {
     flexDirection: 'row',
     alignItems: 'center',
   },
