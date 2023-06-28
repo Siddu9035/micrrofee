@@ -45,11 +45,12 @@ const OtpScreen = ({navigation}) => {
     }
   };
 
-  const handleOtpChange = text => {
+  const handleOtpChange = (text) => {
     const otpRegex = /^[0-9]+$/; // Regex pattern to match only digits
-
+  
     if (otpRegex.test(text)) {
-      setOtp(text);
+      const numericText = text.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+      setOtp(numericText);
       setOtpError('');
     } else {
       setOtpError('Enter Valid OTP');
