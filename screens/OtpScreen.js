@@ -25,8 +25,8 @@ const OtpScreen = ({navigation}) => {
       }, 1000);
     }
     if (timer === 0) {
-      // if timer isequal to 0 then clear the interval time
-      clearInterval(intervalId);
+      // // if timer isequal to 0 then clear the interval time
+      // clearInterval(intervalId);
       // set timer to false
       setTimerActive(false);
     }
@@ -35,13 +35,28 @@ const OtpScreen = ({navigation}) => {
     };
   }, [isTimerActive, timer]);
 
-  const handleSubmit = () => {
-    if (otp.length < 4 || !/^[0-9]+$/.test(otp)) {
-      setOtpError('Enter Valid Otp');
-    } else {
+  const handleResendOtp = async () => {
+    try {
+      setOtp('');
       setOtpError('');
-      setTimer(0);
-      navigation.navigate('SetPassword');
+      setTimer(30);
+      setTimerActive(true);
+    } catch (error) {
+      console.log('Error occurred during OTP resend:', error);
+    }
+  };
+  
+  const handleSubmit = async () => {
+    try {
+      if (otp.length < 4 || !/^[0-9]+$/.test(otp)) {
+        setOtpError('Enter Valid Otp');
+      } else {
+        setOtpError('');
+        setTimer(0);
+        await navigation.navigate('SetPassword');
+      }
+    } catch (error) {
+      console.log('Error occurred during OTP validation:', error);
     }
   };
 
@@ -53,14 +68,16 @@ const OtpScreen = ({navigation}) => {
   };
 
   // function for handleresend otp
-  const handleResendOtp = () => {
-    if (!isTimerActive) {
-      setOtp('');
-      setOtpError('');
-      setTimer(30);
-      setTimerActive(true);
-    }
-  };
+  // const handleResendOtp = () => {
+  //   if (!isTimerActive) {
+  //     setOtp('');
+  //     setOtpError('');
+  //     setTimer(30);
+  //     setTimerActive(true);
+  //   } else {
+  //     setOtpError('');
+  //   } 
+  // };
 
   const formattedTimer = `${Math.floor(timer / 60)
     .toString()
@@ -85,7 +102,7 @@ const OtpScreen = ({navigation}) => {
           keyboardType="phone-pad"
           inputStyles={styles.textInput}
         />
-        {!isTimerActive ? (
+        {!isTimerActive && (
           <TouchableOpacity
             style={styles.ResendButton}
             onPress={handleResendOtp}>
@@ -93,7 +110,8 @@ const OtpScreen = ({navigation}) => {
               <Text style={styles.Resend}>Resend OTP</Text>
             </View>
           </TouchableOpacity>
-        ) : (
+        )}
+        {isTimerActive && (
           <View style={styles.ResendButton}>
             <View style={styles.timerResend}>
               <Text style={styles.Resend}>Resend OTP in</Text>
