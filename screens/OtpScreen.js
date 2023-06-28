@@ -46,19 +46,23 @@ const OtpScreen = ({navigation}) => {
   };
 
   const handleOtpChange = text => {
-    if (/^[0-9]*$/.test(text)) {
+    if (!isNaN(text)) {
       setOtp(text);
       setOtpError('');
+    } else {
+      setOtpError('Enter Valid Otp');
     }
   };
-
   // function for handleresend otp
   const handleResendOtp = () => {
     if (!isTimerActive) {
-      setOtp('');
-      setOtpError('');
+      // setOtp('');
+      // setOtpError('');
       setTimer(30);
       setTimerActive(true);
+    } else {
+      setOtp('');
+      setOtpError('');
     }
   };
 
