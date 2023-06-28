@@ -10,23 +10,23 @@ import SetPasswordScreen from './screens/SetPasswordScreen';
 
 const Stack = createStackNavigator();
 // const Tab = createBottomTabNavigator();
-const OtpStack = createStackNavigator(); // Create a stack navigator for the OTP screen
-const OtpNavigator = () => {
-  return (
-    <OtpStack.Navigator>
-      <OtpStack.Screen
-        name="otp"
-        component={OtpScreen}
-        options={{headerShown: false}}
-      /> 
-        {/* <OtpStack.Screen
-        name="setpassword"
-        component={setPasswordScreen}
-        options={{headerShown: false}}
-      /> */}
-    </OtpStack.Navigator>
-  );
-};
+// const OtpStack = createStackNavigator(); // Create a stack navigator for the OTP screen
+// const OtpNavigator = () => {
+//   return (
+//     <OtpStack.Navigator>
+//       <OtpStack.Screen
+//         name="otp"
+//         component={OtpScreen}
+//         options={{headerShown: false}}
+//       /> 
+//         {/* <OtpStack.Screen
+//         name="setpassword"
+//         component={setPasswordScreen}
+//         options={{headerShown: false}}
+//       /> */}
+//     </OtpStack.Navigator>
+//   );
+// };
 
 const App = () => {
   return (
@@ -71,7 +71,7 @@ const App = () => {
         />
         <Stack.Screen
           name="Otp"
-          component={OtpNavigator}
+          component={OtpScreen}
           options={{
             headerShown: true,
             headerStyle: {

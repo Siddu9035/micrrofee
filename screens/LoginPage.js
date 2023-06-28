@@ -118,8 +118,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: 'white',
     paddingHorizontal: 10,
+    marginHorizontal: 5,
   },
   Password: {
+    flex: 1,
     height: 50,
     fontSize: 18,
     borderWidth: 2,
@@ -130,16 +132,16 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     backgroundColor: 'white',
     paddingRight: 50,
-    marginHorizontal: 15,
+    marginHorizontal: 5,
   },
   textInput: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
     alignItems: 'center',
   },
   iconContainer: {
-    right: 20,
-    marginRight: 20,
+    position: 'absolute',
+    top: 22,
+    right: 35,
   },
   forgotpassword: {
     marginVertical: 20,
