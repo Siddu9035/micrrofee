@@ -14,37 +14,37 @@ const SetPasswordScreen = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [hidePass, setHidePassword] = useState(false);
-  const [hidePassConform, setHidePassConfirm] = useState(false);
+  const [hidePassConfirm, setHidePassConfirm] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   const [passwordConfirmError, setPasswordConfirmError] = useState('');
 
   const validatePassword = () => {
-    const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,}$/;
-    if (!passwordPattern.test(password)) {
-      setPasswordError('Password must be 8 characters long, max20Characters one upperCase, oneLowerCase, oneSpecialCharacter, oneNumeric');
-    } else {
-      setPasswordError('');
+    const passwordPattern =
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,}$/;
+
+     if (!passwordPattern.test(password)) {
+      setPasswordError(
+        'Password must be 8 characters long, maximum 20 characters, containing at least one uppercase letter, one lowercase letter, one special character, and one numeric digit.',
+      );
+    } else if (password !== confirmPassword) {
+      setPasswordConfirmError('please enter correct confirm password');
     }
-  
-    if (password !== confirmPassword) {
-      if (confirmPassword === '') {
-        setPasswordConfirmError('enter confirm password');
-      } else {
-        setPasswordConfirmError('Passwords do not match');
-      }
-    } else {
+    else {
+      setPasswordError('');
       setPasswordConfirmError('');
     }
-  };
-  const handlePasswordChange = (text) => {
+  }
+  const handlePasswordChange = text => {
     setPassword(text);
+    validatePassword();
   };
-  
-  const handleConfirmPasswordChange = (text) => {
+
+  const handleConfirmPasswordChange = text => {
     setConfirmPassword(text);
     if (password === text) {
       setPasswordConfirmError('');
     }
+  
   };
   return (
     <View style={styles.body}>
@@ -57,7 +57,8 @@ const SetPasswordScreen = () => {
           secureTextEntry={!hidePass}
           onChangeText={e => handlePasswordChange(e)}
           onFocus={() => setPasswordError('')}
-          onBlur={() => {
+          onBlur={validatePassword}
+          onPressIn={() => {
             if (password.trim() === '') {
               setPasswordError('Password cannot be empty');
             } else {
@@ -71,34 +72,39 @@ const SetPasswordScreen = () => {
           <Icon name={hidePass ? 'eye' : 'eye-slash'} size={25} color="black" />
         </TouchableOpacity>
       </View>
-      {passwordError !== '' && <Text style={styles.errortext}>{passwordError}</Text>}
+      {passwordError !== '' && (
+        <Text style={styles.errortext}>{passwordError}</Text>
+      )}
       <View style={styles.container}>
         <TextInput
           style={styles.Password}
           placeholder="Confirm your Password"
           maxLength={20}
-          secureTextEntry={!hidePassConform}
+          secureTextEntry={!hidePassConfirm}
           onChangeText={e => handleConfirmPasswordChange(e)}
           onFocus={() => setPasswordConfirmError('')}
-          onBlur={() => {
+          onPressIn={() => {
             if (confirmPassword.trim() === '') {
-              setPasswordConfirmError('Confirm password cannot be empty');
+              setPasswordConfirmError('Enter the confirm password');
             } else {
               setPasswordConfirmError('');
             }
           }}
+          // onBlur={validatePassword}
         />
         <TouchableOpacity
           style={styles.iconContainer}
-          onPress={() => setHidePassConfirm(!hidePassConform)}>
+          onPress={() => setHidePassConfirm(!hidePassConfirm)}>
           <Icon
-            name={hidePassConform ? 'eye' : 'eye-slash'}
+            name={hidePassConfirm ? 'eye' : 'eye-slash'}
             size={25}
             color="black"
           />
         </TouchableOpacity>
       </View>
-      {passwordConfirmError !== '' && <Text style={styles.errortext}>{passwordConfirmError}</Text>}
+      {passwordConfirmError !== '' && (
+        <Text style={styles.errortext}>{passwordConfirmError}</Text>
+      )}
       <View>
         <TouchableOpacity style={styles.resetbutton} onPress={validatePassword}>
           <Text style={styles.resetpass}>Reset Password</Text>
@@ -129,7 +135,7 @@ const styles = StyleSheet.create({
     // marginLeft: 40,
     alignItems: 'center',
     marginTop: 10,
-    marginBottom : 10,
+    marginBottom: 10,
     paddingLeft: 10,
     backgroundColor: 'white',
     paddingRight: 50,
@@ -159,7 +165,7 @@ const styles = StyleSheet.create({
   errortext: {
     color: 'red',
     fontSize: 12,
-    textAlign: 'center',
-    marginHorizontal: 15,
+    alignSelf: 'flex-start',
+    marginHorizontal: 30,
   },
 });
