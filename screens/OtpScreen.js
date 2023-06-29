@@ -16,6 +16,7 @@ const OtpScreen = ({navigation}) => {
   const [timer, setTimer] = useState(30);
   const [isTimerActive, setTimerActive] = useState(true);
   let intervalId;
+  const regexOtp = /^[0-9]+$/;
 
   useEffect(() => {
     // if timer is active
@@ -46,16 +47,52 @@ const OtpScreen = ({navigation}) => {
   };
 
   const handleOtpChange = (text) => {
-    const otpRegex = /^[0-9]+$/; // Regex pattern to match only digits
+    const otpDigitsOnly = text.replace(/[^0-9]/g, '');
   
-    if (otpRegex.test(text)) {
-      const numericText = text.replace(/[^0-9]/g, ''); // Remove non-numeric characters
-      setOtp(numericText);
-      setOtpError('');
-    } else {
-      setOtpError('Enter Valid OTP');
+    let formattedOtp = '';
+    const length = otpDigitsOnly.length;
+    for (let i = 0; i < length; i++) {
+      if (i < 4) {
+        formattedOtp += otpDigitsOnly.charAt(i);
+      }
     }
+    console.log('formatted', formattedOtp);
+    return formattedOtp;
   };
+  
+    const handleChange = (text) => {
+      const formattedOtp = handleOtpChange(text);
+      setOtp(formattedOtp);
+    };
+ 
+  // const handleOtpChange = text => {
+  //   console.log('text', text);
+  //   const otpRemoveText = text.replace(/[^0-9]/g, '');
+    
+  //   let formattedOtp = '';
+  //   const length = otpRemoveText.length;
+  //   for (let i = 0; i < length; i++) {
+  //     formattedOtp += otpRemoveText.charAt(i); 
+
+  //   }
+  //   console.log('formated', formattedOtp);
+  //   return formattedOtp;
+  // }
+    // console.log("OTP", otpRemoveText);
+    // setOtp(otpRemoveText);
+    // setOtpError('');
+
+    
+    // const otpRegex = /^[0-9]+$/; // Regex pattern to match only digits
+  
+    // if (otpRegex.test(text)) {
+    //   const numericText = text.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+    //   setOtp(numericText);
+    //   setOtpError('');
+    // } else {
+    //   setOtpError('Enter Valid OTP');
+    // }
+  
   // function for handleresend otp
   const handleResendOtp = () => {
     if (!isTimerActive) {
@@ -85,7 +122,7 @@ const OtpScreen = ({navigation}) => {
         <Image style={styles.img} source={require('../assets/logo1.png')} />
         {otpError && <Text style={styles.errorText}>{otpError}</Text>}
         <OtpInputs
-          handleChange={handleOtpChange}
+          handleChange={handleChange}
           numberOfInputs={4}
           autofillFromClipboard={false}
           style={styles.inputField}

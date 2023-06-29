@@ -76,7 +76,7 @@ const FillUserDetails = ({navigation}) => {
       formattedNumber += removeText.charAt(i);
       // i++
     }
-
+    console.log('format', formattedNumber);
     return formattedNumber;
   };
   // dissmiss keyboard
