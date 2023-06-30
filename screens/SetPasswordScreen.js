@@ -10,25 +10,30 @@ import {
 import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const SetPasswordScreen = () => {
+const SetPasswordScreen = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [hidePass, setHidePassword] = useState(false);
   const [hidePassConfirm, setHidePassConfirm] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   const [passwordConfirmError, setPasswordConfirmError] = useState('');
+  const passwordPattern =
+    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,}$/;
 
   const validatePassword = () => {
-    const passwordPattern =
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,}$/;
     if (password == '') {
-      setPasswordError('please enter password');
+      setPasswordError('Enter Your Password');
+    } else if (confirmPassword == '') {
+      setPasswordConfirmError('Please enter confirm password');
     } else if (!passwordPattern.test(password)) {
       setPasswordError(
         'Password must be 8 characters long, maximum 20 characters, containing at least one uppercase letter, one lowercase letter, one special character, and one numeric digit.',
       );
+    } else if (password !== confirmPassword) {
+      setPasswordConfirmError('Password do not match');
     } else {
-      setPasswordError('');
+      setPasswordConfirmError('');
+      navigation.navigate('Loginpage');
     }
   };
 
@@ -58,9 +63,19 @@ const SetPasswordScreen = () => {
           placeholder="Enter your Password"
           maxLength={20}
           secureTextEntry={!hidePass}
-          onChangeText={e => handlePasswordChange(e)}
+          onChangeText={text => handlePasswordChange(text)}
           onFocus={() => setPasswordError('')}
-          onBlur={validatePassword}
+          onBlur={() => {
+            if (password == '') {
+              setPasswordError('please enter password');
+            } else if (!passwordPattern.test(password)) {
+              setPasswordError(
+                'Password must be 8 characters long, maximum 20 characters, containing at least one uppercase letter, one lowercase letter, one special character, and one numeric digit.',
+              );
+            } else {
+              setPasswordError('');
+            }
+          }}
         />
         <TouchableOpacity
           style={styles.iconContainer}
@@ -77,17 +92,8 @@ const SetPasswordScreen = () => {
           placeholder="Confirm your Password"
           maxLength={20}
           secureTextEntry={!hidePassConfirm}
-          onChangeText={e => handleConfirmPasswordChange(e)}
+          onChangeText={text => handleConfirmPasswordChange(text)}
           onFocus={() => setPasswordConfirmError('')}
-          onBlur={() => {
-            if (confirmPassword == '') {
-              setPasswordConfirmError('please enter confirm password');
-            } else if (password !== confirmPassword) {
-              setPasswordConfirmError('password do not match');
-            } else {
-              setPasswordConfirmError('');
-            }
-          }}
         />
         <TouchableOpacity
           style={styles.iconContainer}
@@ -113,7 +119,7 @@ const SetPasswordScreen = () => {
 export default SetPasswordScreen;
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
   },
   img: {

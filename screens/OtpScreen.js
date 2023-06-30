@@ -11,7 +11,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import OtpInputs from 'react-native-otp-inputs';
 
 const OtpScreen = ({navigation}) => {
-  const [otp, setOtp] = useState('');
+  const [enteredValue, setEnteredValue] = useState('');
   const [otpError, setOtpError] = useState('');
   const [timer, setTimer] = useState(30);
   const [isTimerActive, setTimerActive] = useState(true);
@@ -37,7 +37,7 @@ const OtpScreen = ({navigation}) => {
   }, [isTimerActive, timer]);
 
   const handleSubmit = () => {
-    if (otp.length < 4 || !/^[0-9]+$/.test(otp)) {
+    if (enteredValue.length < 4 || !/^[0-9]+$/.test(enteredValue)) {
       setOtpError('Enter Valid Otp');
     } else {
       setOtpError('');
@@ -46,24 +46,28 @@ const OtpScreen = ({navigation}) => {
     }
   };
 
-  const handleOtpChange = (text) => {
-    const otpDigitsOnly = text.replace(/[^0-9]/g, '');
+  const checkedEnteredValue = (text) => {
+    setEnteredValue(text.replace(/[^0-9]/g, ''));
+  }
+
+  // const handleOtpChange = (text) => {
+  //   const otpDigitsOnly = text.replace(/[^0-9]/g, '');
   
-    let formattedOtp = '';
-    const length = otpDigitsOnly.length;
-    for (let i = 0; i < length; i++) {
-      if (i < 4) {
-        formattedOtp += otpDigitsOnly.charAt(i);
-      }
-    }
-    console.log('formatted', formattedOtp);
-    return formattedOtp;
-  };
+  //   let formattedOtp = '';
+  //   const length = otpDigitsOnly.length;
+  //   for (let i = 0; i < length; i++) {
+  //     if (i < 4) {
+  //       formattedOtp += otpDigitsOnly.charAt(i);
+  //     }
+  //   }
+  //   console.log('formatted', formattedOtp);
+  //   return formattedOtp;
+  // };
   
-    const handleChange = (text) => {
-      const formattedOtp = handleOtpChange(text);
-      setOtp(formattedOtp);
-    };
+  //   const handleChange = (text) => {
+  //     const formattedOtp = handleOtpChange(text);
+  //     setOtp(formattedOtp);
+  //   };
  
   // const handleOtpChange = text => {
   //   console.log('text', text);
@@ -101,7 +105,7 @@ const OtpScreen = ({navigation}) => {
       setTimer(30);
       setTimerActive(true);
     } else {
-      setOtp('');
+      setEnteredValue('');
       setOtpError('');
     }
   };
@@ -122,8 +126,9 @@ const OtpScreen = ({navigation}) => {
         <Image style={styles.img} source={require('../assets/logo1.png')} />
         {otpError && <Text style={styles.errorText}>{otpError}</Text>}
         <OtpInputs
-          handleChange={handleChange}
+          onChangeText={text => checkedEnteredValue(text)}
           numberOfInputs={4}
+          value={enteredValue}
           autofillFromClipboard={false}
           style={styles.inputField}
           keyboardType="phone-pad"

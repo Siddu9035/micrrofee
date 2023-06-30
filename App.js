@@ -32,7 +32,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
+        {/* <Stack.Screen
           name="login"
           component={LoginPage}
           options={{headerShown: false}}
@@ -68,7 +68,7 @@ const App = () => {
             headerTitleAlign: 'center',
             title: 'Fill User Details',
           }}
-        />
+        /> */}
         <Stack.Screen
           name="Otp"
           component={OtpScreen}
