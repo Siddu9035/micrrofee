@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-const Drawer = createDrawerNavigator();
+// const Drawer = createDrawerNavigator();
 const App = () => {
   return (
     <NavigationContainer>
@@ -172,5 +172,10 @@ const HomeTabNavigator = () => {
     </Tab.Navigator>
   );
 };
+// const HomeDrawerNavigator = () => {
+//   return(
+
+//   );
+// };
 
 export default App;
