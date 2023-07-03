@@ -144,7 +144,7 @@ const FillUserDetails = ({navigation}) => {
       <ScrollView
         contentContainerStyle={styles.container}
         onPress={dissmissKeyboard}>
-        <Image style={styles.img} source={require('../assets/logo1.png')} />
+        <Image style={styles.img} source={require('../assets/images/logo1.png')} />
         <View>
           <Text style={styles.firstname}>
             First Name<Text style={styles.star}>*</Text>

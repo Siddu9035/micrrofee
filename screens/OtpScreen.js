@@ -16,7 +16,6 @@ const OtpScreen = ({navigation}) => {
   const [timer, setTimer] = useState(30);
   const [isTimerActive, setTimerActive] = useState(true);
   let intervalId;
-  const regexOtp = /^[0-9]+$/;
 
   useEffect(() => {
     // if timer is active
@@ -46,57 +45,18 @@ const OtpScreen = ({navigation}) => {
     }
   };
 
-  const checkedEnteredValue = (text) => {
-    setEnteredValue(text.replace(/[^0-9]/g, ''));
-  }
+  const handleOtpChange = text => {
+    const otpRegex = /^[0-9]+$/; // Regex pattern to match only digits
 
-  // const handleOtpChange = (text) => {
-  //   const otpDigitsOnly = text.replace(/[^0-9]/g, '');
-  
-  //   let formattedOtp = '';
-  //   const length = otpDigitsOnly.length;
-  //   for (let i = 0; i < length; i++) {
-  //     if (i < 4) {
-  //       formattedOtp += otpDigitsOnly.charAt(i);
-  //     }
-  //   }
-  //   console.log('formatted', formattedOtp);
-  //   return formattedOtp;
-  // };
-  
-  //   const handleChange = (text) => {
-  //     const formattedOtp = handleOtpChange(text);
-  //     setOtp(formattedOtp);
-  //   };
- 
-  // const handleOtpChange = text => {
-  //   console.log('text', text);
-  //   const otpRemoveText = text.replace(/[^0-9]/g, '');
-    
-  //   let formattedOtp = '';
-  //   const length = otpRemoveText.length;
-  //   for (let i = 0; i < length; i++) {
-  //     formattedOtp += otpRemoveText.charAt(i); 
+    if (otpRegex.test(text)) {
+      const numericText = text.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+      setEnteredValue(numericText);
+      setOtpError('');
+    } else {
+      setOtpError('Enter Valid OTP');
+    }
+  };
 
-  //   }
-  //   console.log('formated', formattedOtp);
-  //   return formattedOtp;
-  // }
-    // console.log("OTP", otpRemoveText);
-    // setOtp(otpRemoveText);
-    // setOtpError('');
-
-    
-    // const otpRegex = /^[0-9]+$/; // Regex pattern to match only digits
-  
-    // if (otpRegex.test(text)) {
-    //   const numericText = text.replace(/[^0-9]/g, ''); // Remove non-numeric characters
-    //   setOtp(numericText);
-    //   setOtpError('');
-    // } else {
-    //   setOtpError('Enter Valid OTP');
-    // }
-  
   // function for handleresend otp
   const handleResendOtp = () => {
     if (!isTimerActive) {
@@ -123,12 +83,12 @@ const OtpScreen = ({navigation}) => {
       style={styles.container}
       onPress={dissmissKeyboard}>
       <View>
-        <Image style={styles.img} source={require('../assets/logo1.png')} />
+        <Image style={styles.img} source={require('../assets/images/logo1.png')} />
         {otpError && <Text style={styles.errorText}>{otpError}</Text>}
         <OtpInputs
-          onChangeText={text => checkedEnteredValue(text)}
+          handleChange={text => handleOtpChange(text)}
           numberOfInputs={4}
-          value={enteredValue}
+          // value={enteredValue}
           autofillFromClipboard={false}
           style={styles.inputField}
           keyboardType="phone-pad"

@@ -10,7 +10,7 @@ import {
 import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const SetPasswordScreen = ({navigation}) => {
+const SetPasswordScreen = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [hidePass, setHidePassword] = useState(false);
@@ -33,7 +33,7 @@ const SetPasswordScreen = ({navigation}) => {
       setPasswordConfirmError('Password do not match');
     } else {
       setPasswordConfirmError('');
-      navigation.navigate('Loginpage');
+      // navigation.navigate('Loginpage');
     }
   };
 
@@ -56,7 +56,7 @@ const SetPasswordScreen = ({navigation}) => {
     <ScrollView
       contentContainerStyle={styles.container}
       onPress={dissmissKeyboard}>
-      <Image source={require('../assets/logo1.png')} style={styles.img}></Image>
+      <Image source={require('../assets/images/logo1.png')} style={styles.img}></Image>
       <View style={styles.textInput}>
         <TextInput
           style={styles.Password}
@@ -67,7 +67,7 @@ const SetPasswordScreen = ({navigation}) => {
           onFocus={() => setPasswordError('')}
           onBlur={() => {
             if (password == '') {
-              setPasswordError('please enter password');
+              setPasswordError('Enter Your Password');
             } else if (!passwordPattern.test(password)) {
               setPasswordError(
                 'Password must be 8 characters long, maximum 20 characters, containing at least one uppercase letter, one lowercase letter, one special character, and one numeric digit.',

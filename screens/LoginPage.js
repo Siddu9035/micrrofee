@@ -29,7 +29,7 @@ const Loginpage = ({navigation}) => {
       <View style={styles.body}>
         <Text style={styles.header}>Welcome to Microffee</Text>
 
-        <Image style={styles.img} source={require('../assets/logo1.png')} />
+        <Image style={styles.img} source={require('../assets/images/logo1.png')} />
 
         {error && <Text style={styles.errorText}>{error}</Text>}
 
@@ -81,9 +81,11 @@ const Loginpage = ({navigation}) => {
             <Text style={styles.signupText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
-        <View>
+        <TouchableOpacity onPress={() => {
+          navigation.navigate('HomeScreen');
+        }}>
           <Text style={styles.footer}>Join as guest</Text>
-        </View>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -114,7 +116,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'lightblue',
     borderRadius: 7,
-    width: 330,
+    width: 350,
     marginVertical: 10,
     backgroundColor: 'white',
     paddingHorizontal: 10,

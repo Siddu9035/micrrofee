@@ -80,7 +80,7 @@ const ForgotPasswordScreeen = () => {
       keyboardShouldPersistTaps="handled"
       onPress={dissmissKeyboard}>
       <View style={styles.container}>
-        <Image source={require('../assets/logo1.png')} style={styles.img1} />
+        <Image source={require('../assets/images/logo1.png')} style={styles.img1} />
       </View>
       <View>
         <View style={styles.dropdownMenu}>
