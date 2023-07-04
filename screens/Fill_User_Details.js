@@ -329,7 +329,8 @@ const FillUserDetails = ({navigation}) => {
                   style={[
                     styles.errorText,
                     {
-                      marginLeft: showDropDown ? 30 : 120,
+                      marginLeft: showDropDown ? 30 : 0,
+                      marginTop: 10,
                     },
                   ]}>
                   {errorMsg.mobileNumber}
@@ -415,6 +416,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: 'red',
+    textAlign: 'left',
   },
   dropdownMenu: {
     flexDirection: 'row',

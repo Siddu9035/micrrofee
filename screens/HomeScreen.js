@@ -86,9 +86,20 @@ const HomeScreen = () => {
     },
   ];
   return (
-    <ScrollView style={styles.contentcontainer}>
-      <View style={styles.container}>
-        <View style={styles.header}>
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.Header}>
+        <Text>Drawer</Text>
+        <Text style={styles.subText}>Microffee</Text>
+        <Icon
+          name="shopping-cart"
+          size={25}
+          color="white"
+          style={styles.icon}
+        />
+      </View>
+      <View style={styles.subContainer}>
+        <View style={styles.SubHeader}>
           <Text style={styles.Home}>Featured Coffees</Text>
           <TouchableOpacity>
             <Text style={styles.Viewall}>View All</Text>
@@ -124,7 +135,7 @@ const HomeScreen = () => {
             ))}
           </View>
         </ScrollView>
-        <View style={styles.header}>
+        <View style={styles.SubHeader}>
           <Text style={styles.Home}> Latest Products</Text>
           <TouchableOpacity>
             <Text style={styles.Viewall}>View All</Text>
@@ -151,7 +162,7 @@ const HomeScreen = () => {
             ))}
           </View>
         </ScrollView>
-        <View style={styles.header}>
+        <View style={styles.SubHeader}>
           <Text style={styles.Home}>Origins/Regions</Text>
           <TouchableOpacity>
             <Text style={styles.Viewall}>View All</Text>
@@ -161,12 +172,12 @@ const HomeScreen = () => {
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={styles.itemscontainer}>
             {originsData.map(section => (
-              <View key={section.title} style={styles.sectionContainer}>
+              <View key={section.title} style={styles.SectionContainer}>
                 <Image
                   style={styles.sectionimage}
                   source={section.sectionimage}
                 />
-                <View style={styles.textItems}>
+                <View style={styles.textItem}>
                   <Text style={styles.sectionTitle}>{section.title}</Text>
                   {/* {section.data.map(item => (
                     <Text key={item} style={styles.item}>
@@ -179,35 +190,51 @@ const HomeScreen = () => {
           </View>
         </ScrollView>
       </View>
-     </ScrollView>
+    </View>
   );
 };
 export default HomeScreen;
 const styles = StyleSheet.create({
-  contentcontainer: {
-    flex: 1,
-    backgroundColor:'#52850f',
-  },
   container: {
-    flex: 1,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    backgroundColor: '#f6f6f6',
+    flexGrow: 1,
+    backgroundColor: 'green',
   },
-  header: {
+  Header: {
+    flexDirection: 'row',
+    height: 55,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'green',
+  },
+  subText: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  SubHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 5,
+    marginTop: 5,
+    marginBottom: 2,
+  },
+  subContainer: {
+    borderTopRightRadius: 30,
+    borderTopLeftRadius: 30,
+    backgroundColor: '#f6f6f6',
   },
   Viewall: {
     marginHorizontal: 13,
     fontSize: 18,
     fontWeight: '700',
   },
+  icon: {
+    paddingRight: 25,
+  },
   Home: {
     marginHorizontal: 13,
     fontSize: 18,
     fontWeight: '700',
+    marginTop: 4,
   },
   line: {
     borderWidth: 0.9,
@@ -229,6 +256,11 @@ const styles = StyleSheet.create({
       height: 10,
     },
   },
+  SectionContainer: {
+    marginHorizontal: 8,
+    elevation: 10,
+    shadowColor: '#000',
+  },
   sectionImage: {
     width: 250,
     height: 100,
@@ -242,10 +274,17 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 15,
   },
   sectionimage: {
+    marginHorizontal: 5,
     width: 200,
     height: 80,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
+    borderRadius: 15,
+    shadowColor: 'black',
+    shadowOpacity: 0.9,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 4,
   },
   sectionTitle: {
     fontWeight: '700',
@@ -262,6 +301,9 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
   },
+  textItem: {
+    paddingLeft: 15,
+  },
   featuredContainer: {
     position: 'absolute',
     flexDirection: 'row',
@@ -270,6 +312,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingHorizontal: 10,
     borderTopLeftRadius: 10,
+    borderBottomRightRadius: 10,
     zIndex: 1,
   },
   starIcon: {

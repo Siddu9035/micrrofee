@@ -96,19 +96,7 @@ const App = () => {
           name="HomeScreen"
           component={HomeTabNavigator}
           options={{
-            headerShown: true,
-            headerStyle: {
-              backgroundColor: '#52850f',
-            },
-            headerTitleStyle: {
-              color: 'white',
-            },
-            headerTintColor: 'white',
-            headerTitleAlign: 'center',
-            title: 'Microffee',
-            headerRight: () => (
-              <Icon name="shopping-cart" size={25} color="white" style={{ marginRight: 20 }} />
-            ),
+            headerShown: false,
           }}
         />
         <Stack.Screen
@@ -136,7 +124,7 @@ const HomeTabNavigator = () => {
         alignItems: 'center',
       },
       tabBarStyle: {
-        height: 70,
+        height: 60,
         padding: 5,
         justifyContent: 'center',
         alignItems: 'center',
@@ -152,7 +140,7 @@ const HomeTabNavigator = () => {
           tabBarLabel: 'Home',
           tabBarIcon: ({focused}) => (
             <Icon name="home" color={focused || focusedTab === 'Home' ? '#9ACD32' : 'gray'}
-            size={focusedTab === 'Home' ? 30 : 20}
+            size={focusedTab === 'Home' ? 30 : 25}
           /> 
           ),
           headerShown: false,
