@@ -133,8 +133,16 @@ const HomeTabNavigator = () => {
       tabBarInactiveTintColor: 'gray',
       tabBarLabelStyle: {
         fontSize: 15,
+        alignItems: 'center',
+      },
+      tabBarStyle: {
+        height: 70,
+        padding: 5,
         justifyContent: 'center',
-
+        alignItems: 'center',
+      },
+      tabBarItemStyle: {
+        marginVertical: 0,
       },
     }}>
       <Tab.Screen

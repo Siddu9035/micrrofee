@@ -1,12 +1,22 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { View } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 
-export default function SeachScreen() {
+const SearchScreen = ({ navigation }) => {
+  const handleSearch = (text) => {
+    // Handle the search functionality here
+    console.log('Searching for:', text);
+  };
+
   return (
-    <View>
-      <Text>SeachScreen</Text>
+    <View style={{ flex: 1, alignItems: 'center' }}>
+      <TextInput
+        placeholder="Search..."
+        onChangeText={handleSearch}
+        onSubmitEditing={() => navigation.navigate('Search')} // Navigate to the same screen to trigger the search functionality
+        style={{ borderWidth: 1, padding: 10, width: '80%' }}
+      />
     </View>
-  )
-}
+  );
+};
 
-const styles = StyleSheet.create({})
+export default SearchScreen;

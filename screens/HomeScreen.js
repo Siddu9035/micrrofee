@@ -179,13 +179,20 @@ const HomeScreen = () => {
           </View>
         </ScrollView>
       </View>
-    </ScrollView>
+     </ScrollView>
   );
 };
 export default HomeScreen;
 const styles = StyleSheet.create({
   contentcontainer: {
-    flexGrow: 1,
+    flex: 1,
+    backgroundColor:'#52850f',
+  },
+  container: {
+    flex: 1,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    backgroundColor: '#f6f6f6',
   },
   header: {
     flexDirection: 'row',
@@ -196,13 +203,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 13,
     fontSize: 18,
     fontWeight: '700',
-    // marginVertical: 10,
   },
   Home: {
     marginHorizontal: 13,
     fontSize: 18,
     fontWeight: '700',
-    // marginVertical: 5,
   },
   line: {
     borderWidth: 0.9,
@@ -214,7 +219,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   sectionContainer: {
-    // marginVertical: 15,
     marginHorizontal: 8,
     elevation: 10,
     shadowColor: '#000',
