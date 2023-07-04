@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
   },
   sectionImage: {
     width: 250,
-    height: 80,
+    height: 100,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
   },
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontWeight: '700',
     fontSize: 18,
-    paddingBottom: 10,
+    // paddingBottom: 10,
   },
   item: {
     fontSize: 16,

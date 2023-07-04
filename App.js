@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
@@ -111,19 +111,28 @@ const App = () => {
             ),
           }}
         />
+        <Stack.Screen
+          name="Search"
+          component={SearchScreen}
+          options={{ headerShown: false }} // Hide the header for the SearchScreen
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
 const HomeTabNavigator = () => {
+  const [focusedTab, setFocusedTab] = useState('Home');
+
+  const handleTabPress = (tabName) => {
+    setFocusedTab(tabName);
+  };
   return (
     <Tab.Navigator screenOptions={{
       tabBarActiveTintColor: '#9ACD32',
       tabBarInactiveTintColor: 'gray',
       tabBarLabelStyle: {
         fontSize: 15,
-        fontWeight: '700',
         justifyContent: 'center',
 
       },
@@ -134,9 +143,18 @@ const HomeTabNavigator = () => {
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({focused}) => (
-            <Icon name="home" color={focused ? '#9ACD32' : 'grey' } size={25} />
+            <Icon name="home" color={focused || focusedTab === 'Home' ? '#9ACD32' : 'gray'}
+            size={focusedTab === 'Home' ? 30 : 20}
+          /> 
           ),
           headerShown: false,
+          tabBarLabelStyle: {
+            fontSize: focusedTab === 'Home' ? 18 : 15,
+            fontWeight: focusedTab === 'Home' ? 'bold' : 'normal',
+          },
+        }}
+        listeners={{
+          tabPress: () => handleTabPress('Home'),
         }}
       />
       <Tab.Screen
@@ -145,8 +163,17 @@ const HomeTabNavigator = () => {
         options={{
           tabBarLabel: 'Search',
           tabBarIcon: ({focused}) => (
-            <Icon name="search" color={focused ? '#9ACD32' : 'grey' } size={25} />
+            <Icon name="search" color={focused || focusedTab === 'Search' ? '#9ACD32' : 'gray'}
+            size={focusedTab === 'Search' ? 25 : 20} />
           ),
+          tabBarLabelStyle: {
+            fontSize: focusedTab === 'Search' ? 18 : 15,
+            fontWeight: focusedTab === 'Search' ? 'bold' : 'normal',
+          },
+          headerShown: false,
+        }}
+        listeners={{
+          tabPress: () => handleTabPress('Search'),
         }}
       />
       <Tab.Screen
@@ -155,8 +182,17 @@ const HomeTabNavigator = () => {
         options={{
           tabBarLabel: 'Wishlist',
           tabBarIcon: ({focused}) => (
-            <Icon name="heart" color={focused ? '#9ACD32' : 'grey' } size={25} />
+            <Icon name="heart" color={focused || focusedTab === 'Wishlist' ? '#9ACD32' : 'gray'}
+            size={focusedTab === 'Wishlist' ? 25 : 20} />
           ),
+          tabBarLabelStyle: {
+            fontSize: focusedTab === 'Wishlist' ? 18 : 15,
+            fontWeight: focusedTab === 'Wishlist' ? 'bold' : 'normal',
+          },
+          headerShown: false,
+        }}
+        listeners={{
+          tabPress: () => handleTabPress('Wishlist'),
         }}
       />
       <Tab.Screen
@@ -165,8 +201,17 @@ const HomeTabNavigator = () => {
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({focused}) => (
-            <Icon name="user" color={focused ? '#9ACD32' : 'grey' } size={25} />
+            <Icon name="user" color={focused || focusedTab === 'Profile' ? '#9ACD32' : 'gray'}
+            size={focusedTab === 'Profile' ? 25 : 20} />
           ),
+          tabBarLabelStyle: {
+            fontSize: focusedTab === 'Profile' ? 18 : 15,
+            fontWeight: focusedTab === 'Profile' ? 'bold' : 'normal',
+          },
+          headerShown: false,
+        }}
+        listeners={{
+          tabPress: () => handleTabPress('Profile'),
         }}
       />
     </Tab.Navigator>
