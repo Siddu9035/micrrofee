@@ -1,3 +1,4 @@
+// import 'react-native-gesture-handler';
 import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -18,7 +19,7 @@ import DrawerScreen from './screens/DrawerScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-const Drawer = createDrawerNavigator();
+// const Drawer = createDrawerNavigator();
 export default function App() {
   return (
     <NavigationContainer>
@@ -94,7 +95,7 @@ export default function App() {
         />
         <Stack.Screen
           name="HomeScreen"
-          component={DrawerNavigator}
+          component={HomeTabNavigator}
           options={{
             headerShown: false,
           }}
@@ -227,12 +228,12 @@ const HomeTabNavigator = () => {
     </Tab.Navigator>
   );
 };
-const DrawerNavigator = () => {
-  return (
-    <Drawer.Navigator initialRouteName="Home">
-      <Drawer.Screen name="Home" component={HomeTabNavigator} />
-      <Drawer.Screen name="Profile" component={ProfileScreen} />
-      <Drawer.Screen name="Wishlist" component={WishListScreen} />
-    </Drawer.Navigator>
-  );
-};
+// const DrawerNavigator = () => {
+//   return (
+//     <Drawer.Navigator initialRouteName="Home">
+//       <Drawer.Screen name="Home" component={HomeTabNavigator} />
+//       <Drawer.Screen name="Profile" component={ProfileScreen} />
+//       <Drawer.Screen name="Wishlist" component={WishListScreen} />
+//     </Drawer.Navigator>
+//   );
+// };
