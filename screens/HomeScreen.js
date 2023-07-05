@@ -86,15 +86,11 @@ const HomeScreen = ({navigation}) => {
       sectionimage: require('../assets/images/latcoffee2.png'),
     },
   ];
-
-  const openDrawer = () => {
-    navigation.openDrawer();
-  };
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.Header}>
-        <TouchableOpacity onPress={openDrawer}>
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Icon name="bars" size={25} color="white" style={styles.menuIcon} />
         </TouchableOpacity>
         <Text style={styles.subText}>Microffee</Text>
