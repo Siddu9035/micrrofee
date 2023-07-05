@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-const HomeScreen = () => {
+
+const HomeScreen = ({navigation}) => {
   const FeaturedData = [
     {
       title: 'java',
@@ -89,7 +90,9 @@ const HomeScreen = () => {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.Header}>
-        <Text>Drawer</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('DrawerScreen')}>
+          <Icon name="bars" size={25} color="white" style={styles.menuIcon} />
+        </TouchableOpacity>
         <Text style={styles.subText}>Microffee</Text>
         <Icon
           name="shopping-cart"
@@ -230,6 +233,9 @@ const styles = StyleSheet.create({
   icon: {
     paddingRight: 25,
   },
+  menuIcon: {
+    paddingLeft: 20,
+  },
   Home: {
     marginHorizontal: 13,
     fontSize: 18,
@@ -292,7 +298,7 @@ const styles = StyleSheet.create({
     // paddingBottom: 10,
   },
   item: {
-    fontSize: 16,
+    fontSize: 14,
   },
   textItems: {
     backgroundColor: 'white',
@@ -303,6 +309,7 @@ const styles = StyleSheet.create({
   },
   textItem: {
     paddingLeft: 15,
+    marginBottom: 8,
   },
   featuredContainer: {
     position: 'absolute',

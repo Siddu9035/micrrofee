@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import {createDrawerNavigator} from 'react-navigation-drawer';
 import LoginPage from './screens/LoginPage'; // Import the login page component
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen'; // Import the "Forgot Password" page component';
 import FillUserDetails from './screens/Fill_User_Details';
@@ -14,12 +14,12 @@ import WishListScreen from './screens/WishListScreen';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import DrawerScreen from './screens/DrawerScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-// const Drawer = createDrawerNavigator();
-const App = () => {
+const Drawer = createDrawerNavigator();
+export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -94,54 +94,59 @@ const App = () => {
         />
         <Stack.Screen
           name="HomeScreen"
-          component={HomeTabNavigator}
+          component={DrawerNavigator}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="Search"
-          component={SearchScreen}
-          options={{ headerShown: false }} // Hide the header for the SearchScreen
+          name="DrawerScreen"
+          component={DrawerScreen}
+          options={{
+            headerShown: false,
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
-};
+}
 
 const HomeTabNavigator = () => {
   const [focusedTab, setFocusedTab] = useState('Home');
 
-  const handleTabPress = (tabName) => {
+  const handleTabPress = tabName => {
     setFocusedTab(tabName);
   };
   return (
-    <Tab.Navigator screenOptions={{
-      tabBarActiveTintColor: '#9ACD32',
-      tabBarInactiveTintColor: 'gray',
-      tabBarLabelStyle: {
-        fontSize: 15,
-        alignItems: 'center',
-      },
-      tabBarStyle: {
-        height: 60,
-        padding: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      tabBarItemStyle: {
-        marginVertical: 0,
-      },
-    }}>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: '#9ACD32',
+        tabBarInactiveTintColor: 'gray',
+        tabBarLabelStyle: {
+          fontSize: 15,
+          alignItems: 'center',
+        },
+        tabBarStyle: {
+          height: 60,
+          padding: 5,
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        tabBarItemStyle: {
+          marginVertical: 0,
+        },
+      }}>
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({focused}) => (
-            <Icon name="home" color={focused || focusedTab === 'Home' ? '#9ACD32' : 'gray'}
-            size={focusedTab === 'Home' ? 30 : 25}
-          /> 
+            <Icon
+              name="home"
+              color={focused || focusedTab === 'Home' ? '#9ACD32' : 'gray'}
+              size={focusedTab === 'Home' ? 30 : 25}
+            />
           ),
           headerShown: false,
           tabBarLabelStyle: {
@@ -159,8 +164,11 @@ const HomeTabNavigator = () => {
         options={{
           tabBarLabel: 'Search',
           tabBarIcon: ({focused}) => (
-            <Icon name="search" color={focused || focusedTab === 'Search' ? '#9ACD32' : 'gray'}
-            size={focusedTab === 'Search' ? 25 : 20} />
+            <Icon
+              name="search"
+              color={focused || focusedTab === 'Search' ? '#9ACD32' : 'gray'}
+              size={focusedTab === 'Search' ? 25 : 20}
+            />
           ),
           tabBarLabelStyle: {
             fontSize: focusedTab === 'Search' ? 18 : 15,
@@ -178,8 +186,11 @@ const HomeTabNavigator = () => {
         options={{
           tabBarLabel: 'Wishlist',
           tabBarIcon: ({focused}) => (
-            <Icon name="heart" color={focused || focusedTab === 'Wishlist' ? '#9ACD32' : 'gray'}
-            size={focusedTab === 'Wishlist' ? 25 : 20} />
+            <Icon
+              name="heart"
+              color={focused || focusedTab === 'Wishlist' ? '#9ACD32' : 'gray'}
+              size={focusedTab === 'Wishlist' ? 25 : 20}
+            />
           ),
           tabBarLabelStyle: {
             fontSize: focusedTab === 'Wishlist' ? 18 : 15,
@@ -197,8 +208,11 @@ const HomeTabNavigator = () => {
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({focused}) => (
-            <Icon name="user" color={focused || focusedTab === 'Profile' ? '#9ACD32' : 'gray'}
-            size={focusedTab === 'Profile' ? 25 : 20} />
+            <Icon
+              name="user"
+              color={focused || focusedTab === 'Profile' ? '#9ACD32' : 'gray'}
+              size={focusedTab === 'Profile' ? 25 : 20}
+            />
           ),
           tabBarLabelStyle: {
             fontSize: focusedTab === 'Profile' ? 18 : 15,
@@ -213,10 +227,12 @@ const HomeTabNavigator = () => {
     </Tab.Navigator>
   );
 };
-// const HomeDrawerNavigator = () => {
-//   return(
-
-//   );
-// };
-
-export default App;
+const DrawerNavigator = () => {
+  return (
+    <Drawer.Navigator initialRouteName="Home">
+      <Drawer.Screen name="Home" component={HomeTabNavigator} />
+      <Drawer.Screen name="Profile" component={ProfileScreen} />
+      <Drawer.Screen name="Wishlist" component={WishListScreen} />
+    </Drawer.Navigator>
+  );
+};
