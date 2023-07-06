@@ -21,15 +21,15 @@ const SetPasswordScreen = () => {
     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,}$/;
 
   const validatePassword = () => {
-    if (password == '') {
+    if (password.trim() == '') {
       setPasswordError('Enter Your Password');
-    } else if (confirmPassword == '') {
+    } else if (confirmPassword.trim() == '') {
       setPasswordConfirmError('Please enter confirm password');
-    } else if (!passwordPattern.test(password)) {
+    } else if (!passwordPattern.test(password.trim())) {
       setPasswordError(
         'Password must be 8 characters long, maximum 20 characters, containing at least one uppercase letter, one lowercase letter, one special character, and one numeric digit.',
       );
-    } else if (password !== confirmPassword) {
+    } else if (password.trim() !== confirmPassword.trim()) {
       setPasswordConfirmError('Password do not match');
     } else {
       setPasswordConfirmError('');
@@ -66,9 +66,9 @@ const SetPasswordScreen = () => {
           onChangeText={text => handlePasswordChange(text)}
           onFocus={() => setPasswordError('')}
           onBlur={() => {
-            if (password == '') {
+            if (password.trim() == '') {
               setPasswordError('Enter Your Password');
-            } else if (!passwordPattern.test(password)) {
+            } else if (!passwordPattern.test(password.trim())) {
               setPasswordError(
                 'Password must be 8 characters long, maximum 20 characters, containing at least one uppercase letter, one lowercase letter, one special character, and one numeric digit.',
               );

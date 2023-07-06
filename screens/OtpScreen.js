@@ -15,9 +15,9 @@ const OtpScreen = ({navigation}) => {
   const [otpError, setOtpError] = useState('');
   const [timer, setTimer] = useState(30);
   const [isTimerActive, setTimerActive] = useState(true);
-  let intervalId;
 
   useEffect(() => {
+    let intervalId;
     // if timer is active
     if (isTimerActive && timer > 0) {
       intervalId = setInterval(() => {

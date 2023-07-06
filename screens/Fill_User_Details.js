@@ -50,7 +50,7 @@ const FillUserDetails = ({navigation}) => {
   const [showDropDown, setshowDropDown] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const regexMobile = /^\([6-9][0-9]{2}\) [0-9]{3}-[0-9]{4}$/;
+  const regexMobile = /^\([6-9]{1}[0-9]{2}\) [0-9]{3}-[0-9]{4}$/;
   const nameRegex = /^[A-Z a-z]+$/;
   const emailRegex = /^\S+@\S+\.\S{2,3}$/;
 
@@ -60,7 +60,7 @@ const FillUserDetails = ({navigation}) => {
 
   const numberFormat = text => {
     // //remove all the unwanted texts
-    const removeText = text.replace(/[^0-9]/g, '');
+    const removeText = text.replace(/\D/g, '');
     // // format the number
     let formattedNumber = '';
     const length = removeText.length;
@@ -269,12 +269,12 @@ const FillUserDetails = ({navigation}) => {
                 value={userDetails.mobileNumber}
                 keyboardType="phone-pad"
                 maxLength={14}
-                onChangeText={async e => {
-                  const formattedNumber = await numberFormat(e);
-                  setUserDetails({
-                    ...userDetails,
+                onChangeText={text => {
+                  const formattedNumber = numberFormat(text);
+                  setUserDetails(prevState => ({
+                    ...prevState,
                     mobileNumber: formattedNumber,
-                  });
+                  }));
                 }}
                 onBlur={() => {
                   if (!regexMobile.test(userDetails.mobileNumber)) {
