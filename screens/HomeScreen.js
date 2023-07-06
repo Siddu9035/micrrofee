@@ -101,9 +101,9 @@ const HomeScreen = ({navigation}) => {
           style={styles.icon}
         />
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.subContainer}>
           <View style={styles.contentContainer}>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.SubHeader}>
               <Text style={styles.Home}>Featured Coffees</Text>
               <TouchableOpacity>
@@ -189,16 +189,16 @@ const HomeScreen = ({navigation}) => {
                 ))}
               </View>
             </ScrollView>
+            </ScrollView>
           </View>
         </View>
-      </ScrollView>
     </View>
   );
 };
 export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: 'green',
   },
   Header: {
@@ -220,15 +220,15 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   subContainer: {
+    flexGrow: 1,
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     backgroundColor: '#f6f6f6',
     overflow: 'hidden',
+    marginBottom: 10,
   },
   contentContainer: {
-    flex: 1,
-    overflow: 'scroll',
-    marginBottom: 10,
+    flexGrow: 1,
   },
   Viewall: {
     marginHorizontal: 13,
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   line: {
-    borderWidth: 0.9,
+    borderBottomWidth: 0.9,
     marginHorizontal: 13,
   },
   itemscontainer: {
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
   sectionimage: {
     marginHorizontal: 5,
     width: 200,
-    height: 80,
+    height: 85,
     borderRadius: 15,
     shadowColor: 'black',
     shadowOpacity: 0.9,

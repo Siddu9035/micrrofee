@@ -20,8 +20,9 @@ const Loginpage = ({navigation}) => {
   const handleLogin = () => {
     if (email == '' || password == '') {
       setError('please enter your login credentials');
+    } else {
+      navigation.navigate('HomeScreen');
     }
-    return;
   };
 
   return (

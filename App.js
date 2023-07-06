@@ -110,13 +110,27 @@ export default function App() {
             headerShown: false,
           }}
         />
-        {/* <Stack.Screen
-          name="DrawerScreen"
-          component={HomeTabNavigator}
+        <Stack.Screen
+          name="Regions"
+          component={Regions}
           options={{
             headerShown: false,
           }}
-        /> */}
+        />
+        <Stack.Screen
+          name="NewToOldest"
+          component={NewToOldest}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Variety"
+          component={Variety}
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
