@@ -20,7 +20,7 @@ import Regions from './screens/Regions';
 import NewToOldest from './screens/NewToOldest';
 import Variety from './screens/Variety';
 
-
+import {useNavigation} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DrawerScreen from './screens/DrawerScreen';
@@ -29,6 +29,7 @@ import {Text, TouchableOpacity, View, StyleSheet, Image} from 'react-native';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
+
 export default function App() {
   return (
     <NavigationContainer>
@@ -122,11 +123,7 @@ export default function App() {
 }
 
 const HomeTabNavigator = () => {
-  const [focusedTab, setFocusedTab] = useState('Home');
-
-  const handleTabPress = tabName => {
-    setFocusedTab(tabName);
-  };
+  const navigation = useNavigation();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -148,25 +145,29 @@ const HomeTabNavigator = () => {
         tabBarHideOnKeyboard: true,
       }}>
       <Tab.Screen
-        name="Home"
+        name="HomeTab"
         component={HomeScreen}
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({focused}) => (
-            <Icon
-              name="home"
-              color={focused || focusedTab === 'Home' ? '#9ACD32' : 'gray'}
-              size={focusedTab === 'Home' ? 30 : 25}
-            />
+            <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+              <Icon
+                name="home"
+                color={focused ? '#9ACD32' : 'gray'}
+                size={focused ? 30 : 25}
+              />
+            </TouchableOpacity>
           ),
           headerShown: false,
-          tabBarLabelStyle: {
-            fontSize: focusedTab === 'Home' ? 18 : 15,
-            fontWeight: focusedTab === 'Home' ? 'bold' : 'normal',
-          },
-        }}
-        listeners={{
-          tabPress: () => handleTabPress('Home'),
+          tabBarLabel: ({focused}) => (
+            <Text
+              style={{
+                fontSize: focused ? 18 : 15,
+                fontWeight: focused ? 'bold' : 'normal',
+              }}>
+              Home
+            </Text>
+          ),
         }}
       />
       <Tab.Screen
@@ -175,20 +176,24 @@ const HomeTabNavigator = () => {
         options={{
           tabBarLabel: 'Search',
           tabBarIcon: ({focused}) => (
-            <Icon
-              name="search"
-              color={focused || focusedTab === 'Search' ? '#9ACD32' : 'gray'}
-              size={focusedTab === 'Search' ? 25 : 20}
-            />
+            <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+              <Icon
+                name="search"
+                color={focused ? '#9ACD32' : 'gray'}
+                size={focused ? 25 : 20}
+              />
+            </TouchableOpacity>
           ),
-          tabBarLabelStyle: {
-            fontSize: focusedTab === 'Search' ? 18 : 15,
-            fontWeight: focusedTab === 'Search' ? 'bold' : 'normal',
-          },
+          tabBarLabel: ({focused}) => (
+            <Text
+              style={{
+                fontSize: focused ? 18 : 15,
+                fontWeight: focused ? 'bold' : 'normal',
+              }}>
+              Search
+            </Text>
+          ),
           headerShown: false,
-        }}
-        listeners={{
-          tabPress: () => handleTabPress('Search'),
         }}
       />
       <Tab.Screen
@@ -197,20 +202,24 @@ const HomeTabNavigator = () => {
         options={{
           tabBarLabel: 'Wishlist',
           tabBarIcon: ({focused}) => (
-            <Icon
-              name="heart"
-              color={focused || focusedTab === 'Wishlist' ? '#9ACD32' : 'gray'}
-              size={focusedTab === 'Wishlist' ? 25 : 20}
-            />
+            <TouchableOpacity onPress={() => navigation.navigate('Wishlist')}>
+              <Icon
+                name="heart"
+                color={focused ? '#9ACD32' : 'gray'}
+                size={focused ? 25 : 20}
+              />
+            </TouchableOpacity>
           ),
-          tabBarLabelStyle: {
-            fontSize: focusedTab === 'Wishlist' ? 18 : 15,
-            fontWeight: focusedTab === 'Wishlist' ? 'bold' : 'normal',
-          },
+          tabBarLabel: ({focused}) => (
+            <Text
+              style={{
+                fontSize: focused ? 18 : 15,
+                fontWeight: focused ? 'bold' : 'normal',
+              }}>
+              Wishlist
+            </Text>
+          ),
           headerShown: false,
-        }}
-        listeners={{
-          tabPress: () => handleTabPress('Wishlist'),
         }}
       />
       <Tab.Screen
@@ -219,20 +228,24 @@ const HomeTabNavigator = () => {
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({focused}) => (
-            <Icon
-              name="user"
-              color={focused || focusedTab === 'Profile' ? '#9ACD32' : 'gray'}
-              size={focusedTab === 'Profile' ? 25 : 20}
-            />
+            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+              <Icon
+                name="user"
+                color={focused ? '#9ACD32' : 'gray'}
+                size={focused ? 25 : 20}
+              />
+            </TouchableOpacity>
           ),
-          tabBarLabelStyle: {
-            fontSize: focusedTab === 'Profile' ? 18 : 15,
-            fontWeight: focusedTab === 'Profile' ? 'bold' : 'normal',
-          },
+          tabBarLabel: ({focused}) => (
+            <Text
+              style={{
+                fontSize: focused ? 18 : 15,
+                fontWeight: focused ? 'bold' : 'normal',
+              }}>
+              Profile
+            </Text>
+          ),
           headerShown: false,
-        }}
-        listeners={{
-          tabPress: () => handleTabPress('Profile'),
         }}
       />
     </Tab.Navigator>
@@ -249,14 +262,19 @@ const CustomDrawerContent = ({navigation, ...props}) => {
     <DrawerContentScrollView {...props}>
       <View>
         <View style={styles.Loginhandler}>
-          <TouchableOpacity style={styles.LoginButton}  onPress={handleButtonPress}>
+          <TouchableOpacity
+            style={styles.LoginButton}
+            onPress={handleButtonPress}>
             <Text style={styles.text}>Login</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.line} />
         <DrawerItemList {...props} />
         <View style={styles.bottomline} />
-        <Image style={styles.img} source={require('./assets/images/logo1.png')} />
+        <Image
+          style={styles.img}
+          source={require('./assets/images/logo1.png')}
+        />
         <Text style={styles.testversion}>Version Test 4</Text>
       </View>
     </DrawerContentScrollView>
@@ -266,10 +284,9 @@ const styles = StyleSheet.create({
   Loginhandler: {
     flexDirection: 'row',
     alignItems: 'center',
-    
   },
   LoginButton: {
-    backgroundColor:'#52850f',
+    backgroundColor: '#52850f',
     width: 160,
     height: 45,
     alignItems: 'center',
@@ -290,6 +307,7 @@ const styles = StyleSheet.create({
   },
   bottomline: {
     borderWidth: 0.2,
+    marginVertical: 5,
     opacity: 0.2,
   },
   img: {
@@ -309,27 +327,36 @@ const styles = StyleSheet.create({
 const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
-      screenOptions={{headerShown: false}}
+      screenOptions={{
+        headerShown: false,
+        drawerLabelStyle: {
+          fontSize: 16,
+          fontWeight: '700',
+        },
+        drawerItemStyle: {
+          backgroundColor: 'skyblue',
+          paddingHorizontal: 10,
+          marginVertical: 8,
+          height: 55,
+        },
+      }}
       drawerContent={props => <CustomDrawerContent {...props} />}>
-      <Drawer.Screen name="Home" component={HomeTabNavigator} options={{
-        headerBackground: '#87CEFA',
-      }} />
-      <Drawer.Screen name="Regions" component={Regions} options={{
-        headerStyle: {
-          backgroundColor: '#87CEFA',
-        },
-      }} />
-      <Drawer.Screen name="Variety" component={Variety} options={{
-        headerStyle: {
-          backgroundColor: '#87CEFA',
-        },
-      }} />
-      <Drawer.Screen name="NewToOldest" component={NewToOldest} options={{
-        headerStyle: {
-          backgroundColor: '#87CEFA',
-        },
-      }} />
-
+      <Drawer.Screen name="Home" component={HomeTabNavigator} />
+      <Drawer.Screen
+        name="Regions"
+        component={Regions}
+        options={{
+          title: 'Regions/Origins',
+        }}
+      />
+      <Drawer.Screen name="Variety" component={Variety} options={{}} />
+      <Drawer.Screen
+        name="NewToOldest"
+        component={NewToOldest}
+        options={{
+          title: 'New To Oldest',
+        }}
+      />
     </Drawer.Navigator>
   );
 };

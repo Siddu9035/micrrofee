@@ -101,98 +101,97 @@ const HomeScreen = ({navigation}) => {
           style={styles.icon}
         />
       </View>
-      <View style={styles.subContainer}>
-        <View style={styles.SubHeader}>
-          <Text style={styles.Home}>Featured Coffees</Text>
-          <TouchableOpacity>
-            <Text style={styles.Viewall}>View All</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.line} />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={styles.itemscontainer}>
-            {FeaturedData.map(section => (
-              <View key={section.title} style={styles.sectionContainer}>
-                <View style={styles.featuredContainer}>
-                  <Icon
-                    name="star"
-                    size={20}
-                    color="gold"
-                    style={styles.starIcon}
-                  />
-                  <Text style={styles.featuredText}>FEATURED</Text>
-                </View>
-                <Image
-                  style={styles.sectionImage}
-                  source={section.SectionImage}
-                />
-                <View style={styles.textItems}>
-                  <Text style={styles.sectionTitle}>{section.title}</Text>
-                  {section.data.map(item => (
-                    <Text key={item} style={styles.item}>
-                      {item}
-                    </Text>
-                  ))}
-                </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.subContainer}>
+          <View style={styles.contentContainer}>
+            <View style={styles.SubHeader}>
+              <Text style={styles.Home}>Featured Coffees</Text>
+              <TouchableOpacity>
+                <Text style={styles.Viewall}>View All</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.line} />
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={styles.itemscontainer}>
+                {FeaturedData.map(section => (
+                  <View key={section.title} style={styles.sectionContainer}>
+                    <View style={styles.featuredContainer}>
+                      <Icon
+                        name="star"
+                        size={20}
+                        color="gold"
+                        style={styles.starIcon}
+                      />
+                      <Text style={styles.featuredText}>FEATURED</Text>
+                    </View>
+                    <Image
+                      style={styles.sectionImage}
+                      source={section.SectionImage}
+                    />
+                    <View style={styles.textItems}>
+                      <Text style={styles.sectionTitle}>{section.title}</Text>
+                      {section.data.map(item => (
+                        <Text key={item} style={styles.item}>
+                          {item}
+                        </Text>
+                      ))}
+                    </View>
+                  </View>
+                ))}
               </View>
-            ))}
-          </View>
-        </ScrollView>
-        <View style={styles.SubHeader}>
-          <Text style={styles.Home}> Latest Products</Text>
-          <TouchableOpacity>
-            <Text style={styles.Viewall}>View All</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.line} />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={styles.itemscontainer}>
-            {latestData.map(section => (
-              <View key={section.title} style={styles.sectionContainer}>
-                <Image
-                  style={styles.Sectionimage}
-                  source={section.Sectionimage}
-                />
-                <View style={styles.textItems}>
-                  <Text style={styles.sectionTitle}>{section.title}</Text>
-                  {section.data.map(item => (
-                    <Text key={item} style={styles.item}>
-                      {item}
-                    </Text>
-                  ))}
-                </View>
+            </ScrollView>
+            <View style={styles.SubHeader}>
+              <Text style={styles.Home}> Latest Products</Text>
+              <TouchableOpacity>
+                <Text style={styles.Viewall}>View All</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.line} />
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={styles.itemscontainer}>
+                {latestData.map(section => (
+                  <View key={section.title} style={styles.sectionContainer}>
+                    <Image
+                      style={styles.Sectionimage}
+                      source={section.Sectionimage}
+                    />
+                    <View style={styles.textItems}>
+                      <Text style={styles.sectionTitle}>{section.title}</Text>
+                      {section.data.map(item => (
+                        <Text key={item} style={styles.item}>
+                          {item}
+                        </Text>
+                      ))}
+                    </View>
+                  </View>
+                ))}
               </View>
-            ))}
-          </View>
-        </ScrollView>
-        <View style={styles.SubHeader}>
-          <Text style={styles.Home}>Origins/Regions</Text>
-          <TouchableOpacity>
-            <Text style={styles.Viewall}>View All</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.line} />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={styles.itemscontainer}>
-            {originsData.map(section => (
-              <View key={section.title} style={styles.SectionContainer}>
-                <Image
-                  style={styles.sectionimage}
-                  source={section.sectionimage}
-                />
-                <View style={styles.textItem}>
-                  <Text style={styles.sectionTitle}>{section.title}</Text>
-                  {/* {section.data.map(item => (
-                    <Text key={item} style={styles.item}>
-                      {item}
-                    </Text>
-                  ))} */}
-                </View>
+            </ScrollView>
+            <View style={styles.SubHeader}>
+              <Text style={styles.Home}>Origins/Regions</Text>
+              <TouchableOpacity>
+                <Text style={styles.Viewall}>View All</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.line} />
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={styles.itemscontainer}>
+                {originsData.map(section => (
+                  <View key={section.title} style={styles.SectionContainer}>
+                    <Image
+                      style={styles.sectionimage}
+                      source={section.sectionimage}
+                    />
+                    <View style={styles.textItem}>
+                      <Text style={styles.sectionTitle}>{section.title}</Text>
+                    </View>
+                  </View>
+                ))}
               </View>
-            ))}
+            </ScrollView>
           </View>
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -224,6 +223,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     backgroundColor: '#f6f6f6',
+    overflow: 'hidden',
+  },
+  contentContainer: {
+    flex: 1,
+    overflow: 'scroll',
+    marginBottom: 10,
   },
   Viewall: {
     marginHorizontal: 13,
