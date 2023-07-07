@@ -144,14 +144,20 @@ const FillUserDetails = ({navigation}) => {
       <ScrollView
         contentContainerStyle={styles.container}
         onPress={dissmissKeyboard}>
-        <Image style={styles.img} source={require('../assets/images/logo1.png')} />
-        <View>
+        <Image
+          style={styles.img}
+          source={require('../assets/images/logo1.png')}
+        />
+        <View style={styles.mandatoryName}>
           <Text style={styles.firstname}>
             First Name<Text style={styles.star}>*</Text>
           </Text>
+        </View>
+        <View style={styles.inputContainer}>
           <TextInput
             style={styles.FirstName}
             placeholder="First Name"
+            placeholderTextColor="#808B96"
             // value={userDetails.fisrtName}
             onChangeText={e => {
               setUserDetails({
@@ -178,15 +184,20 @@ const FillUserDetails = ({navigation}) => {
               });
             }}
           />
-          {showError.fisrtName && (
-            <Text style={styles.errorText}>{errorMsg.fisrtName}</Text>
-          )}
+        </View>
+        {showError.fisrtName && (
+          <Text style={styles.errorText}>{errorMsg.fisrtName}</Text>
+        )}
+        <View style={styles.mandatoryName}>
           <Text style={styles.firstname}>
             Last Name<Text style={styles.star}>*</Text>
           </Text>
+        </View>
+        <View style={styles.inputContainer}>
           <TextInput
-            style={styles.FirstName}
+            style={styles.lastName}
             placeholder="Last Name"
+            placeholderTextColor="#808B96"
             onChangeText={e => {
               setUserDetails({
                 ...userDetails,
@@ -213,15 +224,20 @@ const FillUserDetails = ({navigation}) => {
               });
             }}
           />
-          {showError.lastName && (
-            <Text style={styles.errorText}>{errorMsg.lastName}</Text>
-          )}
+        </View>
+        {showError.lastName && (
+          <Text style={styles.errorText}>{errorMsg.lastName}</Text>
+        )}
+        <View style={styles.mandatoryName}>
           <Text style={styles.firstname}>
             Email-address<Text style={styles.star}>*</Text>
           </Text>
+        </View>
+        <View style={styles.inputContainer}>
           <TextInput
-            style={styles.FirstName}
+            style={styles.email}
             placeholder="Email"
+            placeholderTextColor="#808B96"
             keyboardType="email-address"
             onChangeText={e => {
               setUserDetails({
@@ -248,97 +264,101 @@ const FillUserDetails = ({navigation}) => {
               });
             }}
           />
-          {showError.email && (
-            <Text style={styles.errorText}>{errorMsg.email}</Text>
-          )}
-          <View>
+        </View>
+        {showError.email && (
+          <Text style={styles.errorText}>{errorMsg.email}</Text>
+        )}
+        <View>
+          <View style={styles.mandatoryName}>
             <Text style={styles.firstname}>
               Mobile Number<Text style={styles.star}>*</Text>
             </Text>
-            <View style={styles.dropdownMenu}>
-              <TouchableOpacity
-                style={styles.dropdownSelector}
-                onPress={() => {
-                  setshowDropDown(!showDropDown);
-                }}>
-                <Text style={styles.dropdownText}>{selectedCountry}</Text>
-              </TouchableOpacity>
-              <TextInput
-                placeholder="Mobile Number"
-                style={styles.mobileNo}
-                value={userDetails.mobileNumber}
-                keyboardType="phone-pad"
-                maxLength={14}
-                onChangeText={text => {
-                  const formattedNumber = numberFormat(text);
-                  setUserDetails(prevState => ({
-                    ...prevState,
-                    mobileNumber: formattedNumber,
-                  }));
-                }}
-                onBlur={() => {
-                  if (!regexMobile.test(userDetails.mobileNumber)) {
-                    setErrorMsg({
-                      ...errorMsg,
-                      mobileNumber: 'Enter valid number',
-                    });
-                    setShowError({
-                      ...showError,
-                      mobileNumber: true,
-                    });
-                  }
-                }}
-                onPressIn={() => {
+          </View>
+          <View style={styles.dropdownMenu}>
+            <TouchableOpacity
+              style={styles.dropdownSelector}
+              onPress={() => {
+                setshowDropDown(!showDropDown);
+              }}>
+              <Text style={styles.dropdownText}>{selectedCountry}</Text>
+            </TouchableOpacity>
+            <TextInput
+              placeholder="Mobile Number"
+              placeholderTextColor="#808B96"
+              style={styles.mobileNo}
+              value={userDetails.mobileNumber}
+              keyboardType="phone-pad"
+              maxLength={14}
+              onChangeText={text => {
+                const formattedNumber = numberFormat(text);
+                setUserDetails(prevState => ({
+                  ...prevState,
+                  mobileNumber: formattedNumber,
+                }));
+              }}
+              onBlur={() => {
+                if (!regexMobile.test(userDetails.mobileNumber)) {
+                  setErrorMsg({
+                    ...errorMsg,
+                    mobileNumber: 'Enter valid number',
+                  });
                   setShowError({
                     ...showError,
-                    mobileNumber: false,
+                    mobileNumber: true,
                   });
-                }}
-              />
-            </View>
+                }
+              }}
+              onPressIn={() => {
+                setShowError({
+                  ...showError,
+                  mobileNumber: false,
+                });
+              }}
+            />
+          </View>
 
-            <View style={styles.dropAndError}>
-              {showDropDown && (
-                <View style={styles.dropdownArea}>
-                  {countryData.map((item, index) => (
-                    <TouchableOpacity
-                      key={index}
+          <View style={styles.dropAndError}>
+            {showDropDown && (
+              <View style={styles.dropdownArea}>
+                {countryData.map((item, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={[
+                      styles.countryitem,
+                      item.itemName == selectedCountry &&
+                        styles.selectedCountryItem,
+                    ]}
+                    onPress={() => {
+                      setSelectedCountry(item.itemName);
+                      setshowDropDown(false);
+                    }}>
+                    <Text
                       style={[
-                        styles.countryitem,
+                        styles.countryText,
                         item.itemName == selectedCountry &&
-                          styles.selectedCountryItem,
-                      ]}
-                      onPress={() => {
-                        setSelectedCountry(item.itemName);
-                        setshowDropDown(false);
-                      }}>
-                      <Text
-                        style={[
-                          styles.countryText,
-                          item.itemName == selectedCountry &&
-                            styles.selectedCountryText,
-                        ]}>
-                        {item.itemName}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              )}
-              {showError.mobileNumber && (
-                <Text
-                  style={[
-                    styles.errorText,
-                    {
-                      marginLeft: showDropDown ? 30 : 0,
-                      marginTop: 10,
-                    },
-                  ]}>
-                  {errorMsg.mobileNumber}
-                </Text>
-              )}
-            </View>
+                          styles.selectedCountryText,
+                      ]}>
+                      {item.itemName}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+            {showError.mobileNumber && (
+              <Text
+                style={[
+                  styles.errorText,
+                  {
+                    marginLeft: showDropDown ? 30 : 18,
+                    marginTop: 10,
+                  },
+                ]}>
+                {errorMsg.mobileNumber}
+              </Text>
+            )}
           </View>
         </View>
+
         <View style={styles.bottom}>
           <TouchableOpacity style={styles.button} onPress={handleButtonClick}>
             <Text style={styles.next}>Next</Text>
@@ -376,18 +396,52 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     alignSelf: 'center',
   },
+  inputContainer: {
+    width: '95%',
+    alignSelf: 'center',
+  },
   FirstName: {
     borderWidth: 2,
-    width: 350,
+    width: '95%',
     borderRadius: 8,
     borderColor: '#81C0EF',
     fontSize: 16,
     paddingHorizontal: 10,
     marginBottom: 10,
+    marginHorizontal: 10,
+    color: 'black',
+  },
+  lastName: {
+    color: 'black',
+    borderWidth: 2,
+    width: '95%',
+    borderRadius: 8,
+    borderColor: '#81C0EF',
+    fontSize: 16,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    marginHorizontal: 10,
+  },
+  email: {
+    color: 'black',
+    borderWidth: 2,
+    width: '95%',
+    borderRadius: 8,
+    borderColor: '#81C0EF',
+    fontSize: 16,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    marginHorizontal: 10,
+  },
+  mandatoryName: {
+    alignSelf: 'flex-start',
+    marginHorizontal: 5,
   },
   firstname: {
     marginBottom: 11,
     fontSize: 17,
+    color: 'black',
+    marginHorizontal: 17,
   },
   star: {
     color: 'red',
@@ -399,7 +453,8 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 15,
     backgroundColor: 'white',
-    width: 280,
+    width: '80%',
+    color: 'black',
   },
   next: {
     fontSize: 20,
@@ -411,34 +466,39 @@ const styles = StyleSheet.create({
     backgroundColor: '#52850f', //green
     padding: 10,
     borderRadius: 25,
-    width: 325,
+    width: '95%',
     height: 50,
   },
   errorText: {
     color: 'red',
-    textAlign: 'left',
+    alignSelf: 'flex-start',
+    marginLeft: 18,
   },
   dropdownMenu: {
     flexDirection: 'row',
     borderWidth: 2,
     borderRadius: 6,
     borderColor: '#81C0EF',
-    // marginHorizontal: 10,
+    marginHorizontal: 8,
+    width: '90%',
+    alignSelf: 'center',
+    // marginLeft: 10,
   },
   dropdownSelector: {
-    width: 70,
+    width: '20%',
     height: 50,
     backgroundColor: '#dadbdd',
     justifyContent: 'center',
   },
   dropdownText: {
     fontSize: 19,
+    color: 'black',
   },
   dropdownArea: {
     // alignItems: 'center',
-    width: 70,
+    width: '19%',
     borderLeftWidth: 1,
-    // marginLeft: 20,
+    marginLeft: 16,
     borderRightWidth: 1,
     backgroundColor: 'white',
     borderColor: '#81C0EF',
@@ -452,9 +512,11 @@ const styles = StyleSheet.create({
   countryText: {
     fontSize: 20,
     padding: 1,
+    color: 'black',
   },
   bottom: {
-    // top: 50,
+    width: '95%',
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'flex-end',
   },
@@ -482,6 +544,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     justifyContent: 'center',
+    color: 'black',
   },
   modalButton: {
     alignItems: 'center',

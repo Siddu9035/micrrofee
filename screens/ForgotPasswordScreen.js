@@ -93,6 +93,7 @@ const ForgotPasswordScreeen = () => {
           </TouchableOpacity>
           <TextInput
             placeholder="Mobile Number"
+            placeholderTextColor="#808B96"
             style={styles.mobileNo}
             keyboardType="phone-pad"
             maxLength={14}
@@ -170,7 +171,8 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 15,
     backgroundColor: 'white',
-    width: '80%',
+    width: '78%',
+    color: 'black',
   },
   next: {
     fontSize: 20,
@@ -178,11 +180,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    margin: 25,
+    marginHorizontal: 15,
     backgroundColor: '#52850f', //green
     padding: 10,
     borderRadius: 25,
-    width: 350,
+    width: '90%',
   },
   errorText: {
     // left: 40,
@@ -195,15 +197,18 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderColor: '#81C0EF',
     marginHorizontal: 20,
+    width: '90%',
   },
   dropdownSelector: {
     width: 70,
     height: 50,
     backgroundColor: '#dadbdd',
+    color: 'black',
     justifyContent: 'center',
   },
   dropdownText: {
     fontSize: 19,
+    color: 'black',
   },
   dropdownArea: {
     // alignItems: 'center',
@@ -224,11 +229,16 @@ const styles = StyleSheet.create({
   countryText: {
     fontSize: 20,
     padding: 1,
+    color: 'black',
+  },
+  countryitem: {
+    color: 'black',
   },
   nextButton: {
     flex: 1,
     justifyContent: 'flex-end',
     marginBottom: 20,
+    width: '90%',
   },
   selectedCountryItem: {
     backgroundColor: '#52850f',

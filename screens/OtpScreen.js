@@ -83,7 +83,10 @@ const OtpScreen = ({navigation}) => {
       style={styles.container}
       onPress={dissmissKeyboard}>
       <View>
-        <Image style={styles.img} source={require('../assets/images/logo1.png')} />
+        <Image
+          style={styles.img}
+          source={require('../assets/images/logo1.png')}
+        />
         {otpError && <Text style={styles.errorText}>{otpError}</Text>}
         <OtpInputs
           handleChange={text => handleOtpChange(text)}
@@ -110,9 +113,11 @@ const OtpScreen = ({navigation}) => {
             </View>
           </View>
         )}
-        <TouchableOpacity style={styles.nextButton} onPress={handleSubmit}>
-          <Text style={styles.next}>Next</Text>
-        </TouchableOpacity>
+        <View style={styles.otpbutton}>
+          <TouchableOpacity style={styles.nextButton} onPress={handleSubmit}>
+            <Text style={styles.next}>Next</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </KeyboardAwareScrollView>
   );
@@ -157,16 +162,21 @@ const styles = StyleSheet.create({
   },
   next: {
     padding: 10,
-    backgroundColor: '#52850f',
     color: 'white',
-    width: 340,
     textAlign: 'center',
-    borderRadius: 25,
-    marginVertical: 25,
     fontSize: 20,
   },
+  otpbutton: {
+    alignSelf: 'center',
+    width: '95%',
+  },
   nextButton: {
-    alignItems: 'center',
+    
+    width: '90%',
+    borderRadius: 25,
+    marginVertical: 25,
+    backgroundColor: '#52850f',
+    marginHorizontal: 15,
   },
   textInput: {
     borderWidth: 1.5,

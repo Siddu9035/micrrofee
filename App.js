@@ -2,8 +2,8 @@ import 'react-native-gesture-handler';
 import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import {
-  createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
@@ -31,14 +31,24 @@ const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // Track user login state
+  const [username, setUsername] = useState('siddappa'); // Track username
+
+  // Function to handle user login
+  const handleLogin = username => {
+    setIsLoggedIn(false);
+    setUsername(username);
+  };
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
+      <Stack.Screen
           name="login"
-          component={LoginPage}
-          options={{headerShown: false}}
-        />
+          options={{ headerShown: false }}
+        >
+          {(props) => <LoginPage {...props} handleLogin={handleLogin} />}
+        </Stack.Screen>
         <Stack.Screen
           name="ForgotPassword"
           component={ForgotPasswordScreen}
@@ -105,11 +115,12 @@ export default function App() {
         />
         <Stack.Screen
           name="HomeScreen"
-          component={DrawerNavigator}
-          options={{
-            headerShown: false,
-          }}
-        />
+          options={{ headerShown: false }}
+        >
+          {(props) => (
+            <DrawerNavigator {...props} isLoggedIn={isLoggedIn} username={username} />
+          )}
+        </Stack.Screen>
         <Stack.Screen
           name="Regions"
           component={Regions}
@@ -168,7 +179,7 @@ const HomeTabNavigator = () => {
               <Icon
                 name="home"
                 color={focused ? '#9ACD32' : 'gray'}
-                size={focused ? 30 : 25}
+                size={focused ? 25 : 20}
               />
             </TouchableOpacity>
           ),
@@ -178,6 +189,7 @@ const HomeTabNavigator = () => {
               style={{
                 fontSize: focused ? 18 : 15,
                 fontWeight: focused ? 'bold' : 'normal',
+                color: 'black',
               }}>
               Home
             </Text>
@@ -203,6 +215,7 @@ const HomeTabNavigator = () => {
               style={{
                 fontSize: focused ? 18 : 15,
                 fontWeight: focused ? 'bold' : 'normal',
+                color: 'black',
               }}>
               Search
             </Text>
@@ -229,6 +242,7 @@ const HomeTabNavigator = () => {
               style={{
                 fontSize: focused ? 18 : 15,
                 fontWeight: focused ? 'bold' : 'normal',
+                color: 'black',
               }}>
               Wishlist
             </Text>
@@ -255,6 +269,7 @@ const HomeTabNavigator = () => {
               style={{
                 fontSize: focused ? 18 : 15,
                 fontWeight: focused ? 'bold' : 'normal',
+                color: 'black',
               }}>
               Profile
             </Text>
@@ -266,22 +281,32 @@ const HomeTabNavigator = () => {
   );
 };
 
-const CustomDrawerContent = ({navigation, ...props}) => {
+const CustomDrawerContent = ({navigation, isLoggedIn, username, ...props}) => {
   const handleButtonPress = () => {
     // Handle the button press action here
+    handleLogin('siddappa');
     console.log('Button Pressed');
     navigation.navigate('login');
   };
   return (
     <DrawerContentScrollView {...props}>
       <View>
-        <View style={styles.Loginhandler}>
-          <TouchableOpacity
-            style={styles.LoginButton}
-            onPress={handleButtonPress}>
-            <Text style={styles.text}>Login</Text>
-          </TouchableOpacity>
-        </View>
+        {isLoggedIn ? (
+          <View>
+            <View style={styles.greetingContainer}>
+              <Text style={styles.greetingText}>Welcome back,</Text>
+              <Text style={styles.usertext}>{username}</Text>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.Loginhandler}>
+            <TouchableOpacity
+              style={styles.LoginButton}
+              onPress={handleButtonPress}>
+              <Text style={styles.text}>Login</Text>
+            </TouchableOpacity>
+          </View>
+        )}
         <View style={styles.line} />
         <DrawerItemList {...props} />
         <View style={styles.bottomline} />
@@ -315,12 +340,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   line: {
-    borderWidth: 1,
+    borderBottomWidth: 1,
     marginHorizontal: 5,
     marginVertical: 10,
   },
   bottomline: {
-    borderWidth: 0.2,
+    borderBottomWidth: 1,
     marginVertical: 5,
     opacity: 0.2,
   },
@@ -336,9 +361,25 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     marginTop: -15,
+    color: 'black',
   },
+  greetingText: {
+    color: 'black',
+  },
+  usertext: {
+    color: 'black',
+  },
+  greetingContainer: {},
 });
 const DrawerNavigator = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track user login state
+  const [username, setUsername] = useState('siddappa'); // Track username
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    setUsername(username);
+  };
+
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -346,6 +387,7 @@ const DrawerNavigator = () => {
         drawerLabelStyle: {
           fontSize: 16,
           fontWeight: '700',
+          color: 'black',
         },
         drawerItemStyle: {
           backgroundColor: 'skyblue',
@@ -354,7 +396,16 @@ const DrawerNavigator = () => {
           height: 55,
         },
       }}
-      drawerContent={props => <CustomDrawerContent {...props} />}>
+      // Pass isLoggedIn, username, handleLogout as props to CustomDrawerContent
+      drawerContent={props => (
+        <CustomDrawerContent
+          navigation={props.navigation}
+          handleLogin={handleLogin}
+          isLoggedIn={isLoggedIn}
+          username={username}
+          {...props}
+        />
+      )}>
       <Drawer.Screen name="Home" component={HomeTabNavigator} />
       <Drawer.Screen
         name="Regions"

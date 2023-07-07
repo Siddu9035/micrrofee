@@ -34,10 +34,11 @@ const Loginpage = ({navigation}) => {
 
         {error && <Text style={styles.errorText}>{error}</Text>}
 
-        <View>
+        <View style={styles.inputContainer}>
           <TextInput
             style={styles.email}
             placeholder="Email"
+            placeholderTextColor="#808B96"
             onChangeText={e => setEmail(e)}
             onFocus={() => setError('')}
             keyboardType="email-address"
@@ -47,6 +48,7 @@ const Loginpage = ({navigation}) => {
           <TextInput
             style={styles.Password}
             placeholder="Password"
+            placeholderTextColor="#808B96"
             secureTextEntry={!hidePass}
             onChangeText={e => setPassword(e)}
             onFocus={() => setError('')}
@@ -67,7 +69,7 @@ const Loginpage = ({navigation}) => {
           }}>
           <Text style={styles.forgotpassword}>Forgot your Password?</Text>
         </TouchableOpacity>
-        <View>
+        <View style={styles.loginbuton}>
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.login}>Login</Text>
           </TouchableOpacity>
@@ -104,6 +106,7 @@ const styles = StyleSheet.create({
   header: {
     marginVertical: 25,
     fontSize: 25,
+    color: 'black',
   },
 
   img: {
@@ -111,19 +114,26 @@ const styles = StyleSheet.create({
     height: 150,
     marginBottom: 18,
   },
+  inputContainer: {
+    width: '95%',
+    alignItems: 'center',
+  },
   email: {
+    flex: 1,
     height: 50,
+    color: 'black',
     fontSize: 18,
     borderWidth: 2,
     borderColor: 'lightblue',
     borderRadius: 7,
-    width: 350,
+    width: '95%',
     marginVertical: 10,
     backgroundColor: 'white',
     paddingHorizontal: 10,
     marginHorizontal: 5,
   },
   Password: {
+    color: 'black',
     flex: 1,
     height: 50,
     fontSize: 18,
@@ -158,9 +168,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
   },
+  loginbuton: {
+    width: '95%',
+    alignItems: 'center',
+  },
   button: {
-    width: 310,
-    margin: 25,
+    width: '95%',
+    marginHorizontal: 15,
+    marginVertical: 10,
     backgroundColor: '#52850f', //green
     padding: 9,
     borderRadius: 25,
@@ -171,6 +186,7 @@ const styles = StyleSheet.create({
     fontSize: 19,
     justifyContent: 'center',
     alignItems: 'center',
+    color: 'black',
   },
   footer: {
     margin: 15,

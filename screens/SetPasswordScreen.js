@@ -61,6 +61,7 @@ const SetPasswordScreen = () => {
         <TextInput
           style={styles.Password}
           placeholder="Enter your Password"
+          placeholderTextColor="#808B96"
           maxLength={20}
           secureTextEntry={!hidePass}
           onChangeText={text => handlePasswordChange(text)}
@@ -90,6 +91,7 @@ const SetPasswordScreen = () => {
         <TextInput
           style={styles.Password}
           placeholder="Confirm your Password"
+          placeholderTextColor="#808B96"
           maxLength={20}
           secureTextEntry={!hidePassConfirm}
           onChangeText={text => handleConfirmPasswordChange(text)}
@@ -108,7 +110,7 @@ const SetPasswordScreen = () => {
       {passwordConfirmError !== '' && (
         <Text style={styles.errortext}>{passwordConfirmError}</Text>
       )}
-      <View>
+      <View style={styles.passbutton}>
         <TouchableOpacity style={styles.resetbutton} onPress={validatePassword}>
           <Text style={styles.resetpass}>Reset Password</Text>
         </TouchableOpacity>
@@ -143,6 +145,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingRight: 50,
     marginHorizontal: 25,
+    color: 'black',
   },
   textInput: {
     flexDirection: 'row',
@@ -156,9 +159,13 @@ const styles = StyleSheet.create({
   resetpass: {
     color: 'white',
   },
+  passbutton: {
+    width: '95%',
+    alignItems: 'center',
+  },
   resetbutton: {
     backgroundColor: '#52850f',
-    width: 345,
+    width: '95%',
     height: 45,
     alignItems: 'center',
     justifyContent: 'center',

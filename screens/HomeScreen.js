@@ -40,27 +40,27 @@ const HomeScreen = ({navigation}) => {
   const latestData = [
     {
       title: 'Orange',
-      data: ['Mumbai', 'redCoffee'],
+      data: ['Mumbai',],
       Sectionimage: require('../assets/images/latcoffee1.png'),
     },
     {
       title: 'Red',
-      data: ['Karnataka', 'blackcoffee'],
+      data: ['Karnataka',],
       Sectionimage: require('../assets/images/latcoffee2.png'),
     },
     {
       title: 'Brown',
-      data: ['Kerala', 'bluecoffee'],
+      data: ['Kerala',],
       Sectionimage: require('../assets/images/latcoffee3.png'),
     },
     {
       title: 'Black',
-      data: ['Goa', 'pistacoffee'],
+      data: ['Goa',],
       Sectionimage: require('../assets/images/latcoffee1.png'),
     },
     {
       title: 'White',
-      data: ['uttarPradesh', 'reddishcoffee'],
+      data: ['uttarPradesh',],
       Sectionimage: require('../assets/images/latcoffee2.png'),
     },
   ];
@@ -87,6 +87,7 @@ const HomeScreen = ({navigation}) => {
     },
   ];
   return (
+    // <ScrollView>
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.Header}>
@@ -101,9 +102,9 @@ const HomeScreen = ({navigation}) => {
           style={styles.icon}
         />
       </View>
-        <View style={styles.subContainer}>
-          <View style={styles.contentContainer}>
-          <ScrollView showsVerticalScrollIndicator={false}>
+      <View style={styles.subContainer}>
+        <View style={styles.contentContainer}>
+          <ScrollView style={styles.contentScroll} showsVerticalScrollIndicator={false}>
             <View style={styles.SubHeader}>
               <Text style={styles.Home}>Featured Coffees</Text>
               <TouchableOpacity>
@@ -189,19 +190,20 @@ const HomeScreen = ({navigation}) => {
                 ))}
               </View>
             </ScrollView>
-            </ScrollView>
-          </View>
+          </ScrollView>
         </View>
+      </View>
     </View>
   );
 };
 export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: 'green',
   },
   Header: {
+    // flex: 1,
     flexDirection: 'row',
     height: 55,
     alignItems: 'center',
@@ -225,15 +227,18 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     backgroundColor: '#f6f6f6',
     overflow: 'hidden',
-    marginBottom: 10,
   },
   contentContainer: {
     flexGrow: 1,
+  },
+  contentScroll: {
+    flex: 1,
   },
   Viewall: {
     marginHorizontal: 13,
     fontSize: 18,
     fontWeight: '700',
+    color: 'black',
   },
   icon: {
     paddingRight: 25,
@@ -246,6 +251,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     marginTop: 4,
+    color: 'black',
   },
   line: {
     borderBottomWidth: 0.9,
@@ -301,9 +307,11 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 18,
     // paddingBottom: 10,
+    color: 'black',
   },
   item: {
     fontSize: 14,
+    color: 'black',
   },
   textItems: {
     backgroundColor: 'white',
