@@ -284,7 +284,6 @@ const HomeTabNavigator = () => {
 const CustomDrawerContent = ({navigation, isLoggedIn, username, ...props}) => {
   const handleButtonPress = () => {
     // Handle the button press action here
-    handleLogin('siddappa');
     console.log('Button Pressed');
     navigation.navigate('login');
   };

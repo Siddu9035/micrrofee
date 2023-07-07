@@ -1,7 +1,6 @@
-import {Image, Keyboard, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Image, Keyboard, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const ForgotPasswordScreeen = () => {
   const [mobileNumber, setMobileNumber] = useState('');
@@ -19,17 +18,6 @@ const ForgotPasswordScreeen = () => {
       setshowPhoneNumberError(false);
     }
   };
-
-  // const validatePassword = () => {
-  //   if (mobileNumber.length < 10) {
-  //     setPasswordError('Please enter valid mobile number');
-  //     setShowPasswordError(false);
-  //   }
-  //   // } else {
-  //   //   // setShowPasswordError(true);
-  //   //   // setPasswordError('Please enter valid mobile number');
-  //   // }
-  // };
 
   const numberFormat = text => {
     //remove all the unwanted texts
@@ -75,7 +63,7 @@ const ForgotPasswordScreeen = () => {
     Keyboard.dismiss();
   };
   return (
-    <KeyboardAwareScrollView
+    <ScrollView
       contentContainerStyle={styles.contentContainer}
       keyboardShouldPersistTaps="handled"
       onPress={dissmissKeyboard}>
@@ -148,13 +136,13 @@ const ForgotPasswordScreeen = () => {
           <Text style={styles.next}>Next</Text>
         </TouchableOpacity>
       </View>
-    </KeyboardAwareScrollView>
+    </ScrollView>
   );
 };
 export default ForgotPasswordScreeen;
 const styles = StyleSheet.create({
   contentContainer: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     backgroundColor: '#f6f6f6',
   },
@@ -239,6 +227,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     marginBottom: 20,
     width: '90%',
+    marginTop: 20,
   },
   selectedCountryItem: {
     backgroundColor: '#52850f',

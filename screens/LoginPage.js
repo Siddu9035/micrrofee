@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: 'white',
     paddingHorizontal: 10,
-    marginHorizontal: 5,
+    marginHorizontal: 4,
   },
   Password: {
     color: 'black',
@@ -140,16 +140,17 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'lightblue',
     borderRadius: 7,
-    width: 340,
+    width: '95%',
     marginVertical: 10,
     paddingLeft: 10,
     backgroundColor: 'white',
     paddingRight: 55,
-    marginHorizontal: 15,
+    marginHorizontal: 5,
   },
   textInput: {
     flexDirection: 'row',
     alignItems: 'center',
+    width: '95%',
   },
   iconContainer: {
     position: 'absolute',

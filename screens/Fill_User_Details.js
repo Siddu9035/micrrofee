@@ -50,7 +50,7 @@ const FillUserDetails = ({navigation}) => {
   const [showDropDown, setshowDropDown] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const regexMobile = /^\([6-9]{1}[0-9]{2}\) [0-9]{3}-[0-9]{4}$/;
+  const regexMobile = /^\([6-9][0-9]{2}\) [0-9]{3}-[0-9]{4}$/;
   const nameRegex = /^[A-Z a-z]+$/;
   const emailRegex = /^\S+@\S+\.\S{2,3}$/;
 
@@ -269,11 +269,11 @@ const FillUserDetails = ({navigation}) => {
           <Text style={styles.errorText}>{errorMsg.email}</Text>
         )}
         <View>
-          <View style={styles.mandatoryName}>
-            <Text style={styles.firstname}>
-              Mobile Number<Text style={styles.star}>*</Text>
-            </Text>
-          </View>
+          {/* <View style={styles.mobilemand}> */}
+          <Text style={styles.madmobile}>
+            Mobile Number<Text style={styles.star}>*</Text>
+          </Text>
+          {/* </View> */}
           <View style={styles.dropdownMenu}>
             <TouchableOpacity
               style={styles.dropdownSelector}
@@ -436,6 +436,11 @@ const styles = StyleSheet.create({
   mandatoryName: {
     alignSelf: 'flex-start',
     marginHorizontal: 5,
+  },
+  madmobile: {
+    color: 'black',
+    marginHorizontal: 15,
+    marginBottom: 10,
   },
   firstname: {
     marginBottom: 11,
