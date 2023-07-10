@@ -23,7 +23,7 @@ import Variety from './screens/Variety';
 import {useNavigation} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import DrawerScreen from './screens/DrawerScreen';
+// import DrawerScreen from './screens/DrawerScreen';
 import {Text, TouchableOpacity, View, StyleSheet, Image} from 'react-native';
 
 const Stack = createStackNavigator();
@@ -31,23 +31,20 @@ const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Track user login state
-  const [username, setUsername] = useState('siddappa'); // Track username
+  const [loggedIn, setLoggedIn] = useState(false); // Track user login state
+  const [username, setUsername] = useState(null); // Track username
 
   // Function to handle user login
   const handleLogin = username => {
-    setIsLoggedIn(false);
+    setLoggedIn(true);
     setUsername(username);
   };
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-      <Stack.Screen
-          name="login"
-          options={{ headerShown: false }}
-        >
-          {(props) => <LoginPage {...props} handleLogin={handleLogin} />}
+        <Stack.Screen name="login" options={{headerShown: false}}>
+          {(props) => <LoginPage {...props} username={username} handleLogin={handleLogin} />}
         </Stack.Screen>
         <Stack.Screen
           name="ForgotPassword"
@@ -113,12 +110,13 @@ export default function App() {
             title: 'Set Password',
           }}
         />
-        <Stack.Screen
-          name="HomeScreen"
-          options={{ headerShown: false }}
-        >
-          {(props) => (
-            <DrawerNavigator {...props} isLoggedIn={isLoggedIn} username={username} />
+        <Stack.Screen name="HomeScreen" options={{headerShown: false}}>
+          {props => (
+            <DrawerNavigator
+              {...props}
+              loggedIn={loggedIn}
+              username={username}
+            />
           )}
         </Stack.Screen>
         <Stack.Screen
@@ -281,7 +279,7 @@ const HomeTabNavigator = () => {
   );
 };
 
-const CustomDrawerContent = ({navigation, isLoggedIn, username, ...props}) => {
+const CustomDrawerContent = ({navigation, loggedIn, username, ...props}) => {
   const handleButtonPress = () => {
     // Handle the button press action here
     console.log('Button Pressed');
@@ -290,7 +288,7 @@ const CustomDrawerContent = ({navigation, isLoggedIn, username, ...props}) => {
   return (
     <DrawerContentScrollView {...props}>
       <View>
-        {isLoggedIn ? (
+        {loggedIn ? (
           <View>
             <View style={styles.greetingContainer}>
               <Text style={styles.greetingText}>Welcome back,</Text>
@@ -298,9 +296,9 @@ const CustomDrawerContent = ({navigation, isLoggedIn, username, ...props}) => {
             </View>
           </View>
         ) : (
-          <View style={styles.Loginhandler}>
+          <View style={styles.loginHandler}>
             <TouchableOpacity
-              style={styles.LoginButton}
+              style={styles.loginButton}
               onPress={handleButtonPress}>
               <Text style={styles.text}>Login</Text>
             </TouchableOpacity>
@@ -319,11 +317,11 @@ const CustomDrawerContent = ({navigation, isLoggedIn, username, ...props}) => {
   );
 };
 const styles = StyleSheet.create({
-  Loginhandler: {
+  loginHandler: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  LoginButton: {
+  loginButton: {
     backgroundColor: '#52850f',
     width: 160,
     height: 45,
@@ -371,11 +369,11 @@ const styles = StyleSheet.create({
   greetingContainer: {},
 });
 const DrawerNavigator = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track user login state
-  const [username, setUsername] = useState('siddappa'); // Track username
+  const [loggedIn, setLoggedIn] = useState(false); // Track user login state
+  const [username, setUsername] = useState(null); // Track username
 
   const handleLogin = () => {
-    setIsLoggedIn(true);
+    setLoggedIn(true);
     setUsername(username);
   };
 
@@ -399,8 +397,7 @@ const DrawerNavigator = () => {
       drawerContent={props => (
         <CustomDrawerContent
           navigation={props.navigation}
-          handleLogin={handleLogin}
-          isLoggedIn={isLoggedIn}
+          loggedIn={loggedIn}
           username={username}
           {...props}
         />

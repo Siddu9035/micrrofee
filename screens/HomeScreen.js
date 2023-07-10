@@ -6,10 +6,13 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const HomeScreen = ({navigation}) => {
+  const [isFeaturedExpanded, setFeaturedExpanded] = useState(false);
+  const [isLatestExpanded, setLatestExpanded] = useState(false);
+  const [isOriginsExpanded, setOriginsExpanded] = useState(false);
   const FeaturedData = [
     {
       title: 'java',
@@ -40,27 +43,27 @@ const HomeScreen = ({navigation}) => {
   const latestData = [
     {
       title: 'Orange',
-      data: ['Mumbai',],
+      data: ['Mumbai'],
       Sectionimage: require('../assets/images/latcoffee1.png'),
     },
     {
       title: 'Red',
-      data: ['Karnataka',],
+      data: ['Karnataka'],
       Sectionimage: require('../assets/images/latcoffee2.png'),
     },
     {
       title: 'Brown',
-      data: ['Kerala',],
+      data: ['Kerala'],
       Sectionimage: require('../assets/images/latcoffee3.png'),
     },
     {
       title: 'Black',
-      data: ['Goa',],
+      data: ['Goa'],
       Sectionimage: require('../assets/images/latcoffee1.png'),
     },
     {
       title: 'White',
-      data: ['uttarPradesh',],
+      data: ['uttarPradesh'],
       Sectionimage: require('../assets/images/latcoffee2.png'),
     },
   ];
@@ -86,6 +89,17 @@ const HomeScreen = ({navigation}) => {
       sectionimage: require('../assets/images/latcoffee2.png'),
     },
   ];
+  const toggleFeaturedExpanded = () => {
+    setFeaturedExpanded(!isFeaturedExpanded);
+  };
+
+  const toggleLatestExpanded = () => {
+    setLatestExpanded(!isLatestExpanded);
+  };
+
+  const toggleOriginsExpanded = () => {
+    setOriginsExpanded(!isOriginsExpanded);
+  };
   return (
     // <ScrollView>
     <View style={styles.container}>
@@ -104,90 +118,183 @@ const HomeScreen = ({navigation}) => {
       </View>
       <View style={styles.subContainer}>
         <View style={styles.contentContainer}>
-          <ScrollView style={styles.contentScroll} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            style={styles.contentScroll}
+            showsVerticalScrollIndicator={false}>
             <View style={styles.SubHeader}>
               <Text style={styles.Home}>Featured Coffees</Text>
-              <TouchableOpacity>
-                <Text style={styles.Viewall}>View All</Text>
+              <TouchableOpacity onPress={toggleFeaturedExpanded}>
+                <Text style={styles.Viewall}>
+                  {isFeaturedExpanded ? 'View Less' : 'View All'}
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={styles.line} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.itemscontainer}>
-                {FeaturedData.map(section => (
-                  <View key={section.title} style={styles.sectionContainer}>
-                    <View style={styles.featuredContainer}>
-                      <Icon
-                        name="star"
-                        size={20}
-                        color="gold"
-                        style={styles.starIcon}
-                      />
-                      <Text style={styles.featuredText}>FEATURED</Text>
-                    </View>
-                    <Image
-                      style={styles.sectionImage}
-                      source={section.SectionImage}
-                    />
-                    <View style={styles.textItems}>
-                      <Text style={styles.sectionTitle}>{section.title}</Text>
-                      {section.data.map(item => (
-                        <Text key={item} style={styles.item}>
-                          {item}
-                        </Text>
-                      ))}
-                    </View>
+                {isFeaturedExpanded ? (
+                  <View style={styles.itemcontainer}>
+                    {FeaturedData.map(section => (
+                      <View key={section.title} style={styles.sectionContainer}>
+                        <View style={styles.featuredContainer}>
+                          <Icon
+                            name="star"
+                            size={20}
+                            color="gold"
+                            style={styles.starIcon}
+                          />
+                          <Text style={styles.featuredText}>FEATURED</Text>
+                        </View>
+                        <Image
+                          style={styles.sectionImage}
+                          source={section.SectionImage}
+                        />
+                        <View style={styles.textItems}>
+                          <Text style={styles.sectionTitle}>
+                            {section.title}
+                          </Text>
+                          {section.data.map(item => (
+                            <Text key={item} style={styles.item}>
+                              {item}
+                            </Text>
+                          ))}
+                        </View>
+                      </View>
+                    ))}
                   </View>
-                ))}
+                ) : (
+                  <View style={styles.itemscontainer}>
+                    {FeaturedData.map(section => (
+                      <View key={section.title} style={styles.sectionContainer}>
+                        <View style={styles.featuredContainer}>
+                          <Icon
+                            name="star"
+                            size={20}
+                            color="gold"
+                            style={styles.starIcon}
+                          />
+                          <Text style={styles.featuredText}>FEATURED</Text>
+                        </View>
+                        <Image
+                          style={styles.sectionImage}
+                          source={section.SectionImage}
+                        />
+                        <View style={styles.textItems}>
+                          <Text style={styles.sectionTitle}>
+                            {section.title}
+                          </Text>
+                          {section.data.map(item => (
+                            <Text key={item} style={styles.item}>
+                              {item}
+                            </Text>
+                          ))}
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                )}
               </View>
             </ScrollView>
             <View style={styles.SubHeader}>
               <Text style={styles.Home}> Latest Products</Text>
-              <TouchableOpacity>
-                <Text style={styles.Viewall}>View All</Text>
+              <TouchableOpacity onPress={toggleLatestExpanded}>
+                <Text style={styles.Viewall}>
+                  {isLatestExpanded ? 'View Less' : 'View All'}
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={styles.line} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.itemscontainer}>
-                {latestData.map(section => (
-                  <View key={section.title} style={styles.sectionContainer}>
-                    <Image
-                      style={styles.Sectionimage}
-                      source={section.Sectionimage}
-                    />
-                    <View style={styles.textItems}>
-                      <Text style={styles.sectionTitle}>{section.title}</Text>
-                      {section.data.map(item => (
-                        <Text key={item} style={styles.item}>
-                          {item}
-                        </Text>
-                      ))}
-                    </View>
+                {isLatestExpanded ? (
+                  <View style={styles.itemcontainer}>
+                    {latestData.map(section => (
+                      <View key={section.title} style={styles.sectionContainer}>
+                        <Image
+                          style={styles.Sectionimage}
+                          source={section.Sectionimage}
+                        />
+                        <View style={styles.textItems}>
+                          <Text style={styles.sectionTitle}>
+                            {section.title}
+                          </Text>
+                          {section.data.map(item => (
+                            <Text key={item} style={styles.item}>
+                              {item}
+                            </Text>
+                          ))}
+                        </View>
+                      </View>
+                    ))}
                   </View>
-                ))}
+                ) : (
+                  <View style={styles.itemscontainer}>
+                    {latestData.map(section => (
+                      <View key={section.title} style={styles.sectionContainer}>
+                        <Image
+                          style={styles.Sectionimage}
+                          source={section.Sectionimage}
+                        />
+                        <View style={styles.textItems}>
+                          <Text style={styles.sectionTitle}>
+                            {section.title}
+                          </Text>
+                          {section.data.map(item => (
+                            <Text key={item} style={styles.item}>
+                              {item}
+                            </Text>
+                          ))}
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                )}
               </View>
             </ScrollView>
             <View style={styles.SubHeader}>
               <Text style={styles.Home}>Origins/Regions</Text>
-              <TouchableOpacity>
-                <Text style={styles.Viewall}>View All</Text>
+              <TouchableOpacity onPress={toggleOriginsExpanded}>
+                <Text style={styles.Viewall}>
+                  {isOriginsExpanded ? 'View Less' : 'View All'}
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={styles.line} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.itemscontainer}>
-                {originsData.map(section => (
-                  <View key={section.title} style={styles.SectionContainer}>
-                    <Image
-                      style={styles.sectionimage}
-                      source={section.sectionimage}
-                    />
-                    <View style={styles.textItem}>
-                      <Text style={styles.sectionTitle}>{section.title}</Text>
-                    </View>
+                {isOriginsExpanded ? (
+                  <View style={styles.itemcontainer}>
+                    {originsData.map(section => (
+                      <View key={section.title} style={styles.SectionContainer}>
+                        <Image
+                          style={styles.sectionimage}
+                          source={section.sectionimage}
+                        />
+                        <View style={styles.textItem}>
+                          <Text style={styles.sectionTitle}>
+                            {section.title}
+                          </Text>
+                        </View>
+                      </View>
+                    ))}
                   </View>
-                ))}
+                ) : (
+                  <View style={styles.itemscontainer}>
+                    {originsData.map(section => (
+                      <View key={section.title} style={styles.SectionContainer}>
+                        <Image
+                          style={styles.sectionimage}
+                          source={section.sectionimage}
+                        />
+                        <View style={styles.textItem}>
+                          <Text style={styles.sectionTitle}>
+                            {section.title}
+                          </Text>
+                        </View>
+                      </View>
+                    ))}
+                  </View>  
+                )}
               </View>
             </ScrollView>
           </ScrollView>
@@ -342,5 +449,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'white',
     marginHorizontal: 5,
+  },
+  itemcontainer: {
+    flexDirection: 'column',
+    marginVertical: 10,
   },
 });
