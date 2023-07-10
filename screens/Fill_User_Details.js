@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   inputContainer: {
-    width: '95%',
+    width: '93%',
     alignSelf: 'center',
   },
   FirstName: {
@@ -408,7 +408,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingHorizontal: 10,
     marginBottom: 10,
-    marginHorizontal: 10,
+    marginHorizontal: 8,
     color: 'black',
   },
   lastName: {
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingHorizontal: 10,
     marginBottom: 10,
-    marginHorizontal: 10,
+    marginHorizontal: 8,
   },
   email: {
     color: 'black',
@@ -431,22 +431,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingHorizontal: 10,
     marginBottom: 10,
-    marginHorizontal: 10,
+    marginHorizontal: 8,
   },
   mandatoryName: {
     alignSelf: 'flex-start',
-    marginHorizontal: 5,
+    marginHorizontal: 10,
   },
   madmobile: {
     color: 'black',
-    marginHorizontal: 15,
+    marginLeft: 8,
     marginBottom: 10,
+    fontSize: 17,
   },
   firstname: {
     marginBottom: 11,
     fontSize: 17,
     color: 'black',
-    marginHorizontal: 17,
+    marginHorizontal: 10,
   },
   star: {
     color: 'red',
@@ -485,15 +486,16 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderColor: '#81C0EF',
     marginHorizontal: 8,
-    width: '90%',
+    width: '85%',
     alignSelf: 'center',
     // marginLeft: 10,
   },
   dropdownSelector: {
-    width: '20%',
+    width: '25%',
     height: 50,
     backgroundColor: '#dadbdd',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   dropdownText: {
     fontSize: 19,
@@ -501,9 +503,9 @@ const styles = StyleSheet.create({
   },
   dropdownArea: {
     // alignItems: 'center',
-    width: '19%',
+    width: '22%',
     borderLeftWidth: 1,
-    marginLeft: 16,
+    marginLeft: 10,
     borderRightWidth: 1,
     backgroundColor: 'white',
     borderColor: '#81C0EF',

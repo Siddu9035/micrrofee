@@ -23,7 +23,6 @@ import Variety from './screens/Variety';
 import {useNavigation} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import DrawerScreen from './screens/DrawerScreen';
 import {Text, TouchableOpacity, View, StyleSheet, Image} from 'react-native';
 
 const Stack = createStackNavigator();
@@ -116,15 +115,11 @@ export default function App() {
             title: 'Set Password',
           }}
         />
-        <Stack.Screen name="HomeScreen" options={{headerShown: false}}>
-          {props => (
-            <DrawerNavigator
-              {...props}
-              isLoggedIn={isLoggedIn}
-              username={username}
-            />
-          )}
-        </Stack.Screen>
+        <Stack.Screen
+          name="HomeScreen"
+          component={DrawerNavigator}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="Regions"
           component={Regions}
@@ -151,147 +146,69 @@ export default function App() {
   );
 }
 
-const HomeTabNavigator = () => {
-  const navigation = useNavigation();
+const HomeTabNavigator = ({navigation}) => {
   return (
     <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: '#9ACD32',
-        tabBarInactiveTintColor: 'gray',
-        tabBarLabelStyle: {
-          fontSize: 15,
-          alignItems: 'center',
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused, color, size}) => {
+          let iconName;
+
+          if (route.name === 'Home') {
+            iconName = focused ? 'home' : 'home';
+          } else if (route.name === 'Search') {
+            iconName = focused ? 'search' : 'search';
+          } else if (route.name === 'Wishlist') {
+            iconName = focused ? 'heart' : 'heart';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? 'user' : 'user';
+          }
+
+          return (
+            <TouchableOpacity
+              onPress={() => navigation.navigate(route.name)}
+              style={{alignSelf: 'center', justifyContent: 'center'}}>
+              <Icon
+                name={iconName}
+                size={focused ? 25 : 20}
+                color={focused ? '#9ACD32' : 'gray'}
+              />
+            </TouchableOpacity>
+          );
         },
+        tabBarLabelStyle: {
+          fontSize: 15, // Default font size
+        },
+        tabBarLabel: ({focused, color}) => {
+          const labelStyle = {
+            fontSize: focused ? 18 : 15, // Custom font size when focused
+            fontWeight: focused ? 'bold' : 'normal', // Custom font weight when focused
+            color: focused ? '#9ACD32' : 'gray', // Custom color when focused
+          };
+
+          return <Text style={labelStyle}>{route.name}</Text>;
+        },
+        headerShown: false,
         tabBarStyle: {
           height: 60,
-          padding: 5,
           justifyContent: 'center',
           alignItems: 'center',
         },
-        tabBarItemStyle: {
-          marginVertical: 0,
-        },
         tabBarHideOnKeyboard: true,
-      }}>
-      <Tab.Screen
-        name="HomeTab"
-        component={HomeScreen}
-        options={({navigation}) => ({
-          tabBarLabel: 'Home',
-          tabBarIcon: ({focused}) => (
-            <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-              <Icon
-                name="home"
-                color={focused ? '#9ACD32' : 'gray'}
-                size={focused ? 25 : 20}
-              />
-            </TouchableOpacity>
-          ),
-          headerShown: false,
-          tabBarLabel: ({focused}) => (
-            <Text
-              style={{
-                fontSize: focused ? 18 : 15,
-                fontWeight: focused ? 'bold' : 'normal',
-                color: 'black',
-              }}>
-              Home
-            </Text>
-          ),
-        })}
-      />
-
-      <Tab.Screen
-        name="Search"
-        component={SearchScreen}
-        options={{
-          tabBarLabel: 'Search',
-          tabBarIcon: ({focused}) => (
-            <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-              <Icon
-                name="search"
-                color={focused ? '#9ACD32' : 'gray'}
-                size={focused ? 25 : 20}
-              />
-            </TouchableOpacity>
-          ),
-          tabBarLabel: ({focused}) => (
-            <Text
-              style={{
-                fontSize: focused ? 18 : 15,
-                fontWeight: focused ? 'bold' : 'normal',
-                color: 'black',
-              }}>
-              Search
-            </Text>
-          ),
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="Wishlist"
-        component={WishListScreen}
-        options={{
-          tabBarLabel: 'Wishlist',
-          tabBarIcon: ({focused}) => (
-            <TouchableOpacity onPress={() => navigation.navigate('Wishlist')}>
-              <Icon
-                name="heart"
-                color={focused ? '#9ACD32' : 'gray'}
-                size={focused ? 25 : 20}
-              />
-            </TouchableOpacity>
-          ),
-          tabBarLabel: ({focused}) => (
-            <Text
-              style={{
-                fontSize: focused ? 18 : 15,
-                fontWeight: focused ? 'bold' : 'normal',
-                color: 'black',
-              }}>
-              Wishlist
-            </Text>
-          ),
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          tabBarLabel: 'Profile',
-          tabBarIcon: ({focused}) => (
-            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-              <Icon
-                name="user"
-                color={focused ? '#9ACD32' : 'gray'}
-                size={focused ? 25 : 20}
-              />
-            </TouchableOpacity>
-          ),
-          tabBarLabel: ({focused}) => (
-            <Text
-              style={{
-                fontSize: focused ? 18 : 15,
-                fontWeight: focused ? 'bold' : 'normal',
-                color: 'black',
-              }}>
-              Profile
-            </Text>
-          ),
-          headerShown: false,
-        }}
-      />
+      })}>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Search" component={SearchScreen} />
+      <Tab.Screen name="Wishlist" component={WishListScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 };
 
 const CustomDrawerContent = ({navigation, isLoggedIn, username, ...props}) => {
   const handleButtonPress = () => {
-    // Handle the button press action here
     console.log('Button Pressed');
     navigation.navigate('login');
   };
+
   return (
     <DrawerContentScrollView {...props}>
       <View>
@@ -301,47 +218,56 @@ const CustomDrawerContent = ({navigation, isLoggedIn, username, ...props}) => {
               <Text style={styles.greetingText}>Welcome back,</Text>
               <Text style={styles.usertext}>{username}</Text>
             </View>
+            <View style={styles.line} />
+            <DrawerItemList {...props} />
+            <View style={styles.bottomline} />
+            <Image
+              style={styles.img}
+              source={require('./assets/images/logo1.png')}
+            />
+            <Text style={styles.testversion}>Version Test 4</Text>
+            <View style={styles.userDetailsContainer}>
+              <Text style={styles.userDetailsText}>Username: {username}</Text>
+              {/* Add more user details here */}
+            </View>
           </View>
         ) : (
-          <View style={styles.loginHandler}>
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={handleButtonPress}>
-              <Text style={styles.text}>Login</Text>
-            </TouchableOpacity>
+          <View>
+            <View style={styles.loginHandler}>
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={handleButtonPress}>
+                <Text style={styles.text}>Login</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.line} />
+            <DrawerItemList {...props} />
+            <View style={styles.bottomline} />
+            <Image
+              style={styles.img}
+              source={require('./assets/images/logo1.png')}
+            />
+            <Text style={styles.testversion}>Version Test 4</Text>
           </View>
         )}
-        <View style={styles.line} />
-        <DrawerItemList {...props} />
-        <View style={styles.bottomline} />
-        <Image
-          style={styles.img}
-          source={require('./assets/images/logo1.png')}
-        />
-        <Text style={styles.testversion}>Version Test 4</Text>
       </View>
     </DrawerContentScrollView>
   );
 };
+
 const styles = StyleSheet.create({
-  loginHandler: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  greetingContainer: {
+    marginVertical: 10,
+    paddingHorizontal: 20,
   },
-  loginButton: {
-    backgroundColor: '#52850f',
-    width: 160,
-    height: 45,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 20,
-    borderRadius: 20,
-    marginBottom: 15,
-    marginTop: 30,
-  },
-  text: {
-    color: '#fff',
+  greetingText: {
     fontSize: 18,
+    fontWeight: '600',
+  },
+  usertext: {
+    fontSize: 16,
+    fontWeight: '400',
+    marginTop: 5,
   },
   line: {
     borderBottomWidth: 1,
@@ -367,23 +293,36 @@ const styles = StyleSheet.create({
     marginTop: -15,
     color: 'black',
   },
-  greetingText: {
-    color: 'black',
+  userDetailsContainer: {
+    marginVertical: 10,
+    paddingHorizontal: 20,
   },
-  usertext: {
-    color: 'black',
+  userDetailsText: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 5,
   },
-  greetingContainer: {},
+  loginHandler: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  loginButton: {
+    backgroundColor: '#52850f',
+    width: 160,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 20,
+    borderRadius: 20,
+  },
+  text: {
+    color: '#fff',
+    fontSize: 18,
+  },
 });
-const DrawerNavigator = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track user login state
-  const [username, setUsername] = useState('siddappa'); // Track username
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    setUsername(username);
-  };
-
+const DrawerNavigator = ({isLoggedIn, username}) => {
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -399,18 +338,19 @@ const DrawerNavigator = () => {
           marginVertical: 8,
           height: 55,
         },
+        drawerActiveTintColor: 'lightblue',
       }}
-      // Pass isLoggedIn, username, handleLogout as props to CustomDrawerContent
       drawerContent={props => (
         <CustomDrawerContent
           navigation={props.navigation}
-          // handleLogin={handleLogin}
           isLoggedIn={isLoggedIn}
           username={username}
           {...props}
         />
       )}>
-      <Drawer.Screen name="Home" component={HomeTabNavigator} />
+      <Drawer.Screen name="HomeDrawer" component={HomeTabNavigator} options={{
+        drawerLabel: 'Home',
+      }} />
       <Drawer.Screen
         name="Regions"
         component={Regions}
@@ -418,7 +358,15 @@ const DrawerNavigator = () => {
           title: 'Regions/Origins',
         }}
       />
-      <Drawer.Screen name="Variety" component={Variety} options={{}} />
+      <Drawer.Screen
+        name="Variety"
+        component={Variety}
+        options={
+          {
+            // Add options if needed
+          }
+        }
+      />
       <Drawer.Screen
         name="NewToOldest"
         component={NewToOldest}
