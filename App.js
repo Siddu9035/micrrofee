@@ -23,7 +23,7 @@ import Variety from './screens/Variety';
 import {useNavigation} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// import DrawerScreen from './screens/DrawerScreen';
+import DrawerScreen from './screens/DrawerScreen';
 import {Text, TouchableOpacity, View, StyleSheet, Image} from 'react-native';
 
 const Stack = createStackNavigator();
@@ -31,12 +31,12 @@ const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-  const [loggedIn, setLoggedIn] = useState(false); // Track user login state
-  const [username, setUsername] = useState(null); // Track username
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track user login state
+  const [username, setUsername] = useState('siddappa'); // Track username
 
   // Function to handle user login
   const handleLogin = username => {
-    setLoggedIn(true);
+    setIsLoggedIn(true);
     setUsername(username);
   };
 
@@ -114,7 +114,7 @@ export default function App() {
           {props => (
             <DrawerNavigator
               {...props}
-              loggedIn={loggedIn}
+              isLoggedIn={isLoggedIn}
               username={username}
             />
           )}
@@ -279,7 +279,7 @@ const HomeTabNavigator = () => {
   );
 };
 
-const CustomDrawerContent = ({navigation, loggedIn, username, ...props}) => {
+const CustomDrawerContent = ({navigation, isLoggedIn, username, ...props}) => {
   const handleButtonPress = () => {
     // Handle the button press action here
     console.log('Button Pressed');
@@ -288,7 +288,7 @@ const CustomDrawerContent = ({navigation, loggedIn, username, ...props}) => {
   return (
     <DrawerContentScrollView {...props}>
       <View>
-        {loggedIn ? (
+        {isLoggedIn ? (
           <View>
             <View style={styles.greetingContainer}>
               <Text style={styles.greetingText}>Welcome back,</Text>
@@ -369,11 +369,11 @@ const styles = StyleSheet.create({
   greetingContainer: {},
 });
 const DrawerNavigator = () => {
-  const [loggedIn, setLoggedIn] = useState(false); // Track user login state
-  const [username, setUsername] = useState(null); // Track username
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track user login state
+  const [username, setUsername] = useState('siddappa'); // Track username
 
   const handleLogin = () => {
-    setLoggedIn(true);
+    setIsLoggedIn(true);
     setUsername(username);
   };
 
@@ -397,7 +397,8 @@ const DrawerNavigator = () => {
       drawerContent={props => (
         <CustomDrawerContent
           navigation={props.navigation}
-          loggedIn={loggedIn}
+          // handleLogin={handleLogin}
+          isLoggedIn={isLoggedIn}
           username={username}
           {...props}
         />
