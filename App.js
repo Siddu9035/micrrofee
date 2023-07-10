@@ -44,7 +44,13 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="login" options={{headerShown: false}}>
-          {(props) => <LoginPage {...props} username={username} handleLogin={handleLogin} />}
+          {props => (
+            <LoginPage
+              {...props}
+              username={username}
+              handleLogin={handleLogin}
+            />
+          )}
         </Stack.Screen>
         <Stack.Screen
           name="ForgotPassword"
@@ -170,7 +176,7 @@ const HomeTabNavigator = () => {
       <Tab.Screen
         name="HomeTab"
         component={HomeScreen}
-        options={{
+        options={({navigation}) => ({
           tabBarLabel: 'Home',
           tabBarIcon: ({focused}) => (
             <TouchableOpacity onPress={() => navigation.navigate('Home')}>
@@ -192,8 +198,9 @@ const HomeTabNavigator = () => {
               Home
             </Text>
           ),
-        }}
+        })}
       />
+
       <Tab.Screen
         name="Search"
         component={SearchScreen}
