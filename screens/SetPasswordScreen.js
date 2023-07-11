@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'lightblue',
     borderRadius: 7,
-    width: 350,
+    width: '100%',
     // marginLeft: 40,
     alignItems: 'center',
     marginTop: 10,
@@ -144,12 +144,13 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     backgroundColor: 'white',
     paddingRight: 50,
-    marginHorizontal: 25,
+    marginHorizontal: 18,
     color: 'black',
   },
   textInput: {
     flexDirection: 'row',
     alignItems: 'center',
+    width: '100%',
   },
   iconContainer: {
     position: 'absolute',

@@ -21,7 +21,7 @@ const Loginpage = ({navigation}) => {
     if (email == '' || password == '') {
       setError('please enter your login credentials');
     } else {
-      navigation.navigate('HomeScreen');
+      navigation.navigate('Home');
     }
   };
 
@@ -85,7 +85,7 @@ const Loginpage = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={() => {
-          navigation.navigate('HomeScreen');
+          navigation.navigate('Home');
         }}>
           <Text style={styles.footer}>Join as guest</Text>
         </TouchableOpacity>
@@ -115,42 +115,42 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   inputContainer: {
-    width: '95%',
+    width: '100%',
     alignItems: 'center',
   },
   email: {
-    flex: 1,
+    // flex: 1,
     height: 50,
     color: 'black',
     fontSize: 18,
     borderWidth: 2,
     borderColor: 'lightblue',
     borderRadius: 7,
-    width: '95%',
+    width: '100%',
     marginVertical: 10,
     backgroundColor: 'white',
     paddingHorizontal: 10,
-    marginHorizontal: 4,
+    // marginHorizontal: 4,
   },
   Password: {
     color: 'black',
-    flex: 1,
+    // flex: 1,
     height: 50,
     fontSize: 18,
     borderWidth: 2,
     borderColor: 'lightblue',
     borderRadius: 7,
-    width: '95%',
+    width: '100%',
     marginVertical: 10,
     paddingLeft: 10,
     backgroundColor: 'white',
     paddingRight: 55,
-    marginHorizontal: 5,
+    // marginHorizontal: 5,
   },
   textInput: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '95%',
+    width: '100%',
   },
   iconContainer: {
     position: 'absolute',

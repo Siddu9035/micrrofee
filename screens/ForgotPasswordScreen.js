@@ -123,7 +123,7 @@ const ForgotPasswordScreeen = () => {
               style={[
                 styles.errorText,
                 {
-                  marginLeft: isClicked ? 30 : 120,
+                  marginLeft: isClicked ? 10 : 100,
                 },
               ]}>
               {phoneNumber}
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderColor: '#81C0EF',
     marginHorizontal: 20,
-    width: '90%',
+    width: '85%',
   },
   dropdownSelector: {
     width: 70,
