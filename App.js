@@ -301,7 +301,6 @@ function App() {
           }}
         />
       </Drawer.Navigator>
-      <StackNavigator/>
     </NavigationContainer>
   );
 }
