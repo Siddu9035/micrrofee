@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {DrawerItem, createDrawerNavigator} from '@react-navigation/drawer';
@@ -19,7 +19,7 @@ import WishListScreen from './screens/WishListScreen';
 import Regions from './screens/Regions';
 import NewToOldest from './screens/NewToOldest';
 import Variety from './screens/Variety';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -172,40 +172,55 @@ function StackNavigator() {
 
 function CustomDrawerContent(props) {
   const navigation = useNavigation();
-  const isLoggedIn = true; // Assuming this variable is set based on login state
-  const userName = "Siddappa"; // Assuming the user name is obtained from user data
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+
+  useEffect(() => {
+    // Fetch the email from AsyncStorage
+    const fetchUserEmail = async () => {
+      try {
+        const email = await AsyncStorage.getItem('userEmail');
+        if (email) {
+          setUserEmail(email);
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        console.log('Error retrieving user email from AsyncStorage:', error);
+      }
+    };
+
+    fetchUserEmail();
+  }, []);
 
   const handleLogin = () => {
-    // Implement your custom login logic here
-    // For example, navigate to the LoginPage
     navigation.navigate('login');
   };
+
   return (
     <DrawerContentScrollView {...props}>
-      {isLoggedIn ? (
+      {isLoggedIn && (
         <DrawerItem
           label={() => (
             <View style={styles.afterLoginContainer}>
               <Text style={styles.normalText}>Welcome back,</Text>
-              <Text style={styles.afterLogin}>{userName}</Text>
+              <Text style={styles.afterLogin}>{userEmail}</Text>
             </View>
           )}
         />
-      ) : (
+      )}
+      {!isLoggedIn && (
         <DrawerItem
           label={() => (
             <View style={styles.loginButtonContainer}>
               <TouchableOpacity
                 style={styles.loginButton}
-                onPress={handleLogin}
-              >
+                onPress={handleLogin}>
                 <Text style={styles.loginText}>Login</Text>
               </TouchableOpacity>
             </View>
           )}
         />
       )}
-
       <View style={styles.line} />
       <DrawerItemList {...props} />
       <View style={styles.bottomline} />
@@ -214,6 +229,7 @@ function CustomDrawerContent(props) {
     </DrawerContentScrollView>
   );
 }
+
 
 const styles = StyleSheet.create({
   loginButtonContainer: {
@@ -274,16 +290,21 @@ const styles = StyleSheet.create({
   },
 });
 // Define the root component
-function App() {
+function App({isLoggedIn, userEmail, handleLogin}) {
   return (
     <NavigationContainer>
-      <StackNavigator/>
+      <StackNavigator>
+      <DrawerNavigator>
+          <CustomDrawerContent
+            isLoggedIn={isLoggedIn}
+            userEmail={userEmail}
+            handleLogin={handleLogin}
+          />
+        </DrawerNavigator>
+      </StackNavigator>
     </NavigationContainer>
   );
 }
-
-export default App;
-
 const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
@@ -303,9 +324,7 @@ const DrawerNavigator = () => {
         drawerActiveTintColor: 'lightblue',
       }}
       drawerContent={props => (
-        <CustomDrawerContent
-          {...props}
-        />
+        <CustomDrawerContent {...props} />
       )}>
       <Drawer.Screen
         name="HomeDrawer"
@@ -340,3 +359,7 @@ const DrawerNavigator = () => {
     </Drawer.Navigator>
   );
 };
+
+export default App;
+
+

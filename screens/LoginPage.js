@@ -10,19 +10,30 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Loginpage = ({navigation}) => {
-  const [email, setEmail] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hidePass, setHidePassword] = useState(false);
   const [error, setError] = useState('');
 
-  const handleLogin = () => {
-    if (email == '' || password == '') {
+  const handleLogin = async () => {
+    if (userEmail == '' || password == '') {
       setError('please enter your login credentials');
     } else {
+      // Store the email in local storage
+      await AsyncStorage.setItem('userEmail', userEmail);
+      setError('');
+      setUserEmail('');
+      setPassword('');
       navigation.navigate('Home');
+      await clearStoredEmail();
     }
+  };
+  const clearStoredEmail = async () => {
+    await AsyncStorage.removeItem('userEmail');
+    console.log('email removed');
   };
 
   return (
@@ -30,7 +41,10 @@ const Loginpage = ({navigation}) => {
       <View style={styles.body}>
         <Text style={styles.header}>Welcome to Microffee</Text>
 
-        <Image style={styles.img} source={require('../assets/images/logo1.png')} />
+        <Image
+          style={styles.img}
+          source={require('../assets/images/logo1.png')}
+        />
 
         {error && <Text style={styles.errorText}>{error}</Text>}
 
@@ -38,8 +52,9 @@ const Loginpage = ({navigation}) => {
           <TextInput
             style={styles.email}
             placeholder="Email"
+            value={userEmail}
             placeholderTextColor="#808B96"
-            onChangeText={e => setEmail(e)}
+            onChangeText={e => setUserEmail(e)}
             onFocus={() => setError('')}
             keyboardType="email-address"
           />
@@ -47,6 +62,7 @@ const Loginpage = ({navigation}) => {
         <View style={styles.textInput}>
           <TextInput
             style={styles.Password}
+            value={password}
             placeholder="Password"
             placeholderTextColor="#808B96"
             secureTextEntry={!hidePass}
@@ -84,9 +100,7 @@ const Loginpage = ({navigation}) => {
             <Text style={styles.signupText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => {
-          navigation.navigate('Home');
-        }}>
+        <TouchableOpacity onPress={() => {navigation.navigate('Home')}}>
           <Text style={styles.footer}>Join as guest</Text>
         </TouchableOpacity>
       </View>

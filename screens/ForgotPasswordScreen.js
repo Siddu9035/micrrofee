@@ -8,7 +8,6 @@ const ForgotPasswordScreeen = () => {
   const [showPhoneNumberError, setshowPhoneNumberError] = useState(false);
 
   const validatePhoneNumber = () => {
-    // let regex = /^\([6-9]\d{3}\) \d{3}-\d{4}$/;
     let regex = /^\([6-9][0-9]{2}\) [0-9]{3}-[0-9]{4}$/;
     if (!regex.test(mobileNumber)) {
       setPhoneNumberError('please enter valid number');
