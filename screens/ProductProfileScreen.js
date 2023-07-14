@@ -31,6 +31,26 @@ const ProductProfileScreen = ({navigation}) => {
   const [collapsed, setCollapsed] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [count, setCount] = useState(0);
+  const [selectitem, setSelectItem] = useState('0');
+  const [isClicked, setIsClicked] = useState(false);
+  const [selectData, setSelectData] = useState([
+    {
+      itemName: '1',
+    },
+    {
+      itemName: '2',
+    },
+    {
+      itemName: '3',
+    },
+  ]);
+  const [isIcon1Clicked, setIsIcon1Clicked] = useState(false);
+  const [isIcon2Clicked, setIsIcon2Clicked] = useState(false);
+  // const [currentIcon, setCurrentIcon] = useState('');
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedUnit, setSelectedUnit] = useState('');
+  const price = 25;
 
   const handleClick = () => {
     setCollapsed(!collapsed);
@@ -46,6 +66,27 @@ const ProductProfileScreen = ({navigation}) => {
     } else {
       Alert.alert('Warning!!', 'Please Login');
     }
+  };
+
+  const incrementCount = () => {
+    setCount(count + 1);
+  };
+
+  const decrementCount = () => {
+    if (count > 0) {
+      setCount(count - 1);
+    }
+  };
+  const handleIcon1Press = () => {
+    setIsIcon1Clicked(!isIcon1Clicked);
+    setIsIcon2Clicked(false); // Deselect the other icon
+    setIsExpanded(true);
+  };
+
+  const handleIcon2Press = () => {
+    setIsIcon2Clicked(!isIcon2Clicked);
+    setIsIcon1Clicked(false); // Deselect the other icon
+    setIsExpanded(true);
   };
   return (
     <View style={styles.container}>
@@ -103,26 +144,110 @@ const ProductProfileScreen = ({navigation}) => {
               </View>
             ))}
             {collapsed ? (
-              <View>
+              <View style={{flex: 1}}>
                 <View style={styles.selectedFlex}>
                   <Text style={styles.selectLot}>Select A Lot</Text>
                   <View style={styles.selectedIcon}>
-                    <Icon
-                      name="circle-thin"
-                      size={25}
-                      color={'black'}
-                      style={{marginHorizontal: 5}}
-                    />
+                    <TouchableOpacity onPress={handleIcon1Press}>
+                      <Icon
+                        name="circle-thin"
+                        size={25}
+                        color={isIcon1Clicked ? 'green' : 'black'}
+                        style={{marginHorizontal: 5}}
+                      />
+                    </TouchableOpacity>
                     <Text style={styles.nano}>nano</Text>
                   </View>
                   <View style={styles.selectedIcon}>
-                    <Icon
-                      name="circle-thin"
-                      size={25}
-                      color={'black'}
-                      style={{marginHorizontal: 5}}
-                    />
+                    <TouchableOpacity onPress={handleIcon2Press}>
+                      <Icon
+                        name="circle-thin"
+                        size={25}
+                        color={isIcon2Clicked ? 'green' : 'black'}
+                        style={{marginHorizontal: 5}}
+                      />
+                    </TouchableOpacity>
                     <Text style={styles.nano}>micro</Text>
+                  </View>
+                </View>
+                <View style={styles.chooseItem}>
+                  {isExpanded && (
+                    <>
+                      <View style={styles.choosingItem}>
+                        <Text style={styles.chooseUnit}>
+                          Choose unit by lbs
+                        </Text>
+                      </View>
+                      <View style={styles.dropDownContainer}>
+                        <TouchableOpacity
+                          style={styles.dropdownSelector}
+                          onPress={() => {
+                            setIsClicked(!isClicked);
+                          }}>
+                          <Text style={styles.dropdownText}>{selectitem}</Text>
+                          <Icon
+                            name={isClicked ? 'chevron-up' : 'chevron-down'}
+                            size={25}
+                            color="#9ACD32"
+                            style={{marginLeft: 35}}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                      {isClicked && (
+                        <View style={styles.dropdownArea}>
+                          <View>
+                            {selectData.map((item, index) => (
+                              <TouchableOpacity
+                                key={index}
+                                style={[
+                                  styles.countryitem,
+                                  item.itemName == selectitem &&
+                                    styles.selectedItem,
+                                ]}
+                                onPress={() => {
+                                  setSelectItem(item.itemName);
+                                  setIsClicked(false);
+                                  setSelectedUnit(item.itemName);
+                                }}>
+                                <Text
+                                  style={[
+                                    styles.countryText,
+                                    item.itemName == selectitem &&
+                                      styles.selectItemText,
+                                  ]}>
+                                  {item.itemName}
+                                </Text>
+                              </TouchableOpacity>
+                            ))}
+                          </View>
+                        </View>
+                      )}
+                    </>
+                  )}
+                </View>
+                <View>
+                  <View style={styles.quantityFlex}>
+                    {selectedUnit !== '' && (
+                      <>
+                        <Text style={styles.quantityText}>Quantity</Text>
+                        <View style={styles.counter}>
+                          <TouchableOpacity
+                            style={styles.plusButton}
+                            onPress={incrementCount}>
+                            <Icon name="plus" size={20} color={'black'} />
+                          </TouchableOpacity>
+
+                          <Text style={{color: 'black'}}>{count}</Text>
+
+                          <TouchableOpacity onPress={decrementCount}>
+                            <Icon name="minus" size={20} color={'black'} />
+                          </TouchableOpacity>
+                        </View>
+                        <View style={styles.priceContainer}>
+                          <Text style={styles.priceText}>${count * price}</Text>
+                        </View>
+                      </>
+                    )}
                   </View>
                 </View>
               </View>
@@ -140,8 +265,10 @@ const ProductProfileScreen = ({navigation}) => {
                 <View style={styles.aboutCoffee}>
                   <Text style={styles.paragraph}>
                     <Text style={styles.textBold}>About coffee: </Text>
-                    This JavaScript Tutorial is designed to help both beginners
-                    and experienced professionals
+                    React Native UI Kitten is one of the most popular UI
+                    frameworks available in the React Native world. They provide
+                    so many tools and a drop-down component is one of them. They
+                    have named the component Select.
                   </Text>
                 </View>
                 <View style={styles.line3} />
@@ -157,7 +284,9 @@ const ProductProfileScreen = ({navigation}) => {
               </TouchableOpacity>
             </View>
             <View style={styles.buyButton}>
-              <TouchableOpacity style={styles.buyNowButton}>
+              <TouchableOpacity
+                style={styles.buyNowButton}
+                onPress={handleAddToCart}>
                 <Text style={styles.buyingText}>Buy Now</Text>
               </TouchableOpacity>
             </View>
@@ -352,7 +481,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: 40,
     alignItems: 'center',
-    marginHorizontal: 25,
+    marginHorizontal: 14,
     marginVertical: 20,
     elevation: 10,
     shadowColor: 'black',
@@ -374,5 +503,143 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 15,
     fontWeight: 'bold',
+  },
+  dropDownContainer: {
+    backgroundColor: '#FFF',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 10,
+    width: '40%',
+    height: 40,
+    color: 'black',
+    alignItems: 'center',
+    marginLeft: 20,
+    justifyContent: 'space-evenly',
+  },
+  dropdownSelector: {
+    flexDirection: 'row',
+  },
+  dropdownText: {
+    fontSize: 19,
+    color: 'black',
+  },
+  dropdownArea: {
+    // flex: 1,
+    width: '40%',
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    backgroundColor: 'white',
+    borderColor: '#81C0EF',
+    shadowColor: 'black',
+    elevation: 8,
+    // marginTop: 130,
+  },
+  countryText: {
+    fontSize: 20,
+    padding: 1,
+    color: 'black',
+    fontWeight: 'bold',
+  },
+  countryitem: {
+    color: 'black',
+    fontWeight: 'bold',
+  },
+  selectedItem: {
+    backgroundColor: '#52850f',
+    color: 'white',
+  },
+  selectItemText: {
+    color: 'white',
+  },
+  chooseItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 14,
+    marginVertical: 15,
+  },
+  chooseUnit: {
+    color: 'black',
+    fontSize: 15,
+    height: 40,
+    textAlignVertical: 'center',
+    fontWeight: 'bold',
+  },
+  choosingItem: {
+    backgroundColor: 'white',
+    width: '50%',
+    alignItems: 'center',
+    elevation: 10,
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+  },
+  quantityFlex: {
+    flexDirection: 'row',
+  },
+  counter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    justifyContent: 'space-between',
+    height: 40,
+    padding: 10,
+    shadowColor: 'black',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 10,
+    marginLeft: 15,
+    marginRight: 15,
+    width: '30%',
+    marginVertical: 20,
+  },
+  plusButton: {},
+  quantityText: {
+    color: 'black',
+    backgroundColor: 'white',
+    textAlignVertical: 'center',
+    marginLeft: 14,
+    marginVertical: 20,
+    height: 40,
+    width: '30%',
+    textAlign: 'center',
+    fontSize: 14,
+    fontWeight: 'bold',
+    elevation: 10,
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+  },
+  priceContainer: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    width: '23%',
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: 'black',
+    shadowOffset: {width: 0, height: 2},
+    elevation: 10,
+    marginVertical: 20,
+    borderWidth: 1,
+    borderColor: '#9ACD32',
+  },
+  priceText: {
+    color: 'black',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  circleIconSelected: {
+    borderColor: 'green',
   },
 });
