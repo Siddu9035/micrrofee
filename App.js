@@ -19,6 +19,7 @@ import WishListScreen from './screens/WishListScreen';
 import Regions from './screens/Regions';
 import NewToOldest from './screens/NewToOldest';
 import Variety from './screens/Variety';
+import ProductProfileScreen from './screens/ProductProfileScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -91,7 +92,7 @@ function TabNavigator({navigation}) {
 function StackNavigator() {
   return (
     <Stack.Navigator initialRouteName="login">
-      <Stack.Screen
+      {/* <Stack.Screen
         name="login"
         component={LoginPage}
         options={{headerShown: false}}
@@ -159,13 +160,19 @@ function StackNavigator() {
           headerTitleAlign: 'center',
           title: 'Set Password',
         }}
-      />
-      <Stack.Screen
+      /> */}
+      {/* <Stack.Screen
         name="Home"
         component={DrawerNavigator}
         options={{headerShown: false}}
+      /> */}
+      <Stack.Screen
+        name="ProductProfile"
+        component={ProductProfileScreen}
+        options={{
+          headerShown: false,
+        }}
       />
-      {/* Add more screens here */}
     </Stack.Navigator>
   );
 }
@@ -230,7 +237,6 @@ function CustomDrawerContent(props) {
   );
 }
 
-
 const styles = StyleSheet.create({
   loginButtonContainer: {
     paddingHorizontal: 16,
@@ -294,7 +300,7 @@ function App({isLoggedIn, userEmail, handleLogin}) {
   return (
     <NavigationContainer>
       <StackNavigator>
-      <DrawerNavigator>
+        <DrawerNavigator>
           <CustomDrawerContent
             isLoggedIn={isLoggedIn}
             userEmail={userEmail}
@@ -323,9 +329,7 @@ const DrawerNavigator = () => {
         },
         drawerActiveTintColor: 'lightblue',
       }}
-      drawerContent={props => (
-        <CustomDrawerContent {...props} />
-      )}>
+      drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen
         name="HomeDrawer"
         component={TabNavigator}
@@ -361,5 +365,3 @@ const DrawerNavigator = () => {
 };
 
 export default App;
-
-
