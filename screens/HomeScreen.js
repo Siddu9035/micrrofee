@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const HomeScreen = ({navigation}) => {
   const FeaturedData = [
     {
-      title: 'java',
+      title: 'Java',
       data: ['Central America', 'BalckCoffee'],
       SectionImage: require('../assets/images/coffee_1.png'),
     },
@@ -117,7 +117,14 @@ const HomeScreen = ({navigation}) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.itemscontainer}>
                 {FeaturedData.map(section => (
-                  <View key={section.title} style={styles.sectionContainer}>
+                  <TouchableOpacity
+                    key={section.title}
+                    style={styles.sectionContainer}
+                    onPress={() =>
+                      navigation.navigate('ProductProfile', {
+                        sectionData: section,
+                      })
+                    }>
                     <View style={styles.featuredContainer}>
                       <Icon
                         name="star"
@@ -139,7 +146,7 @@ const HomeScreen = ({navigation}) => {
                         </Text>
                       ))}
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 ))}
               </View>
             </ScrollView>
@@ -153,7 +160,14 @@ const HomeScreen = ({navigation}) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.itemscontainer}>
                 {latestData.map(section => (
-                  <View key={section.title} style={styles.sectionContainer}>
+                  <TouchableOpacity
+                    key={section.title}
+                    style={styles.sectionContainer}
+                    onPress={() =>
+                      navigation.navigate('ProductProfile', {
+                        sectionData: section,
+                      })
+                    }>
                     <Image
                       style={styles.Sectionimage}
                       source={section.Sectionimage}
@@ -166,7 +180,7 @@ const HomeScreen = ({navigation}) => {
                         </Text>
                       ))}
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 ))}
               </View>
             </ScrollView>

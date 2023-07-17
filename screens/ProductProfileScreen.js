@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Modal} from 'react-native';
 import {
   StyleSheet,
@@ -11,24 +11,9 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const ProductProfileScreen = ({navigation}) => {
-  const FeaturedData = [
-    {
-      title: 'Java',
-      SectionImage: require('../assets/images/coffee_1.png'),
-    },
-  ];
-  const data = [
-    {title: 'origins', data: 'ethiopia'},
-    {title: 'Formsf', data: 'test form'},
-    {title: 'variety', data: 'Java'},
-    {title: 'Altitude', data: 'add'},
-    {title: 'Notes', data: 'loreum ipsum'},
-    {title: 'Process', data: 'test process'},
-    {title: 'Dry fruits', data: 'test method'},
-    {title: 'Certification', data: 'test certiication'},
-    {title: 'Q Grade', data: '79.70'},
-  ];
+const ProductProfileScreen = ({route, navigation}) => {
+  // Get the section data passed as a route parameter
+  const {sectionData} = route.params;
   const [collapsed, setCollapsed] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -51,12 +36,11 @@ const ProductProfileScreen = ({navigation}) => {
   ]);
   const [isIcon1Clicked, setIsIcon1Clicked] = useState(false);
   const [isIcon2Clicked, setIsIcon2Clicked] = useState(false);
-  // const [currentIcon, setCurrentIcon] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState('');
   const [selectedPrice, setSelectedPrice] = useState(25);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  // const price = 25;
+
 
   const handleClick = () => {
     setCollapsed(!collapsed);
@@ -67,8 +51,10 @@ const ProductProfileScreen = ({navigation}) => {
   };
   const handleAddToCart = () => {
     if (!isLoggedIn) {
+      console.log('User is not logged in. Showing modal.');
       setIsModalVisible(true);
     } else {
+      console.log('User is not logged in. Showing modal.');
       setIsModalVisible(false);
     }
   };
@@ -104,62 +90,58 @@ const ProductProfileScreen = ({navigation}) => {
   const closeModal = () => {
     setIsModalVisible(false);
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.Header}>
-        <TouchableOpacity style={styles.iconContainer}>
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={() => navigation.goBack()}>
           <Icon name="angle-left" size={40} color={'white'} />
         </TouchableOpacity>
         <Text style={styles.headerText}>Product Profile</Text>
       </View>
       <View style={styles.subContainer}>
         <View style={styles.contentContainer}>
-          {FeaturedData.map(section => (
-            <View key={section.title} style={styles.sectionContainer}>
-              <View style={styles.featuredContainer}>
+          <View style={styles.featuredContainer}>
+            <Icon name="star" size={20} color="gold" style={styles.starIcon} />
+            <Text style={styles.featuredText}>FEATURED</Text>
+          </View>
+          <Image
+            style={styles.sectionImage}
+            source={sectionData.SectionImage ? sectionData.SectionImage : require('../assets/images/coffee_1.png')}
+          />
+          <Image
+            style={styles.sectionImage}
+            source={sectionData.Sectionimage}
+          />
+          <View style={styles.iconsContainer}>
+            <TouchableOpacity
+              onPress={handleIconPress}
+              style={styles.iconContainer}>
+              <View style={styles.circularBackground}>
                 <Icon
-                  name="star"
-                  size={20}
-                  color="gold"
-                  style={styles.starIcon}
+                  name={isLiked ? 'heart' : 'heart-o'}
+                  size={25}
+                  color={isLiked ? 'red' : 'black'}
                 />
-                <Text style={styles.featuredText}>FEATURED</Text>
               </View>
-              <Image
-                style={styles.sectionImage}
-                source={section.SectionImage}
+            </TouchableOpacity>
+          </View>
+          <View style={styles.textItems}>
+            <Text style={styles.sectionTitle}>{sectionData.title}</Text>
+            <TouchableOpacity onPress={handleClick}>
+              <Icon
+                name={collapsed ? 'chevron-circle-down' : 'chevron-circle-up'}
+                size={28}
+                color={'black'}
+                style={styles.iconUp}
               />
-              <View style={styles.iconsContainer}>
-                <TouchableOpacity
-                  onPress={handleIconPress}
-                  style={styles.iconContainer}>
-                  <View style={styles.circularBackground}>
-                    <Icon
-                      name={isLiked ? 'heart' : 'heart-o'}
-                      size={25}
-                      color={isLiked ? 'red' : 'black'}
-                    />
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.textItems}>
-                <Text style={styles.sectionTitle}>{section.title}</Text>
-                <TouchableOpacity onPress={handleClick}>
-                  <Icon
-                    name={
-                      collapsed ? 'chevron-circle-down' : 'chevron-circle-up'
-                    }
-                    size={28}
-                    color={'black'}
-                    style={styles.iconUp}
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.line} />
-            </View>
-          ))}
+            </TouchableOpacity>
+          </View>
+          <View style={styles.line} />
           <ScrollView style={styles.contentScroll}>
-            {collapsed || isLoggedIn ? (
+            {collapsed && isLoggedIn ? (
               <View style={{flex: 1}}>
                 <View style={styles.selectedFlex}>
                   <Text style={styles.selectLot}>Select A Lot</Text>
@@ -270,14 +252,11 @@ const ProductProfileScreen = ({navigation}) => {
               </View>
             ) : (
               <>
-                <View>
-                  {data.map(item => (
-                    <View key={item.title} style={styles.dataContainer}>
-                      <Text style={styles.title}>{item.title}</Text>
-                      <Text style={styles.data}>{item.data}</Text>
-                    </View>
-                  ))}
-                </View>
+                {sectionData.data.map((item, index) => (
+                  <Text key={index} style={styles.item}>
+                    {item}
+                  </Text>
+                ))}
                 <View style={styles.line2} />
                 <View style={styles.aboutCoffee}>
                   <Text style={styles.paragraph}>
@@ -307,20 +286,20 @@ const ProductProfileScreen = ({navigation}) => {
                 <Text style={styles.buyingText}>Buy Now</Text>
               </TouchableOpacity>
             </View>
-            <Modal
-              visible={isModalVisible}
-              transparent={true}>
-              <View style={styles.modalContainer}>
-                <View style={styles.modalContent}>
-                  <Text style={{color: 'black'}}>Please Login!!</Text>
-                  <TouchableOpacity
-                    style={styles.closeButton}
-                    onPress={closeModal}>
-                    <Text style={styles.closeButtonText}>Ok</Text>
-                  </TouchableOpacity>
+            {isLoggedIn ? null : (
+              <Modal visible={isModalVisible} transparent={true}>
+                <View style={styles.modalContainer}>
+                  <View style={styles.modalContent}>
+                    <Text style={{color: 'black'}}>Please Login!!</Text>
+                    <TouchableOpacity
+                      style={styles.closeButton}
+                      onPress={closeModal}>
+                      <Text style={styles.closeButtonText}>Ok</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-            </Modal>
+              </Modal>
+            )}
           </View>
         </View>
       </View>
@@ -697,5 +676,10 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: 'black',
     fontSize: 16,
+  },
+  item: {
+    color: 'black',
+    paddingLeft: 10,
+    paddingVertical: 5,
   },
 });

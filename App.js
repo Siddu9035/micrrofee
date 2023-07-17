@@ -25,6 +25,7 @@ import {useNavigation} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Text, TouchableOpacity, View, StyleSheet, Image} from 'react-native';
+import {AuthProvider} from './screens/AuthContext';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -92,7 +93,7 @@ function TabNavigator({navigation}) {
 function StackNavigator() {
   return (
     <Stack.Navigator initialRouteName="login">
-      {/* <Stack.Screen
+      <Stack.Screen
         name="login"
         component={LoginPage}
         options={{headerShown: false}}
@@ -160,12 +161,12 @@ function StackNavigator() {
           headerTitleAlign: 'center',
           title: 'Set Password',
         }}
-      /> */}
-      {/* <Stack.Screen
+      />
+      <Stack.Screen
         name="Home"
         component={DrawerNavigator}
         options={{headerShown: false}}
-      /> */}
+      />
       <Stack.Screen
         name="ProductProfile"
         component={ProductProfileScreen}
@@ -195,7 +196,6 @@ function CustomDrawerContent(props) {
         console.log('Error retrieving user email from AsyncStorage:', error);
       }
     };
-
     fetchUserEmail();
   }, []);
 
@@ -296,20 +296,29 @@ const styles = StyleSheet.create({
   },
 });
 // Define the root component
-function App({isLoggedIn, userEmail, handleLogin}) {
+function App({userEmail}) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogin = () => {
+    // Perform your login logic here
+    // Once the user is successfully logged in, set the isLoggedIn state to true
+    setIsLoggedIn(true);
+  };
   return (
-    <NavigationContainer>
-      <StackNavigator>
-        <DrawerNavigator>
-          <CustomDrawerContent
-            isLoggedIn={isLoggedIn}
-            userEmail={userEmail}
-            handleLogin={handleLogin}
-          />
-          {isLoggedIn && <ProductProfileScreen/>}
-        </DrawerNavigator>
-      </StackNavigator>
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <StackNavigator>
+          <DrawerNavigator>
+            <CustomDrawerContent
+              isLoggedIn={isLoggedIn}
+              userEmail={userEmail}
+              handleLogin={handleLogin}
+            />
+            <ProductProfileScreen isLoggedIn={isLoggedIn} />
+          </DrawerNavigator>
+        </StackNavigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
 const DrawerNavigator = () => {

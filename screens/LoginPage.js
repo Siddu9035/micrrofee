@@ -17,6 +17,8 @@ const Loginpage = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [hidePass, setHidePassword] = useState(false);
   const [error, setError] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
 
   const handleLogin = async () => {
     if (userEmail == '' || password == '') {
