@@ -306,6 +306,7 @@ function App({isLoggedIn, userEmail, handleLogin}) {
             userEmail={userEmail}
             handleLogin={handleLogin}
           />
+          {isLoggedIn && <ProductProfileScreen/>}
         </DrawerNavigator>
       </StackNavigator>
     </NavigationContainer>

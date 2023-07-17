@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {Modal} from 'react-native';
 import {
   StyleSheet,
   Text,
@@ -37,12 +38,15 @@ const ProductProfileScreen = ({navigation}) => {
   const [selectData, setSelectData] = useState([
     {
       itemName: '1',
+      price: '25',
     },
     {
       itemName: '2',
+      price: '50',
     },
     {
       itemName: '3',
+      price: '75',
     },
   ]);
   const [isIcon1Clicked, setIsIcon1Clicked] = useState(false);
@@ -50,7 +54,9 @@ const ProductProfileScreen = ({navigation}) => {
   // const [currentIcon, setCurrentIcon] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState('');
-  const price = 25;
+  const [selectedPrice, setSelectedPrice] = useState(25);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  // const price = 25;
 
   const handleClick = () => {
     setCollapsed(!collapsed);
@@ -60,11 +66,18 @@ const ProductProfileScreen = ({navigation}) => {
     setIsLiked(!isLiked);
   };
   const handleAddToCart = () => {
-    if (isLoggedIn) {
-      // Perform the action for adding to cart
-      // ...
+    if (!isLoggedIn) {
+      setIsModalVisible(true);
     } else {
-      Alert.alert('Warning!!', 'Please Login');
+      setIsModalVisible(false);
+    }
+  };
+
+  const handleBuyNow = () => {
+    if (!isLoggedIn) {
+      setIsModalVisible(true);
+    } else {
+      setIsModalVisible(false);
     }
   };
 
@@ -88,6 +101,9 @@ const ProductProfileScreen = ({navigation}) => {
     setIsIcon1Clicked(false); // Deselect the other icon
     setIsExpanded(true);
   };
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
   return (
     <View style={styles.container}>
       <View style={styles.Header}>
@@ -98,59 +114,59 @@ const ProductProfileScreen = ({navigation}) => {
       </View>
       <View style={styles.subContainer}>
         <View style={styles.contentContainer}>
-          <ScrollView style={styles.contentScroll}>
-            {FeaturedData.map(section => (
-              <View key={section.title} style={styles.sectionContainer}>
-                <View style={styles.featuredContainer}>
-                  <Icon
-                    name="star"
-                    size={20}
-                    color="gold"
-                    style={styles.starIcon}
-                  />
-                  <Text style={styles.featuredText}>FEATURED</Text>
-                </View>
-                <Image
-                  style={styles.sectionImage}
-                  source={section.SectionImage}
+          {FeaturedData.map(section => (
+            <View key={section.title} style={styles.sectionContainer}>
+              <View style={styles.featuredContainer}>
+                <Icon
+                  name="star"
+                  size={20}
+                  color="gold"
+                  style={styles.starIcon}
                 />
-                <View style={styles.iconsContainer}>
-                  <TouchableOpacity
-                    onPress={handleIconPress}
-                    style={styles.iconContainer}>
-                    <View style={styles.circularBackground}>
-                      <Icon
-                        name={isLiked ? 'heart' : 'heart-o'}
-                        size={25}
-                        color={isLiked ? 'red' : 'black'}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.textItems}>
-                  <Text style={styles.sectionTitle}>{section.title}</Text>
-                  <TouchableOpacity onPress={handleClick}>
-                    <Icon
-                      name={
-                        collapsed ? 'chevron-circle-down' : 'chevron-circle-up'
-                      }
-                      size={28}
-                      color={'black'}
-                      style={styles.iconUp}
-                    />
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.line} />
+                <Text style={styles.featuredText}>FEATURED</Text>
               </View>
-            ))}
-            {collapsed ? (
+              <Image
+                style={styles.sectionImage}
+                source={section.SectionImage}
+              />
+              <View style={styles.iconsContainer}>
+                <TouchableOpacity
+                  onPress={handleIconPress}
+                  style={styles.iconContainer}>
+                  <View style={styles.circularBackground}>
+                    <Icon
+                      name={isLiked ? 'heart' : 'heart-o'}
+                      size={25}
+                      color={isLiked ? 'red' : 'black'}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.textItems}>
+                <Text style={styles.sectionTitle}>{section.title}</Text>
+                <TouchableOpacity onPress={handleClick}>
+                  <Icon
+                    name={
+                      collapsed ? 'chevron-circle-down' : 'chevron-circle-up'
+                    }
+                    size={28}
+                    color={'black'}
+                    style={styles.iconUp}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.line} />
+            </View>
+          ))}
+          <ScrollView style={styles.contentScroll}>
+            {collapsed || isLoggedIn ? (
               <View style={{flex: 1}}>
                 <View style={styles.selectedFlex}>
                   <Text style={styles.selectLot}>Select A Lot</Text>
                   <View style={styles.selectedIcon}>
                     <TouchableOpacity onPress={handleIcon1Press}>
                       <Icon
-                        name="circle-thin"
+                        name={isIcon1Clicked ? 'circle' : 'circle-thin'}
                         size={25}
                         color={isIcon1Clicked ? 'green' : 'black'}
                         style={{marginHorizontal: 5}}
@@ -161,7 +177,7 @@ const ProductProfileScreen = ({navigation}) => {
                   <View style={styles.selectedIcon}>
                     <TouchableOpacity onPress={handleIcon2Press}>
                       <Icon
-                        name="circle-thin"
+                        name={isIcon2Clicked ? 'circle' : 'circle-thin'}
                         size={25}
                         color={isIcon2Clicked ? 'green' : 'black'}
                         style={{marginHorizontal: 5}}
@@ -208,6 +224,7 @@ const ProductProfileScreen = ({navigation}) => {
                                   setSelectItem(item.itemName);
                                   setIsClicked(false);
                                   setSelectedUnit(item.itemName);
+                                  setSelectedPrice(item.price);
                                 }}>
                                 <Text
                                   style={[
@@ -244,7 +261,7 @@ const ProductProfileScreen = ({navigation}) => {
                           </TouchableOpacity>
                         </View>
                         <View style={styles.priceContainer}>
-                          <Text style={styles.priceText}>${count * price}</Text>
+                          <Text style={styles.priceText}>${selectedPrice}</Text>
                         </View>
                       </>
                     )}
@@ -286,10 +303,24 @@ const ProductProfileScreen = ({navigation}) => {
             <View style={styles.buyButton}>
               <TouchableOpacity
                 style={styles.buyNowButton}
-                onPress={handleAddToCart}>
+                onPress={handleBuyNow}>
                 <Text style={styles.buyingText}>Buy Now</Text>
               </TouchableOpacity>
             </View>
+            <Modal
+              visible={isModalVisible}
+              transparent={true}>
+              <View style={styles.modalContainer}>
+                <View style={styles.modalContent}>
+                  <Text style={{color: 'black'}}>Please Login!!</Text>
+                  <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={closeModal}>
+                    <Text style={styles.closeButtonText}>Ok</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
           </View>
         </View>
       </View>
@@ -529,6 +560,9 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   dropdownArea: {
+    position: 'absolute',
+    left: '60%',
+    top: 35,
     // flex: 1,
     width: '40%',
     borderLeftWidth: 1,
@@ -558,6 +592,7 @@ const styles = StyleSheet.create({
   },
   chooseItem: {
     flexDirection: 'row',
+    flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
     marginHorizontal: 14,
@@ -641,5 +676,26 @@ const styles = StyleSheet.create({
   },
   circleIconSelected: {
     borderColor: 'green',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 8,
+    height: 100,
+    width: '70%',
+  },
+  closeButton: {
+    marginTop: 25,
+    alignSelf: 'flex-end',
+  },
+  closeButtonText: {
+    color: 'black',
+    fontSize: 16,
   },
 });
