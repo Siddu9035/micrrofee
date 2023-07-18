@@ -19,7 +19,6 @@ const Loginpage = ({navigation}) => {
   const [error, setError] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-
   const handleLogin = async () => {
     if (userEmail == '' || password == '') {
       setError('please enter your login credentials');
@@ -102,7 +101,10 @@ const Loginpage = ({navigation}) => {
             <Text style={styles.signupText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => {navigation.navigate('Home')}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Home');
+          }}>
           <Text style={styles.footer}>Join as guest</Text>
         </TouchableOpacity>
       </View>

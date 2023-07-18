@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {Modal} from 'react-native';
 import {
   StyleSheet,
@@ -7,13 +7,18 @@ import {
   View,
   ScrollView,
   Image,
-  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+// import {useAuth} from './AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const ProductProfileScreen = ({route, navigation}) => {
+  // const {isLoggedIn} = useAuth();
   // Get the section data passed as a route parameter
-  const {sectionData} = route.params;
+  const {sectionData, isFeatured} = route.params;
+  const imageSource =
+    sectionData.SectionImage ||
+    sectionData.Sectionimage ||
+    sectionData.sectionimage;
   const [collapsed, setCollapsed] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -40,7 +45,18 @@ const ProductProfileScreen = ({route, navigation}) => {
   const [selectedUnit, setSelectedUnit] = useState('');
   const [selectedPrice, setSelectedPrice] = useState(25);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  const data = [
+    {title: 'origins', data: 'ethiopia'},
+    {title: 'Formsf', data: 'test form'},
+    {title: 'variety', data: 'Java'},
+    {title: 'Altitude', data: 'add'},
+    {title: 'Notes', data: 'loreum ipsum'},
+    {title: 'Process', data: 'test process'},
+    {title: 'Dry fruits', data: 'test method'},
+    {title: 'Certification', data: 'test certiication'},
+    {title: 'Q Grade', data: '79.70'},
+  ];
+  const isLoggedInRef = useRef(isLoggedIn);
 
   const handleClick = () => {
     setCollapsed(!collapsed);
@@ -49,19 +65,32 @@ const ProductProfileScreen = ({route, navigation}) => {
   const handleIconPress = () => {
     setIsLiked(!isLiked);
   };
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!isLoggedIn) {
       console.log('User is not logged in. Showing modal.');
       setIsModalVisible(true);
+
+      try {
+        // Store the login status as 'false' in AsyncStorage
+        await AsyncStorage.setItem('isLoggedIn', 'false');
+      } catch (error) {
+        console.log('Error storing login status:', error);
+      }
     } else {
-      console.log('User is not logged in. Showing modal.');
       setIsModalVisible(false);
     }
   };
 
-  const handleBuyNow = () => {
+  const handleBuyNow = async () => {
     if (!isLoggedIn) {
       setIsModalVisible(true);
+
+      try {
+        // Store the login status as 'false' in AsyncStorage
+        await AsyncStorage.setItem('isLoggedIn', 'false');
+      } catch (error) {
+        console.log('Error storing login status:', error);
+      }
     } else {
       setIsModalVisible(false);
     }
@@ -87,9 +116,44 @@ const ProductProfileScreen = ({route, navigation}) => {
     setIsIcon1Clicked(false); // Deselect the other icon
     setIsExpanded(true);
   };
-  const closeModal = () => {
+  const closeModal = async () => {
+    navigation.navigate('login');
     setIsModalVisible(false);
+
+    try {
+      // Store the login status as 'true' in AsyncStorage
+      await AsyncStorage.setItem('isLoggedIn', 'true');
+    } catch (error) {
+      console.log('Error storing login status:', error);
+    }
   };
+  // This effect will be called when the component is mounted
+  useEffect(() => {
+    // Check if the user is logged in from AsyncStorage
+    const checkLoginStatus = async () => {
+      try {
+        const isLoggedInString = await AsyncStorage.getItem('isLoggedIn');
+        const isLoggedInValue = isLoggedInString === 'true'; // Convert string to boolean
+        setIsLoggedIn(isLoggedInValue);
+        isLoggedInRef.current = isLoggedInValue; // Update the ref with the current value
+      } catch (error) {
+        console.log('Error retrieving login status:', error);
+      }
+    };
+
+    checkLoginStatus();
+
+    // The cleanup function will execute when the component is unmounted
+    return () => {
+      // Check if the login status has changed since the component mounted
+      if (isLoggedInRef.current !== isLoggedIn) {
+        // Update AsyncStorage with the new login status
+        AsyncStorage.setItem('isLoggedIn', String(isLoggedIn))
+          .then(() => console.log('Login status updated.'))
+          .catch(error => console.log('Error storing login status:', error));
+      }
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -103,18 +167,18 @@ const ProductProfileScreen = ({route, navigation}) => {
       </View>
       <View style={styles.subContainer}>
         <View style={styles.contentContainer}>
-          <View style={styles.featuredContainer}>
-            <Icon name="star" size={20} color="gold" style={styles.starIcon} />
-            <Text style={styles.featuredText}>FEATURED</Text>
-          </View>
-          <Image
-            style={styles.sectionImage}
-            source={sectionData.SectionImage ? sectionData.SectionImage : require('../assets/images/coffee_1.png')}
-          />
-          <Image
-            style={styles.sectionImage}
-            source={sectionData.Sectionimage}
-          />
+          {isFeatured ? (
+            <View style={styles.featuredContainer}>
+              <Icon
+                name="star"
+                size={20}
+                color="gold"
+                style={styles.starIcon}
+              />
+              <Text style={styles.featuredText}>FEATURED</Text>
+            </View>
+          ) : null}
+          <Image style={styles.sectionImage} source={imageSource} />
           <View style={styles.iconsContainer}>
             <TouchableOpacity
               onPress={handleIconPress}
@@ -141,33 +205,35 @@ const ProductProfileScreen = ({route, navigation}) => {
           </View>
           <View style={styles.line} />
           <ScrollView style={styles.contentScroll}>
-            {collapsed && isLoggedIn ? (
+            {collapsed ? (
               <View style={{flex: 1}}>
-                <View style={styles.selectedFlex}>
-                  <Text style={styles.selectLot}>Select A Lot</Text>
-                  <View style={styles.selectedIcon}>
-                    <TouchableOpacity onPress={handleIcon1Press}>
-                      <Icon
-                        name={isIcon1Clicked ? 'circle' : 'circle-thin'}
-                        size={25}
-                        color={isIcon1Clicked ? 'green' : 'black'}
-                        style={{marginHorizontal: 5}}
-                      />
-                    </TouchableOpacity>
-                    <Text style={styles.nano}>nano</Text>
+                {isLoggedIn && (
+                  <View style={styles.selectedFlex}>
+                    <Text style={styles.selectLot}>Select A Lot</Text>
+                    <View style={styles.selectedIcon}>
+                      <TouchableOpacity onPress={handleIcon1Press}>
+                        <Icon
+                          name={isIcon1Clicked ? 'circle' : 'circle-thin'}
+                          size={25}
+                          color={isIcon1Clicked ? 'green' : 'black'}
+                          style={{marginHorizontal: 5}}
+                        />
+                      </TouchableOpacity>
+                      <Text style={styles.nano}>nano</Text>
+                    </View>
+                    <View style={styles.selectedIcon}>
+                      <TouchableOpacity onPress={handleIcon2Press}>
+                        <Icon
+                          name={isIcon2Clicked ? 'circle' : 'circle-thin'}
+                          size={25}
+                          color={isIcon2Clicked ? 'green' : 'black'}
+                          style={{marginHorizontal: 5}}
+                        />
+                      </TouchableOpacity>
+                      <Text style={styles.nano}>micro</Text>
+                    </View>
                   </View>
-                  <View style={styles.selectedIcon}>
-                    <TouchableOpacity onPress={handleIcon2Press}>
-                      <Icon
-                        name={isIcon2Clicked ? 'circle' : 'circle-thin'}
-                        size={25}
-                        color={isIcon2Clicked ? 'green' : 'black'}
-                        style={{marginHorizontal: 5}}
-                      />
-                    </TouchableOpacity>
-                    <Text style={styles.nano}>micro</Text>
-                  </View>
-                </View>
+                )}
                 <View style={styles.chooseItem}>
                   {isExpanded && (
                     <>
@@ -252,11 +318,19 @@ const ProductProfileScreen = ({route, navigation}) => {
               </View>
             ) : (
               <>
-                {sectionData.data.map((item, index) => (
+                {/* {sectionData.data.map((item, index) => (
                   <Text key={index} style={styles.item}>
                     {item}
                   </Text>
-                ))}
+                ))} */}
+                <View>
+                  {data.map(item => (
+                    <View key={item.title} style={styles.dataContainer}>
+                      <Text style={styles.title}>{item.title}</Text>
+                      <Text style={styles.data}>{item.data}</Text>
+                    </View>
+                  ))}
+                </View>
                 <View style={styles.line2} />
                 <View style={styles.aboutCoffee}>
                   <Text style={styles.paragraph}>
@@ -294,7 +368,7 @@ const ProductProfileScreen = ({route, navigation}) => {
                     <TouchableOpacity
                       style={styles.closeButton}
                       onPress={closeModal}>
-                      <Text style={styles.closeButtonText}>Ok</Text>
+                      <Text style={styles.closeButtonText}>Login</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -366,7 +440,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'flex-end',
     top: 85,
-    right: 20,
+    right: 5,
   },
   contentScroll: {
     flex: 1,
@@ -530,6 +604,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 20,
     justifyContent: 'space-evenly',
+    zIndex: 1,
   },
   dropdownSelector: {
     flexDirection: 'row',
@@ -550,6 +625,7 @@ const styles = StyleSheet.create({
     borderColor: '#81C0EF',
     shadowColor: 'black',
     elevation: 8,
+    zIndex: 1,
     // marginTop: 130,
   },
   countryText: {
@@ -647,6 +723,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     borderWidth: 1,
     borderColor: '#9ACD32',
+    zIndex: 1,
   },
   priceText: {
     color: 'black',
@@ -664,17 +741,25 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: 'white',
-    padding: 20,
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 5,
     borderRadius: 8,
-    height: 100,
+    height: 115,
     width: '70%',
   },
   closeButton: {
     marginTop: 25,
     alignSelf: 'flex-end',
+    width: '45%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'green',
+    borderRadius: 25,
+    height: 50,
   },
   closeButtonText: {
-    color: 'black',
+    color: 'white',
     fontSize: 16,
   },
   item: {

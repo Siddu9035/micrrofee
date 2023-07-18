@@ -10,6 +10,7 @@ import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const HomeScreen = ({navigation}) => {
+
   const FeaturedData = [
     {
       title: 'Java',
@@ -67,25 +68,36 @@ const HomeScreen = ({navigation}) => {
   const originsData = [
     {
       title: 'Orange',
+      data: ['karnataka'],
       sectionimage: require('../assets/images/latcoffee1.png'),
     },
     {
       title: 'Red',
+      data: ['karnataka'],
       sectionimage: require('../assets/images/latcoffee2.png'),
     },
     {
       title: 'Brown',
+      data: ['karnataka'],
       sectionimage: require('../assets/images/latcoffee3.png'),
     },
     {
       title: 'Black',
+      data: ['karnataka'],
       sectionimage: require('../assets/images/latcoffee1.png'),
     },
     {
       title: 'White',
+      data: ['karnataka'],
       sectionimage: require('../assets/images/latcoffee2.png'),
     },
   ];
+  const handleSectionPress = (section, isFeatured) => {
+    navigation.navigate('ProductProfile', {
+      sectionData: section,
+      isFeatured: isFeatured,
+    });
+  };
   return (
     // <ScrollView>
     <View style={styles.container}>
@@ -120,11 +132,7 @@ const HomeScreen = ({navigation}) => {
                   <TouchableOpacity
                     key={section.title}
                     style={styles.sectionContainer}
-                    onPress={() =>
-                      navigation.navigate('ProductProfile', {
-                        sectionData: section,
-                      })
-                    }>
+                    onPress={() => handleSectionPress(section, true)}>
                     <View style={styles.featuredContainer}>
                       <Icon
                         name="star"
@@ -163,11 +171,7 @@ const HomeScreen = ({navigation}) => {
                   <TouchableOpacity
                     key={section.title}
                     style={styles.sectionContainer}
-                    onPress={() =>
-                      navigation.navigate('ProductProfile', {
-                        sectionData: section,
-                      })
-                    }>
+                    onPress={() => handleSectionPress(section, false)}>
                     <Image
                       style={styles.Sectionimage}
                       source={section.Sectionimage}
@@ -194,7 +198,10 @@ const HomeScreen = ({navigation}) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.itemscontainer}>
                 {originsData.map(section => (
-                  <View key={section.title} style={styles.SectionContainer}>
+                  <TouchableOpacity
+                    key={section.title}
+                    style={styles.SectionContainer}
+                    onPress={() => handleSectionPress(section, false)}>
                     <Image
                       style={styles.sectionimage}
                       source={section.sectionimage}
@@ -202,7 +209,7 @@ const HomeScreen = ({navigation}) => {
                     <View style={styles.textItem}>
                       <Text style={styles.sectionTitle}>{section.title}</Text>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 ))}
               </View>
             </ScrollView>
