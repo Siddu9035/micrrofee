@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
       await AsyncStorage.setItem('userEmail', email);
       setIsLoggedIn(true);
       setUserEmail(email);
-      navigation.navigate('login');
+    //   navigation.navigate('login');
     } catch (error) {
       console.log('Error saving login status and user email:', error);
     }

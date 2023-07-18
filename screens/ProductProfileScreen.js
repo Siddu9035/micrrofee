@@ -9,20 +9,15 @@ import {
   Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// import {useAuth} from './AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const ProductProfileScreen = ({route, navigation}) => {
-  // const {isLoggedIn} = useAuth();
   // Get the section data passed as a route parameter
-  const {sectionData, isFeatured} = route.params;
-  const imageSource =
-    sectionData.SectionImage ||
-    sectionData.Sectionimage ||
-    sectionData.sectionimage;
+  const {sectionData, sectionDescription, isFeatured} = route.params;
+  const imageSource = sectionData.SectionImage || sectionData.Sectionimage;
   const [collapsed, setCollapsed] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
   const [selectitem, setSelectItem] = useState('0');
   const [isClicked, setIsClicked] = useState(false);
   const [selectData, setSelectData] = useState([
@@ -46,9 +41,6 @@ const ProductProfileScreen = ({route, navigation}) => {
   const [selectedPrice, setSelectedPrice] = useState(25);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const data = [
-    {title: 'origins', data: 'ethiopia'},
-    {title: 'Formsf', data: 'test form'},
-    {title: 'variety', data: 'Java'},
     {title: 'Altitude', data: 'add'},
     {title: 'Notes', data: 'loreum ipsum'},
     {title: 'Process', data: 'test process'},
@@ -57,6 +49,8 @@ const ProductProfileScreen = ({route, navigation}) => {
     {title: 'Q Grade', data: '79.70'},
   ];
   const isLoggedInRef = useRef(isLoggedIn);
+  const [selectedLot, setSelectedLot] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleClick = () => {
     setCollapsed(!collapsed);
@@ -66,10 +60,10 @@ const ProductProfileScreen = ({route, navigation}) => {
     setIsLiked(!isLiked);
   };
   const handleAddToCart = async () => {
-    if (!isLoggedIn) {
-      console.log('User is not logged in. Showing modal.');
+    if (!isLoggedIn || selectedLot == '') {
+      // console.log('User is not logged in. Showing modal.');
       setIsModalVisible(true);
-
+      setErrorMessage('Please select Lot Before Adding to Cart');
       try {
         // Store the login status as 'false' in AsyncStorage
         await AsyncStorage.setItem('isLoggedIn', 'false');
@@ -78,13 +72,14 @@ const ProductProfileScreen = ({route, navigation}) => {
       }
     } else {
       setIsModalVisible(false);
+      setErrorMessage('');
     }
   };
 
   const handleBuyNow = async () => {
     if (!isLoggedIn) {
       setIsModalVisible(true);
-
+      setErrorMessage('');
       try {
         // Store the login status as 'false' in AsyncStorage
         await AsyncStorage.setItem('isLoggedIn', 'false');
@@ -109,15 +104,17 @@ const ProductProfileScreen = ({route, navigation}) => {
     setIsIcon1Clicked(!isIcon1Clicked);
     setIsIcon2Clicked(false); // Deselect the other icon
     setIsExpanded(true);
+    setErrorMessage('');
   };
 
   const handleIcon2Press = () => {
     setIsIcon2Clicked(!isIcon2Clicked);
     setIsIcon1Clicked(false); // Deselect the other icon
     setIsExpanded(true);
+    setErrorMessage('');
   };
   const closeModal = async () => {
-    navigation.navigate('login');
+    // navigation.navigate('login');
     setIsModalVisible(false);
 
     try {
@@ -136,24 +133,20 @@ const ProductProfileScreen = ({route, navigation}) => {
         const isLoggedInValue = isLoggedInString === 'true'; // Convert string to boolean
         setIsLoggedIn(isLoggedInValue);
         isLoggedInRef.current = isLoggedInValue; // Update the ref with the current value
+
+        // If the user navigated back without logging in, log them out automatically
+        if (!isLoggedInValue) {
+          AsyncStorage.setItem('isLoggedIn', 'false')
+            .then(() => console.log('User logged out.'))
+            .catch(error => console.log('Error storing login status:', error));
+        }
       } catch (error) {
         console.log('Error retrieving login status:', error);
       }
     };
 
     checkLoginStatus();
-
-    // The cleanup function will execute when the component is unmounted
-    return () => {
-      // Check if the login status has changed since the component mounted
-      if (isLoggedInRef.current !== isLoggedIn) {
-        // Update AsyncStorage with the new login status
-        AsyncStorage.setItem('isLoggedIn', String(isLoggedIn))
-          .then(() => console.log('Login status updated.'))
-          .catch(error => console.log('Error storing login status:', error));
-      }
-    };
-  }, []);
+  }, [isLoggedIn, setIsLoggedIn]);
 
   return (
     <View style={styles.container}>
@@ -207,33 +200,34 @@ const ProductProfileScreen = ({route, navigation}) => {
           <ScrollView style={styles.contentScroll}>
             {collapsed ? (
               <View style={{flex: 1}}>
-                {isLoggedIn && (
-                  <View style={styles.selectedFlex}>
-                    <Text style={styles.selectLot}>Select A Lot</Text>
-                    <View style={styles.selectedIcon}>
-                      <TouchableOpacity onPress={handleIcon1Press}>
-                        <Icon
-                          name={isIcon1Clicked ? 'circle' : 'circle-thin'}
-                          size={25}
-                          color={isIcon1Clicked ? 'green' : 'black'}
-                          style={{marginHorizontal: 5}}
-                        />
-                      </TouchableOpacity>
-                      <Text style={styles.nano}>nano</Text>
-                    </View>
-                    <View style={styles.selectedIcon}>
-                      <TouchableOpacity onPress={handleIcon2Press}>
-                        <Icon
-                          name={isIcon2Clicked ? 'circle' : 'circle-thin'}
-                          size={25}
-                          color={isIcon2Clicked ? 'green' : 'black'}
-                          style={{marginHorizontal: 5}}
-                        />
-                      </TouchableOpacity>
-                      <Text style={styles.nano}>micro</Text>
-                    </View>
+                <View style={styles.selectedFlex}>
+                  <Text style={styles.selectLot}>Select A Lot</Text>
+                  <View style={styles.selectedIcon}>
+                    <TouchableOpacity onPress={handleIcon1Press}>
+                      <Icon
+                        name={isIcon1Clicked ? 'circle' : 'circle-thin'}
+                        size={25}
+                        color={isIcon1Clicked ? 'green' : 'black'}
+                        style={{marginHorizontal: 5}}
+                      />
+                    </TouchableOpacity>
+                    <Text style={styles.nano}>nano</Text>
                   </View>
-                )}
+                  <View style={styles.selectedIcon}>
+                    <TouchableOpacity onPress={handleIcon2Press}>
+                      <Icon
+                        name={isIcon2Clicked ? 'circle' : 'circle-thin'}
+                        size={25}
+                        color={isIcon2Clicked ? 'green' : 'black'}
+                        style={{marginHorizontal: 5}}
+                      />
+                    </TouchableOpacity>
+                    <Text style={styles.nano}>micro</Text>
+                  </View>
+                </View>
+                {errorMessage ? (
+                  <Text style={styles.errorMessage}>{errorMessage}</Text>
+                ) : null}
                 <View style={styles.chooseItem}>
                   {isExpanded && (
                     <>
@@ -253,7 +247,7 @@ const ProductProfileScreen = ({route, navigation}) => {
                             name={isClicked ? 'chevron-up' : 'chevron-down'}
                             size={25}
                             color="#9ACD32"
-                            style={{marginLeft: 35}}
+                            style={{marginLeft: 45}}
                           />
                         </TouchableOpacity>
                       </View>
@@ -309,7 +303,9 @@ const ProductProfileScreen = ({route, navigation}) => {
                           </TouchableOpacity>
                         </View>
                         <View style={styles.priceContainer}>
-                          <Text style={styles.priceText}>${selectedPrice}</Text>
+                          <Text style={styles.priceText}>
+                            ${selectedPrice * count}
+                          </Text>
                         </View>
                       </>
                     )}
@@ -318,11 +314,14 @@ const ProductProfileScreen = ({route, navigation}) => {
               </View>
             ) : (
               <>
-                {/* {sectionData.data.map((item, index) => (
-                  <Text key={index} style={styles.item}>
-                    {item}
-                  </Text>
-                ))} */}
+                <View>
+                  {sectionData.description.map((item, index) => (
+                    <View key={item.title} style={styles.dataContainer}>
+                      <Text style={styles.title}>{item.title}</Text>
+                      <Text style={styles.data}>{item.des}</Text>
+                    </View>
+                  ))}
+                </View>
                 <View>
                   {data.map(item => (
                     <View key={item.title} style={styles.dataContainer}>
@@ -342,6 +341,120 @@ const ProductProfileScreen = ({route, navigation}) => {
                   </Text>
                 </View>
                 <View style={styles.line3} />
+                <View style={{flex: 1}}>
+                  {isLoggedIn && (
+                    <View style={styles.selectedFlex}>
+                      <Text style={styles.selectLot}>Select A Lot</Text>
+                      <View style={styles.selectedIcon}>
+                        <TouchableOpacity onPress={handleIcon1Press}>
+                          <Icon
+                            name={isIcon1Clicked ? 'circle' : 'circle-thin'}
+                            size={25}
+                            color={isIcon1Clicked ? 'green' : 'black'}
+                            style={{marginHorizontal: 5}}
+                          />
+                        </TouchableOpacity>
+                        <Text style={styles.nano}>nano</Text>
+                      </View>
+                      <View style={styles.selectedIcon}>
+                        <TouchableOpacity onPress={handleIcon2Press}>
+                          <Icon
+                            name={isIcon2Clicked ? 'circle' : 'circle-thin'}
+                            size={25}
+                            color={isIcon2Clicked ? 'green' : 'black'}
+                            style={{marginHorizontal: 5}}
+                          />
+                        </TouchableOpacity>
+                        <Text style={styles.nano}>micro</Text>
+                      </View>
+                    </View>
+                  )}
+                  <View style={styles.chooseItem}>
+                    {isExpanded && (
+                      <>
+                        <View style={styles.choosingItem}>
+                          <Text style={styles.chooseUnit}>
+                            Choose unit by lbs
+                          </Text>
+                        </View>
+                        <View style={styles.dropDownContainer}>
+                          <TouchableOpacity
+                            style={styles.dropdownSelector}
+                            onPress={() => {
+                              setIsClicked(!isClicked);
+                            }}>
+                            <Text style={styles.dropdownText}>
+                              {selectitem}
+                            </Text>
+                            <Icon
+                              name={isClicked ? 'chevron-up' : 'chevron-down'}
+                              size={25}
+                              color="#9ACD32"
+                              style={{marginLeft: 35}}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                        {isClicked && (
+                          <View style={styles.dropdownArea}>
+                            <View>
+                              {selectData.map((item, index) => (
+                                <TouchableOpacity
+                                  key={index}
+                                  style={[
+                                    styles.countryitem,
+                                    item.itemName == selectitem &&
+                                      styles.selectedItem,
+                                  ]}
+                                  onPress={() => {
+                                    setSelectItem(item.itemName);
+                                    setIsClicked(false);
+                                    setSelectedUnit(item.itemName);
+                                    setSelectedPrice(item.price);
+                                  }}>
+                                  <Text
+                                    style={[
+                                      styles.countryText,
+                                      item.itemName == selectitem &&
+                                        styles.selectItemText,
+                                    ]}>
+                                    {item.itemName}
+                                  </Text>
+                                </TouchableOpacity>
+                              ))}
+                            </View>
+                          </View>
+                        )}
+                      </>
+                    )}
+                  </View>
+                  <View>
+                    <View style={styles.quantityFlex}>
+                      {selectedUnit !== '' && (
+                        <>
+                          <Text style={styles.quantityText}>Quantity</Text>
+                          <View style={styles.counter}>
+                            <TouchableOpacity
+                              style={styles.plusButton}
+                              onPress={incrementCount}>
+                              <Icon name="plus" size={20} color={'black'} />
+                            </TouchableOpacity>
+
+                            <Text style={{color: 'black'}}>{count}</Text>
+
+                            <TouchableOpacity onPress={decrementCount}>
+                              <Icon name="minus" size={20} color={'black'} />
+                            </TouchableOpacity>
+                          </View>
+                          <View style={styles.priceContainer}>
+                            <Text style={styles.priceText}>
+                              ${selectedPrice * count}
+                            </Text>
+                          </View>
+                        </>
+                      )}
+                    </View>
+                  </View>
+                </View>
               </>
             )}
           </ScrollView>
@@ -364,12 +477,19 @@ const ProductProfileScreen = ({route, navigation}) => {
               <Modal visible={isModalVisible} transparent={true}>
                 <View style={styles.modalContainer}>
                   <View style={styles.modalContent}>
-                    <Text style={{color: 'black'}}>Please Login!!</Text>
-                    <TouchableOpacity
-                      style={styles.closeButton}
-                      onPress={closeModal}>
-                      <Text style={styles.closeButtonText}>Login</Text>
-                    </TouchableOpacity>
+                    <View style={styles.modalHeader}>
+                      <TouchableOpacity onPress={closeModal}>
+                        <Icon name="close" size={24} color="black" />
+                      </TouchableOpacity>
+                    </View>
+                    <Text style={styles.loginText}>Please Login!!</Text>
+                    <View style={styles.loginSpace}>
+                      <TouchableOpacity
+                        style={styles.closeButton}
+                        onPress={() => navigation.navigate('login')}>
+                        <Text style={styles.closeButtonText}>Login</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               </Modal>
@@ -612,11 +732,12 @@ const styles = StyleSheet.create({
   dropdownText: {
     fontSize: 19,
     color: 'black',
+    marginHorizontal: 15,
   },
   dropdownArea: {
     position: 'absolute',
     left: '60%',
-    top: 35,
+    // top: 35,
     // flex: 1,
     width: '40%',
     borderLeftWidth: 1,
@@ -745,26 +866,46 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 5,
     borderRadius: 8,
-    height: 115,
-    width: '70%',
+    height: 130,
+    width: '80%',
+    alignItems: 'center',
   },
   closeButton: {
-    marginTop: 25,
     alignSelf: 'flex-end',
-    width: '45%',
+    width: 120,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'green',
     borderRadius: 25,
     height: 50,
   },
-  closeButtonText: {
-    color: 'white',
-    fontSize: 16,
-  },
   item: {
     color: 'black',
     paddingLeft: 10,
     paddingVertical: 5,
+  },
+  modalHeader: {
+    alignSelf: 'flex-end',
+    bottom: 20,
+  },
+  loginText: {
+    textAlignVertical: 'top',
+    bottom: 25,
+    right: 5,
+    color: 'black',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 15,
+  },
+  loginSpace: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    // width: '80%',
+    marginTop: 15,
+  },
+  errorMessage: {
+    color: 'red',
+    textAlign: 'center',
   },
 });

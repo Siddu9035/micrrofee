@@ -11,13 +11,15 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from './AuthContext';
 
 const Loginpage = ({navigation}) => {
+  const {isLoggedIn, handleLogout} = useAuth();
   const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hidePass, setHidePassword] = useState(false);
   const [error, setError] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleLogin = async () => {
     if (userEmail == '' || password == '') {
@@ -104,6 +106,7 @@ const Loginpage = ({navigation}) => {
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('Home');
+            handleLogout();
           }}>
           <Text style={styles.footer}>Join as guest</Text>
         </TouchableOpacity>

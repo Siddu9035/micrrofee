@@ -8,34 +8,96 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {useAuth} from './AuthContext';
 
 const HomeScreen = ({navigation}) => {
+  const {isLoggedIn} = useAuth();
 
   const FeaturedData = [
     {
       title: 'Java',
       data: ['Central America', 'BalckCoffee'],
       SectionImage: require('../assets/images/coffee_1.png'),
+      description:
+        [
+          {
+            title: 'origins', des: 'america'
+          },
+          {
+            title: 'variety', des: 'Java'
+          },
+          {
+            title: 'Forms', des: 'Blackcoffee'
+          },
+        ],
     },
     {
       title: 'javaScript',
       data: ['America', 'BrownCoffee'],
       SectionImage: require('../assets/images/coffee_2.png'),
+      description:
+        [
+          {
+            title: 'origins', des: 'America'
+          },
+          {
+            title: 'variety', des: 'javascript'
+          },
+          {
+            title: 'Forms', des: 'browncoffee'
+          },
+        ],
     },
     {
       title: 'python',
       data: ['North America', 'YellowCoffee'],
       SectionImage: require('../assets/images/coffee_3.png'),
+      description:
+        [
+          {
+            title: 'origins', des: 'NorthAmerica'
+          },
+          {
+            title: 'variety', des: 'Python'
+          },
+          {
+            title: 'Forms', des: 'Yellowcoffee'
+          },
+        ],
     },
     {
       title: 'Swift',
       data: ['india', 'KesarCoffee'],
       SectionImage: require('../assets/images/coffee_3.png'),
+      description:
+        [
+          {
+            title: 'origins', des: 'India'
+          },
+          {
+            title: 'variety', des: 'Swift'
+          },
+          {
+            title: 'Forms', des: 'KesarCoffee'
+          },
+        ],
     },
     {
       title: 'AngularJs',
       data: ['Europe', 'RedCoffee'],
       SectionImage: require('../assets/images/coffee_3.png'),
+      description:
+        [
+          {
+            title: 'origins', des: 'Europe'
+          },
+          {
+            title: 'variety', des: 'Angularjs'
+          },
+          {
+            title: 'Forms', des: 'Redcoffee'
+          },
+        ],
     },
   ];
   const latestData = [
@@ -43,26 +105,86 @@ const HomeScreen = ({navigation}) => {
       title: 'Orange',
       data: ['Mumbai'],
       Sectionimage: require('../assets/images/latcoffee1.png'),
+      description:
+        [
+          {
+            title: 'origins', des: 'Mumbai'
+          },
+          {
+            title: 'variety', des: 'Orange'
+          },
+          {
+            title: 'Forms', des: 'Redcoffee'
+          },
+        ],
     },
     {
       title: 'Red',
       data: ['Karnataka'],
       Sectionimage: require('../assets/images/latcoffee2.png'),
+      description:
+        [
+          {
+            title: 'origins', des: 'Karnataka'
+          },
+          {
+            title: 'variety', des: 'Red'
+          },
+          {
+            title: 'Forms', des: 'reddishcoffee'
+          },
+        ],
     },
     {
       title: 'Brown',
       data: ['Kerala'],
       Sectionimage: require('../assets/images/latcoffee3.png'),
+      description:
+        [
+          {
+            title: 'origins', des: 'kerala'
+          },
+          {
+            title: 'variety', des: 'Brown'
+          },
+          {
+            title: 'Forms', des: 'Brownish'
+          },
+        ],
     },
     {
       title: 'Black',
       data: ['Goa'],
       Sectionimage: require('../assets/images/latcoffee1.png'),
+      description:
+        [
+          {
+            title: 'origins', des: 'goa'
+          },
+          {
+            title: 'variety', des: 'Black'
+          },
+          {
+            title: 'Forms', des: 'Blackish'
+          },
+        ],
     },
     {
       title: 'White',
       data: ['uttarPradesh'],
       Sectionimage: require('../assets/images/latcoffee2.png'),
+      description:
+        [
+          {
+            title: 'origins', des: 'uttarpradesh'
+          },
+          {
+            title: 'variety', des: 'white'
+          },
+          {
+            title: 'Forms', des: 'Whiteish'
+          },
+        ],
     },
   ];
   const originsData = [
@@ -96,6 +218,7 @@ const HomeScreen = ({navigation}) => {
     navigation.navigate('ProductProfile', {
       sectionData: section,
       isFeatured: isFeatured,
+      isLoggedIn: isLoggedIn, // Pass the isLoggedIn status as a parameter
     });
   };
   return (
@@ -198,10 +321,7 @@ const HomeScreen = ({navigation}) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.itemscontainer}>
                 {originsData.map(section => (
-                  <TouchableOpacity
-                    key={section.title}
-                    style={styles.SectionContainer}
-                    onPress={() => handleSectionPress(section, false)}>
+                  <View key={section.title} style={styles.SectionContainer}>
                     <Image
                       style={styles.sectionimage}
                       source={section.sectionimage}
@@ -209,7 +329,7 @@ const HomeScreen = ({navigation}) => {
                     <View style={styles.textItem}>
                       <Text style={styles.sectionTitle}>{section.title}</Text>
                     </View>
-                  </TouchableOpacity>
+                  </View>
                 ))}
               </View>
             </ScrollView>
