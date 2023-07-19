@@ -45,6 +45,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await AsyncStorage.removeItem('isLoggedIn');
       await AsyncStorage.removeItem('userEmail');
+      console.log('user logged out');
       setIsLoggedIn(false);
       setUserEmail('');
     } catch (error) {

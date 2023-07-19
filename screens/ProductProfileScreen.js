@@ -133,20 +133,13 @@ const ProductProfileScreen = ({route, navigation}) => {
         const isLoggedInValue = isLoggedInString === 'true'; // Convert string to boolean
         setIsLoggedIn(isLoggedInValue);
         isLoggedInRef.current = isLoggedInValue; // Update the ref with the current value
-
-        // If the user navigated back without logging in, log them out automatically
-        if (!isLoggedInValue) {
-          AsyncStorage.setItem('isLoggedIn', 'false')
-            .then(() => console.log('User logged out.'))
-            .catch(error => console.log('Error storing login status:', error));
-        }
       } catch (error) {
         console.log('Error retrieving login status:', error);
       }
     };
-
+  
     checkLoginStatus();
-  }, [isLoggedIn, setIsLoggedIn]);
+  }, [setIsLoggedIn]);
 
   return (
     <View style={styles.container}>
@@ -200,31 +193,34 @@ const ProductProfileScreen = ({route, navigation}) => {
           <ScrollView style={styles.contentScroll}>
             {collapsed ? (
               <View style={{flex: 1}}>
-                <View style={styles.selectedFlex}>
-                  <Text style={styles.selectLot}>Select A Lot</Text>
-                  <View style={styles.selectedIcon}>
-                    <TouchableOpacity onPress={handleIcon1Press}>
-                      <Icon
-                        name={isIcon1Clicked ? 'circle' : 'circle-thin'}
-                        size={25}
-                        color={isIcon1Clicked ? 'green' : 'black'}
-                        style={{marginHorizontal: 5}}
-                      />
-                    </TouchableOpacity>
-                    <Text style={styles.nano}>nano</Text>
+                {isLoggedIn && (
+                  <View style={styles.selectedFlex}>
+                    <Text style={styles.selectLot}>Select A Lot</Text>
+                    <View style={styles.selectedIcon}>
+                      <TouchableOpacity onPress={handleIcon1Press}>
+                        <Icon
+                          name={isIcon1Clicked ? 'circle' : 'circle-thin'}
+                          size={25}
+                          color={isIcon1Clicked ? 'green' : 'black'}
+                          style={{marginHorizontal: 5}}
+                        />
+                      </TouchableOpacity>
+                      <Text style={styles.nano}>nano</Text>
+                    </View>
+                    <View style={styles.selectedIcon}>
+                      <TouchableOpacity onPress={handleIcon2Press}>
+                        <Icon
+                          name={isIcon2Clicked ? 'circle' : 'circle-thin'}
+                          size={25}
+                          color={isIcon2Clicked ? 'green' : 'black'}
+                          style={{marginHorizontal: 5}}
+                        />
+                      </TouchableOpacity>
+                      <Text style={styles.nano}>micro</Text>
+                    </View>
                   </View>
-                  <View style={styles.selectedIcon}>
-                    <TouchableOpacity onPress={handleIcon2Press}>
-                      <Icon
-                        name={isIcon2Clicked ? 'circle' : 'circle-thin'}
-                        size={25}
-                        color={isIcon2Clicked ? 'green' : 'black'}
-                        style={{marginHorizontal: 5}}
-                      />
-                    </TouchableOpacity>
-                    <Text style={styles.nano}>micro</Text>
-                  </View>
-                </View>
+                )}
+
                 {errorMessage ? (
                   <Text style={styles.errorMessage}>{errorMessage}</Text>
                 ) : null}
@@ -252,7 +248,7 @@ const ProductProfileScreen = ({route, navigation}) => {
                         </TouchableOpacity>
                       </View>
                       {isClicked && (
-                        <View style={styles.dropdownArea}>
+                        <View style={[styles.dropdownArea, {marginBottom: isClicked ? 50 : 0}]}>
                           <View>
                             {selectData.map((item, index) => (
                               <TouchableOpacity
@@ -285,7 +281,7 @@ const ProductProfileScreen = ({route, navigation}) => {
                   )}
                 </View>
                 <View>
-                  <View style={styles.quantityFlex}>
+                  <View style={[styles.quantityFlex, {marginTop: isClicked ? 80 : 0 }]}>
                     {selectedUnit !== '' && (
                       <>
                         <Text style={styles.quantityText}>Quantity</Text>
@@ -681,6 +677,7 @@ const styles = StyleSheet.create({
   },
   selectedFlex: {
     flexDirection: 'row',
+    flexGrow: 1,
     justifyContent: 'space-evenly',
     backgroundColor: 'white',
     height: 40,
@@ -689,10 +686,6 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     elevation: 10,
     shadowColor: 'black',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
   },
   selectedIcon: {
     flexDirection: 'row',
@@ -711,12 +704,7 @@ const styles = StyleSheet.create({
   dropDownContainer: {
     backgroundColor: '#FFF',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    
     elevation: 10,
     width: '40%',
     height: 40,
@@ -737,8 +725,9 @@ const styles = StyleSheet.create({
   dropdownArea: {
     position: 'absolute',
     left: '60%',
-    // top: 35,
-    // flex: 1,
+    top: 35,
+    // bottom: 30,
+    flex: 1,
     width: '40%',
     borderLeftWidth: 1,
     borderRightWidth: 1,
@@ -787,10 +776,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 10,
     shadowColor: 'black',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
   },
   quantityFlex: {
     flexDirection: 'row',
@@ -803,9 +788,6 @@ const styles = StyleSheet.create({
     height: 40,
     padding: 10,
     shadowColor: 'black',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
     elevation: 10,
     marginLeft: 15,
     marginRight: 15,
@@ -826,10 +808,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     elevation: 10,
     shadowColor: 'black',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
   },
   priceContainer: {
     backgroundColor: 'white',
@@ -839,7 +817,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: 'black',
-    shadowOffset: {width: 0, height: 2},
     elevation: 10,
     marginVertical: 20,
     borderWidth: 1,

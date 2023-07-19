@@ -17,87 +17,117 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'Java',
       data: ['Central America', 'BalckCoffee'],
-      SectionImage: require('../assets/images/coffee_1.png'),
-      description:
-        [
-          {
-            title: 'origins', des: 'america'
-          },
-          {
-            title: 'variety', des: 'Java'
-          },
-          {
-            title: 'Forms', des: 'Blackcoffee'
-          },
-        ],
+      SectionImage: [
+        require('../assets/images/coffee_1.png'),
+        require('../assets/images/coffee_2.png'),
+        require('../assets/images/coffee_3.png'),
+      ],
+      description: [
+        {
+          title: 'origins',
+          des: 'america',
+        },
+        {
+          title: 'variety',
+          des: 'Java',
+        },
+        {
+          title: 'Forms',
+          des: 'Blackcoffee',
+        },
+      ],
     },
     {
       title: 'javaScript',
       data: ['America', 'BrownCoffee'],
-      SectionImage: require('../assets/images/coffee_2.png'),
-      description:
-        [
-          {
-            title: 'origins', des: 'America'
-          },
-          {
-            title: 'variety', des: 'javascript'
-          },
-          {
-            title: 'Forms', des: 'browncoffee'
-          },
-        ],
+      SectionImage: [
+        require('../assets/images/coffee_2.png'),
+        require('../assets/images/coffee_1.png'),
+        require('../assets/images/coffee_3.png'),
+      ],
+      description: [
+        {
+          title: 'origins',
+          des: 'America',
+        },
+        {
+          title: 'variety',
+          des: 'javascript',
+        },
+        {
+          title: 'Forms',
+          des: 'browncoffee',
+        },
+      ],
     },
     {
       title: 'python',
       data: ['North America', 'YellowCoffee'],
-      SectionImage: require('../assets/images/coffee_3.png'),
-      description:
-        [
-          {
-            title: 'origins', des: 'NorthAmerica'
-          },
-          {
-            title: 'variety', des: 'Python'
-          },
-          {
-            title: 'Forms', des: 'Yellowcoffee'
-          },
-        ],
+      SectionImage: [
+        require('../assets/images/coffee_3.png'),
+        require('../assets/images/coffee_2.png'),
+        require('../assets/images/coffee_1.png'),
+      ],
+      description: [
+        {
+          title: 'origins',
+          des: 'NorthAmerica',
+        },
+        {
+          title: 'variety',
+          des: 'Python',
+        },
+        {
+          title: 'Forms',
+          des: 'Yellowcoffee',
+        },
+      ],
     },
     {
       title: 'Swift',
       data: ['india', 'KesarCoffee'],
-      SectionImage: require('../assets/images/coffee_3.png'),
-      description:
-        [
-          {
-            title: 'origins', des: 'India'
-          },
-          {
-            title: 'variety', des: 'Swift'
-          },
-          {
-            title: 'Forms', des: 'KesarCoffee'
-          },
-        ],
+      SectionImage: [
+        require('../assets/images/coffee_1.png'),
+        require('../assets/images/coffee_3.png'),
+        require('../assets/images/coffee_2.png'),
+      ],
+      description: [
+        {
+          title: 'origins',
+          des: 'India',
+        },
+        {
+          title: 'variety',
+          des: 'Swift',
+        },
+        {
+          title: 'Forms',
+          des: 'KesarCoffee',
+        },
+      ],
     },
     {
       title: 'AngularJs',
       data: ['Europe', 'RedCoffee'],
-      SectionImage: require('../assets/images/coffee_3.png'),
-      description:
-        [
-          {
-            title: 'origins', des: 'Europe'
-          },
-          {
-            title: 'variety', des: 'Angularjs'
-          },
-          {
-            title: 'Forms', des: 'Redcoffee'
-          },
-        ],
+      SectionImage: [
+        require('../assets/images/coffee_3.png'),
+        require('../assets/images/coffee_1.png'),
+        require('../assets/images/coffee_2.png'),
+      ],
+      description: [
+        {
+          title: 'origins',
+          des: 'Europe',
+        },
+        {
+          title: 'variety',
+          des: 'Angularjs',
+        },
+        {
+          title: 'Forms',
+          des: 'Redcoffee',
+        },
+      ],
     },
   ];
   const latestData = [
@@ -105,86 +135,96 @@ const HomeScreen = ({navigation}) => {
       title: 'Orange',
       data: ['Mumbai'],
       Sectionimage: require('../assets/images/latcoffee1.png'),
-      description:
-        [
-          {
-            title: 'origins', des: 'Mumbai'
-          },
-          {
-            title: 'variety', des: 'Orange'
-          },
-          {
-            title: 'Forms', des: 'Redcoffee'
-          },
-        ],
+      description: [
+        {
+          title: 'origins',
+          des: 'Mumbai',
+        },
+        {
+          title: 'variety',
+          des: 'Orange',
+        },
+        {
+          title: 'Forms',
+          des: 'Redcoffee',
+        },
+      ],
     },
     {
       title: 'Red',
       data: ['Karnataka'],
       Sectionimage: require('../assets/images/latcoffee2.png'),
-      description:
-        [
-          {
-            title: 'origins', des: 'Karnataka'
-          },
-          {
-            title: 'variety', des: 'Red'
-          },
-          {
-            title: 'Forms', des: 'reddishcoffee'
-          },
-        ],
+      description: [
+        {
+          title: 'origins',
+          des: 'Karnataka',
+        },
+        {
+          title: 'variety',
+          des: 'Red',
+        },
+        {
+          title: 'Forms',
+          des: 'reddishcoffee',
+        },
+      ],
     },
     {
       title: 'Brown',
       data: ['Kerala'],
       Sectionimage: require('../assets/images/latcoffee3.png'),
-      description:
-        [
-          {
-            title: 'origins', des: 'kerala'
-          },
-          {
-            title: 'variety', des: 'Brown'
-          },
-          {
-            title: 'Forms', des: 'Brownish'
-          },
-        ],
+      description: [
+        {
+          title: 'origins',
+          des: 'kerala',
+        },
+        {
+          title: 'variety',
+          des: 'Brown',
+        },
+        {
+          title: 'Forms',
+          des: 'Brownish',
+        },
+      ],
     },
     {
       title: 'Black',
       data: ['Goa'],
       Sectionimage: require('../assets/images/latcoffee1.png'),
-      description:
-        [
-          {
-            title: 'origins', des: 'goa'
-          },
-          {
-            title: 'variety', des: 'Black'
-          },
-          {
-            title: 'Forms', des: 'Blackish'
-          },
-        ],
+      description: [
+        {
+          title: 'origins',
+          des: 'goa',
+        },
+        {
+          title: 'variety',
+          des: 'Black',
+        },
+        {
+          title: 'Forms',
+          des: 'Blackish',
+        },
+      ],
     },
     {
       title: 'White',
       data: ['uttarPradesh'],
       Sectionimage: require('../assets/images/latcoffee2.png'),
-      description:
-        [
-          {
-            title: 'origins', des: 'uttarpradesh'
-          },
-          {
-            title: 'variety', des: 'white'
-          },
-          {
-            title: 'Forms', des: 'Whiteish'
-          },
-        ],
+      description: [
+        {
+          title: 'origins',
+          des: 'uttarpradesh',
+        },
+        {
+          title: 'variety',
+          des: 'white',
+        },
+        {
+          title: 'Forms',
+          des: 'Whiteish',
+        },
+      ],
     },
   ];
   const originsData = [
@@ -265,10 +305,25 @@ const HomeScreen = ({navigation}) => {
                       />
                       <Text style={styles.featuredText}>FEATURED</Text>
                     </View>
-                    <Image
+                    <View style={styles.mainImageContainer}>
+                      <Image
+                        style={styles.sectionImage}
+                        source={section.SectionImage[0]} // Main image is the first image in the array
+                      />
+                      <View style={styles.backsideImages}>
+                        {section.SectionImage.slice(1).map((image, index) => (
+                          <Image
+                            key={index}
+                            style={styles.backsideImage}
+                            source={image}
+                          />
+                        ))}
+                      </View>
+                    </View>
+                    {/* <Image
                       style={styles.sectionImage}
                       source={section.SectionImage}
-                    />
+                    /> */}
                     <View style={styles.textItems}>
                       <Text style={styles.sectionTitle}>{section.title}</Text>
                       {section.data.map(item => (
@@ -406,6 +461,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   sectionContainer: {
+    // flexDirection: 'row',
     marginHorizontal: 8,
     elevation: 10,
     shadowColor: '#000',
@@ -489,5 +545,25 @@ const styles = StyleSheet.create({
   itemcontainer: {
     flexDirection: 'column',
     marginVertical: 10,
+  },
+  mainImageContainer: {
+    position: 'relative',
+    // Adjust the width and height of the main image container based on your preference
+  },
+  mainImage: {
+    width: 200, // Adjust the width of the main image as needed
+    height: 200, // Adjust the height of the main image as needed
+    borderRadius: 10, // Adjust the border radius as needed to round the corners of the main image
+  },
+  backsideImages: {
+    flexDirection: 'row',
+    marginTop: -10, // Add spacing between the main image and the backside images
+    marginBottom: 5, // Add spacing between the backside images and the text items
+  },
+  backsideImage: {
+    width: 100, // Adjust the width of the backside images as needed
+    height: 100, // Adjust the height of the backside images as needed
+    marginHorizontal: 10, // Adjust the spacing between backside images as needed
+    opacity: 0.7, // Adjust the opacity of the backside images to make them appear slightly faded
   },
 });
