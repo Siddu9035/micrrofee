@@ -51,8 +51,9 @@ const ProductProfileScreen = ({route, navigation}) => {
     {title: 'Certification', data: 'test certiication'},
     {title: 'Q Grade', data: '79.70'},
   ];
+  const [lotError, setLotError] = useState('');
   const isLoggedInRef = useRef(isLoggedIn);
-  const { width, height } = Dimensions.get('window');
+  const {width, height} = Dimensions.get('window');
 
   const handleClick = () => {
     setCollapsed(!collapsed);
@@ -61,20 +62,31 @@ const ProductProfileScreen = ({route, navigation}) => {
   const handleIconPress = () => {
     setIsLiked(!isLiked);
   };
-  const handleAddToCart = async () => {
+  const handleAddToCart = () => {
     if (!isLoggedIn) {
-      // console.log('User is not logged in. Showing modal.');
       setIsModalVisible(true);
     } else {
-      setIsModalVisible(false);
+      if (selectedUnit === '') {
+        setLotError('Please select a lot before adding to cart.');
+      } else {
+        // Add to cart logic
+        setIsModalVisible(false);
+        setLotError(''); // Clear the error message if a lot is selected
+      }
     }
   };
 
-  const handleBuyNow = async () => {
+  const handleBuyNow = () => {
     if (!isLoggedIn) {
       setIsModalVisible(true);
     } else {
-      setIsModalVisible(false);
+      if (selectedUnit === '') {
+        setLotError('Please select a lot before buying.');
+      } else {
+        // Add to cart logic
+        setIsModalVisible(false);
+        setLotError(''); // Clear the error message if a lot is selected
+      }
     }
   };
 
@@ -91,12 +103,14 @@ const ProductProfileScreen = ({route, navigation}) => {
     setIsIcon1Clicked(!isIcon1Clicked);
     setIsIcon2Clicked(false); // Deselect the other icon
     setIsExpanded(true);
+    setLotError('');
   };
 
   const handleMicroLot = () => {
     setIsIcon2Clicked(!isIcon2Clicked);
     setIsIcon1Clicked(false); // Deselect the other icon
     setIsExpanded(true);
+    setLotError('');
   };
   const closeModal = async () => {
     // navigation.navigate('login');
@@ -154,7 +168,7 @@ const ProductProfileScreen = ({route, navigation}) => {
               horizontal
               data={imageSource}
               renderItem={({item, index}) => (
-                <View style={{width:width}}>
+                <View style={{width: width}}>
                   <Image key={index} source={item} style={styles.img} />
                 </View>
               )}
@@ -216,7 +230,7 @@ const ProductProfileScreen = ({route, navigation}) => {
               </Text>
             </View>
             <View style={styles.line3} />
-            <View style={{flex: 1}}>
+            <View>
               {isLoggedIn && (
                 <View style={styles.selectedFlex}>
                   <Text style={styles.selectLot}>Select A Lot</Text>
@@ -244,6 +258,7 @@ const ProductProfileScreen = ({route, navigation}) => {
                   </View>
                 </View>
               )}
+              {lotError && <Text style={styles.lotErrorText}>{lotError}</Text>}
               <View style={styles.chooseItem}>
                 {isExpanded && (
                   <>
@@ -712,7 +727,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 5,
     borderRadius: 8,
-    height: 130,
+    height: 150,
     width: '80%',
     alignItems: 'center',
   },
@@ -721,6 +736,7 @@ const styles = StyleSheet.create({
     width: 120,
     alignItems: 'center',
     justifyContent: 'center',
+    // marginBottom: 25,
     backgroundColor: 'green',
     borderRadius: 25,
     height: 50,
@@ -747,16 +763,15 @@ const styles = StyleSheet.create({
   loginSpace: {
     alignItems: 'center',
     alignSelf: 'center',
-    // width: '80%',
     marginTop: 15,
+    // marginBottom: 10,
   },
-  errorMessage: {
+  lotErrorText: {
     color: 'red',
     textAlign: 'center',
   },
   img: {
     width: 360,
     height: 170,
-
   },
 });
