@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {Modal} from 'react-native';
 import {
   StyleSheet,
   Text,
@@ -7,14 +6,17 @@ import {
   View,
   ScrollView,
   Image,
+  Modal,
+  FlatList,
+  Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SwiperFlatList from 'react-native-swiper-flatlist';
 const ProductProfileScreen = ({route, navigation}) => {
   // Get the section data passed as a route parameter
-  const {sectionData, sectionDescription, isFeatured} = route.params;
-  const imageSource = sectionData.image;
-  // || sectionData.Sectionimage;
+  const {sectionData, isFeatured} = route.params;
+  const imageSource = sectionData.SectionImage || sectionData.Sectionimage;
   const [collapsed, setCollapsed] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -50,7 +52,7 @@ const ProductProfileScreen = ({route, navigation}) => {
     {title: 'Q Grade', data: '79.70'},
   ];
   const isLoggedInRef = useRef(isLoggedIn);
-  const [showErrorMessage, setShowErrorMessage] = useState('');
+  const { width, height } = Dimensions.get('window');
 
   const handleClick = () => {
     setCollapsed(!collapsed);
@@ -63,10 +65,7 @@ const ProductProfileScreen = ({route, navigation}) => {
     if (!isLoggedIn) {
       // console.log('User is not logged in. Showing modal.');
       setIsModalVisible(true);
-    } else if (selectedUnit == '') {
-      setShowErrorMessage('Please select Lot Before Adding to Cart');
     } else {
-      setShowErrorMessage('');
       setIsModalVisible(false);
     }
   };
@@ -74,10 +73,7 @@ const ProductProfileScreen = ({route, navigation}) => {
   const handleBuyNow = async () => {
     if (!isLoggedIn) {
       setIsModalVisible(true);
-    } else if (selectedUnit == '') {
-      setShowErrorMessage('Please Select Lot before buying');
     } else {
-      setShowErrorMessage('');
       setIsModalVisible(false);
     }
   };
@@ -91,18 +87,16 @@ const ProductProfileScreen = ({route, navigation}) => {
       setCount(count - 1);
     }
   };
-  const handleIcon1Press = () => {
+  const handleNanoLot = () => {
     setIsIcon1Clicked(!isIcon1Clicked);
     setIsIcon2Clicked(false); // Deselect the other icon
     setIsExpanded(true);
-    setShowErrorMessage('');
   };
 
-  const handleIcon2Press = () => {
+  const handleMicroLot = () => {
     setIsIcon2Clicked(!isIcon2Clicked);
     setIsIcon1Clicked(false); // Deselect the other icon
     setIsExpanded(true);
-    setShowErrorMessage('');
   };
   const closeModal = async () => {
     // navigation.navigate('login');
@@ -124,7 +118,6 @@ const ProductProfileScreen = ({route, navigation}) => {
         const isLoggedInValue = isLoggedInString === 'true'; // Convert string to boolean
         setIsLoggedIn(isLoggedInValue);
         isLoggedInRef.current = isLoggedInValue; // Update the ref with the current value
-        setShowErrorMessage('');
       } catch (error) {
         console.log('Error retrieving login status:', error);
       }
@@ -145,7 +138,7 @@ const ProductProfileScreen = ({route, navigation}) => {
       </View>
       <View style={styles.subContainer}>
         <View style={styles.contentContainer}>
-          {isFeatured ? (
+          {isFeatured && (
             <View style={styles.featuredContainer}>
               <Icon
                 name="star"
@@ -155,20 +148,21 @@ const ProductProfileScreen = ({route, navigation}) => {
               />
               <Text style={styles.featuredText}>FEATURED</Text>
             </View>
-          ) : null}
-          <ScrollView horizontal style={styles.sectionimg}>
-            {imageSource.map((imageUrl, index) => (
-              <Image
-                key={index}
-                source={imageUrl}
-                style={styles.img} // Adjust the style as needed
-              />
-            ))}
-          </ScrollView>
-          <View style={styles.iconsContainer}>
+          )}
+          <View>
+            <SwiperFlatList
+              horizontal
+              data={imageSource}
+              renderItem={({item, index}) => (
+                <View style={{width:width}}>
+                  <Image key={index} source={item} style={styles.img} />
+                </View>
+              )}
+              index={0} // Initial index to show
+            />
             <TouchableOpacity
               onPress={handleIconPress}
-              style={styles.iconContainer}>
+              style={styles.iconsContainer}>
               <View style={styles.circularBackground}>
                 <Icon
                   name={isLiked ? 'heart' : 'heart-o'}
@@ -191,146 +185,7 @@ const ProductProfileScreen = ({route, navigation}) => {
           </View>
           <View style={styles.line} />
           <ScrollView style={styles.contentScroll}>
-            {collapsed ? (
-              <>
-                <View style={{flex: 1}}>
-                  {isLoggedIn && (
-                    <View style={styles.selectedFlex}>
-                      <Text style={styles.selectLot}>Select A Lot</Text>
-                      <View style={styles.selectedIcon}>
-                        <TouchableOpacity onPress={handleIcon1Press}>
-                          <Icon
-                            name={isIcon1Clicked ? 'circle' : 'circle-thin'}
-                            size={25}
-                            color={isIcon1Clicked ? 'green' : 'black'}
-                            style={{marginHorizontal: 5}}
-                          />
-                        </TouchableOpacity>
-                        <Text style={styles.nano}>nano</Text>
-                      </View>
-                      <View style={styles.selectedIcon}>
-                        <TouchableOpacity onPress={handleIcon2Press}>
-                          <Icon
-                            name={isIcon2Clicked ? 'circle' : 'circle-thin'}
-                            size={25}
-                            color={isIcon2Clicked ? 'green' : 'black'}
-                            style={{marginHorizontal: 5}}
-                          />
-                        </TouchableOpacity>
-                        <Text style={styles.nano}>micro</Text>
-                      </View>
-                    </View>
-                  )}
-                  {showErrorMessage !== '' && (
-                    <Text
-                      style={{
-                        color: 'red',
-                        marginBottom: 10,
-                        textAlign: 'center',
-                      }}>
-                      {showErrorMessage}
-                    </Text>
-                  )}
-                  <View style={styles.chooseItem}>
-                    {isExpanded && (
-                      <>
-                        <View style={styles.choosingItem}>
-                          <Text style={styles.chooseUnit}>
-                            Choose unit by lbs
-                          </Text>
-                        </View>
-                        <View style={styles.dropDownContainer}>
-                          <TouchableOpacity
-                            style={styles.dropdownSelector}
-                            onPress={() => {
-                              setIsClicked(!isClicked);
-                            }}>
-                            <Text style={styles.dropdownText}>
-                              {selectitem}
-                            </Text>
-                            <Icon
-                              name={isClicked ? 'chevron-up' : 'chevron-down'}
-                              size={25}
-                              color="#9ACD32"
-                              style={{marginLeft: 45}}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      </>
-                    )}
-                  </View>
-                  {showErrorMessage !== '' && (
-                    <Text
-                      style={{
-                        color: 'red',
-                        marginBottom: 10,
-                        textAlign: 'center',
-                      }}>
-                      {showErrorMessage}
-                    </Text>
-                  )}
-                  <View>
-                    <View style={styles.quantityFlex}>
-                      {selectedUnit !== '' && (
-                        <>
-                          <Text style={styles.quantityText}>Quantity</Text>
-                          <View style={styles.counter}>
-                            <TouchableOpacity
-                              style={styles.plusButton}
-                              onPress={incrementCount}>
-                              <Icon name="plus" size={20} color={'black'} />
-                            </TouchableOpacity>
-
-                            <Text style={{color: 'black'}}>{count}</Text>
-
-                            <TouchableOpacity onPress={decrementCount}>
-                              <Icon name="minus" size={20} color={'black'} />
-                            </TouchableOpacity>
-                          </View>
-                          <View style={styles.priceContainer}>
-                            <Text style={styles.priceText}>
-                              ${selectedPrice * count}
-                            </Text>
-                          </View>
-                        </>
-                      )}
-                    </View>
-                  </View>
-                </View>
-                <View>
-                  {isClicked && (
-                    <View style={styles.dropdownArea}>
-                      <View>
-                        {selectData.map((item, index) => (
-                          <TouchableOpacity
-                            key={index}
-                            style={[
-                              styles.countryitem,
-                              item.itemName == selectitem &&
-                                styles.selectedItem,
-                            ]}
-                            onPress={() => {
-                              setSelectItem(item.itemName);
-                              setIsClicked(false);
-                              setSelectedUnit(item.itemName);
-                              setSelectedPrice(item.price);
-                            }}>
-                            <Text
-                              style={[
-                                styles.countryText,
-                                item.itemName == selectitem &&
-                                  styles.selectItemText,
-                              ]}>
-                              {item.itemName}
-                            </Text>
-                          </TouchableOpacity>
-                        ))}
-                      </View>
-                    </View>
-                  )}
-                </View>
-              </>
-            ) : (
+            {collapsed && (
               <>
                 <View>
                   {sectionData.description.map((item, index) => (
@@ -349,142 +204,129 @@ const ProductProfileScreen = ({route, navigation}) => {
                   ))}
                 </View>
                 <View style={styles.line2} />
-                <View style={styles.aboutCoffee}>
-                  <Text style={styles.paragraph}>
-                    <Text style={styles.textBold}>About coffee: </Text>
-                    React Native UI Kitten is one of the most popular UI
-                    frameworks available in the React Native world. They provide
-                    so many tools and a drop-down component is one of them. They
-                    have named the component Select.
-                  </Text>
-                </View>
-                <View style={styles.line3} />
-                <View style={{flex: 1}}>
-                  {isLoggedIn && (
-                    <View style={styles.selectedFlex}>
-                      <Text style={styles.selectLot}>Select A Lot</Text>
-                      <View style={styles.selectedIcon}>
-                        <TouchableOpacity onPress={handleIcon1Press}>
-                          <Icon
-                            name={isIcon1Clicked ? 'circle' : 'circle-thin'}
-                            size={25}
-                            color={isIcon1Clicked ? 'green' : 'black'}
-                            style={{marginHorizontal: 5}}
-                          />
-                        </TouchableOpacity>
-                        <Text style={styles.nano}>nano</Text>
-                      </View>
-                      <View style={styles.selectedIcon}>
-                        <TouchableOpacity onPress={handleIcon2Press}>
-                          <Icon
-                            name={isIcon2Clicked ? 'circle' : 'circle-thin'}
-                            size={25}
-                            color={isIcon2Clicked ? 'green' : 'black'}
-                            style={{marginHorizontal: 5}}
-                          />
-                        </TouchableOpacity>
-                        <Text style={styles.nano}>micro</Text>
-                      </View>
-                    </View>
-                  )}
-                  {showErrorMessage !== '' && (
-                    <Text
-                      style={{
-                        color: 'red',
-                        marginBottom: 10,
-                        textAlign: 'center',
-                      }}>
-                      {showErrorMessage}
-                    </Text>
-                  )}
-                  <View style={styles.chooseItem}>
-                    {isExpanded && (
-                      <>
-                        <View style={styles.choosingItem}>
-                          <Text style={styles.chooseUnit}>
-                            Choose unit by lbs
-                          </Text>
-                        </View>
-                        <View style={styles.dropDownContainer}>
-                          <TouchableOpacity
-                            style={styles.dropdownSelector}
-                            onPress={() => {
-                              setIsClicked(!isClicked);
-                            }}>
-                            <Text style={styles.dropdownText}>
-                              {selectitem}
-                            </Text>
-                            <Icon
-                              name={isClicked ? 'chevron-up' : 'chevron-down'}
-                              size={25}
-                              color="#9ACD32"
-                              style={{marginLeft: 35}}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      </>
-                    )}
-                  </View>
-                  <View>
-                    <View style={styles.quantityFlex}>
-                      {selectedUnit !== '' && (
-                        <>
-                          <Text style={styles.quantityText}>Quantity</Text>
-                          <View style={styles.counter}>
-                            <TouchableOpacity
-                              style={styles.plusButton}
-                              onPress={incrementCount}>
-                              <Icon name="plus" size={20} color={'black'} />
-                            </TouchableOpacity>
-
-                            <Text style={{color: 'black'}}>{count}</Text>
-
-                            <TouchableOpacity onPress={decrementCount}>
-                              <Icon name="minus" size={20} color={'black'} />
-                            </TouchableOpacity>
-                          </View>
-                          <View style={styles.priceContainer}>
-                            <Text style={styles.priceText}>
-                              ${selectedPrice * count}
-                            </Text>
-                          </View>
-                        </>
-                      )}
-                    </View>
-                  </View>
-                  {isClicked && (
-                    <View style={styles.dropdownArea}>
-                      <View>
-                        {selectData.map((item, index) => (
-                          <TouchableOpacity
-                            key={index}
-                            style={[
-                              styles.countryitem,
-                              item.itemName == selectitem &&
-                                styles.selectedItem,
-                            ]}
-                            onPress={() => {
-                              setSelectItem(item.itemName);
-                              setIsClicked(false);
-                              setSelectedUnit(item.itemName);
-                              setSelectedPrice(item.price);
-                            }}>
-                            <Text
-                              style={[
-                                styles.countryText,
-                                item.itemName == selectitem &&
-                                  styles.selectItemText,
-                              ]}>
-                              {item.itemName}
-                            </Text>
-                          </TouchableOpacity>
-                        ))}
-                      </View>
-                    </View>
-                  )}
-                </View>
               </>
             )}
+            <View style={styles.aboutCoffee}>
+              <Text style={styles.paragraph}>
+                <Text style={styles.textBold}>About coffee: </Text>
+                React Native UI Kitten is one of the most popular UI frameworks
+                available in the React Native world. They provide so many tools
+                and a drop-down component is one of them. They have named the
+                component Select.
+              </Text>
+            </View>
+            <View style={styles.line3} />
+            <View style={{flex: 1}}>
+              {isLoggedIn && (
+                <View style={styles.selectedFlex}>
+                  <Text style={styles.selectLot}>Select A Lot</Text>
+                  <View style={styles.selectedIcon}>
+                    <TouchableOpacity onPress={handleNanoLot}>
+                      <Icon
+                        name={isIcon1Clicked ? 'circle' : 'circle-thin'}
+                        size={25}
+                        color={isIcon1Clicked ? 'green' : 'black'}
+                        style={{marginHorizontal: 5}}
+                      />
+                    </TouchableOpacity>
+                    <Text style={styles.nano}>nano</Text>
+                  </View>
+                  <View style={styles.selectedIcon}>
+                    <TouchableOpacity onPress={handleMicroLot}>
+                      <Icon
+                        name={isIcon2Clicked ? 'circle' : 'circle-thin'}
+                        size={25}
+                        color={isIcon2Clicked ? 'green' : 'black'}
+                        style={{marginHorizontal: 5}}
+                      />
+                    </TouchableOpacity>
+                    <Text style={styles.nano}>micro</Text>
+                  </View>
+                </View>
+              )}
+              <View style={styles.chooseItem}>
+                {isExpanded && (
+                  <>
+                    <View style={styles.choosingItem}>
+                      <Text style={styles.chooseUnit}>Choose unit by lbs</Text>
+                    </View>
+                    <View style={styles.dropDownContainer}>
+                      <TouchableOpacity
+                        style={styles.dropdownSelector}
+                        onPress={() => {
+                          setIsClicked(!isClicked);
+                        }}>
+                        <Text style={styles.dropdownText}>{selectitem}</Text>
+                        <Icon
+                          name={isClicked ? 'chevron-up' : 'chevron-down'}
+                          size={25}
+                          color="#9ACD32"
+                          style={{marginLeft: 45}}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </>
+                )}
+              </View>
+              <View>
+                <View style={styles.quantityFlex}>
+                  {selectedUnit !== '' && (
+                    <>
+                      <Text style={styles.quantityText}>Quantity</Text>
+                      <View style={styles.counter}>
+                        <TouchableOpacity
+                          style={styles.plusButton}
+                          onPress={incrementCount}>
+                          <Icon name="plus" size={20} color={'black'} />
+                        </TouchableOpacity>
+
+                        <Text style={{color: 'black'}}>{count}</Text>
+
+                        <TouchableOpacity onPress={decrementCount}>
+                          <Icon name="minus" size={20} color={'black'} />
+                        </TouchableOpacity>
+                      </View>
+                      <View style={styles.priceContainer}>
+                        <Text style={styles.priceText}>
+                          ${selectedPrice * count}
+                        </Text>
+                      </View>
+                    </>
+                  )}
+                </View>
+              </View>
+            </View>
+            <View>
+              {isClicked && (
+                <View style={styles.dropdownArea}>
+                  <View>
+                    {selectData.map((item, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        style={[
+                          styles.countryitem,
+                          item.itemName == selectitem && styles.selectedItem,
+                        ]}
+                        onPress={() => {
+                          setSelectItem(item.itemName);
+                          setIsClicked(false);
+                          setSelectedUnit(item.itemName);
+                          setSelectedPrice(item.price);
+                        }}>
+                        <Text
+                          style={[
+                            styles.countryText,
+                            item.itemName == selectitem &&
+                              styles.selectItemText,
+                          ]}>
+                          {item.itemName}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+              )}
+            </View>
           </ScrollView>
           <View style={styles.buttons}>
             <View style={styles.addButton}>
@@ -561,10 +403,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
   },
-  sectionImage: {
-    width: '100%',
-    height: 150,
-  },
   featuredContainer: {
     position: 'absolute',
     flexDirection: 'row',
@@ -587,8 +425,9 @@ const styles = StyleSheet.create({
   iconsContainer: {
     position: 'absolute',
     alignSelf: 'flex-end',
-    top: 85,
+    top: 100,
     right: 5,
+    paddingRight: 10,
   },
   contentScroll: {
     flex: 1,
@@ -605,8 +444,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#DCDCDC',
     justifyContent: 'space-between',
-    height: 50,
-    marginTop: -200,
+    // marginTop: -200,
   },
   line: {
     borderBottomWidth: 0.8,
@@ -916,14 +754,9 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
   },
-  sectionimg: {
-    flexDirection: 'row',
-    flex: 1,
-    // paddingTop: 5,
-  },
   img: {
-    width: 400,
+    width: 360,
     height: 170,
-    // marginHorizontal: 10,
+
   },
 });

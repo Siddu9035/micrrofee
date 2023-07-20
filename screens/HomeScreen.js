@@ -17,8 +17,7 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'Java',
       data: ['Central America', 'BalckCoffee'],
-      SectionImage: require('../assets/images/coffee_1.png'),
-      image: [
+      SectionImage: [
         require('../assets/images/coffee_1.png'),
         require('../assets/images/coffee_2.png'),
         require('../assets/images/coffee_3.png'),
@@ -41,10 +40,9 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'javaScript',
       data: ['America', 'BrownCoffee'],
-      SectionImage: require('../assets/images/coffee_2.png'),
-      image: [
-        require('../assets/images/coffee_1.png'),
+      SectionImage: [
         require('../assets/images/coffee_2.png'),
+        require('../assets/images/coffee_1.png'),
         require('../assets/images/coffee_3.png'),
       ],
       description: [
@@ -65,11 +63,10 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'python',
       data: ['North America', 'YellowCoffee'],
-      SectionImage: require('../assets/images/coffee_3.png'),
-      image: [
-        require('../assets/images/coffee_1.png'),
-        require('../assets/images/coffee_2.png'),
+      SectionImage: [
         require('../assets/images/coffee_3.png'),
+        require('../assets/images/coffee_2.png'),
+        require('../assets/images/coffee_1.png'),
       ],
       description: [
         {
@@ -89,11 +86,10 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'Swift',
       data: ['india', 'KesarCoffee'],
-      SectionImage: require('../assets/images/coffee_3.png'),
-      image: [
-        require('../assets/images/coffee_1.png'),
-        require('../assets/images/coffee_2.png'),
+      SectionImage: [
         require('../assets/images/coffee_3.png'),
+        require('../assets/images/coffee_2.png'),
+        require('../assets/images/coffee_1.png'),
       ],
       description: [
         {
@@ -113,8 +109,7 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'AngularJs',
       data: ['Europe', 'RedCoffee'],
-      SectionImage: require('../assets/images/coffee_3.png'),
-      image: [
+      SectionImage: [
         require('../assets/images/coffee_1.png'),
         require('../assets/images/coffee_2.png'),
         require('../assets/images/coffee_3.png'),
@@ -139,11 +134,10 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'Orange',
       data: ['Mumbai'],
-      Sectionimage: require('../assets/images/latcoffee1.png'),
-      image: [
-        require('../assets/images/coffee_2.png'),
-        require('../assets/images/coffee_1.png'),
-        require('../assets/images/coffee_3.png'),
+      Sectionimage: [
+        require('../assets/images/latcoffee1.png'),
+        require('../assets/images/latcoffee2.png'),
+        require('../assets/images/latcoffee3.png'),
       ],
       description: [
         {
@@ -163,11 +157,10 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'Red',
       data: ['Karnataka'],
-      Sectionimage: require('../assets/images/latcoffee2.png'),
-      image: [
-        require('../assets/images/coffee_3.png'),
-        require('../assets/images/coffee_2.png'),
-        require('../assets/images/coffee_1.png'),
+      Sectionimage: [
+        require('../assets/images/latcoffee2.png'),
+        require('../assets/images/latcoffee1.png'),
+        require('../assets/images/latcoffee3.png'),
       ],
       description: [
         {
@@ -187,11 +180,10 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'Brown',
       data: ['Kerala'],
-      Sectionimage: require('../assets/images/latcoffee3.png'),
-      image: [
-        require('../assets/images/coffee_2.png'),
-        require('../assets/images/coffee_1.png'),
-        require('../assets/images/coffee_3.png'),
+      Sectionimage: [
+        require('../assets/images/latcoffee3.png'),
+        require('../assets/images/latcoffee2.png'),
+        require('../assets/images/latcoffee1.png'),
       ],
       description: [
         {
@@ -211,11 +203,10 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'Black',
       data: ['Goa'],
-      Sectionimage: require('../assets/images/latcoffee1.png'),
-      image: [
-        require('../assets/images/coffee_1.png'),
-        require('../assets/images/coffee_2.png'),
-        require('../assets/images/coffee_3.png'),
+      Sectionimage: [
+        require('../assets/images/latcoffee1.png'),
+        require('../assets/images/latcoffee2.png'),
+        require('../assets/images/latcoffee3.png'),
       ],
       description: [
         {
@@ -235,11 +226,10 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'White',
       data: ['uttarPradesh'],
-      Sectionimage: require('../assets/images/latcoffee2.png'),
-      image: [
-        require('../assets/images/coffee_3.png'),
-        require('../assets/images/coffee_1.png'),
-        require('../assets/images/coffee_2.png'),
+      Sectionimage: [
+        require('../assets/images/latcoffee2.png'),
+        require('../assets/images/latcoffee1.png'),
+        require('../assets/images/latcoffee3.png'),
       ],
       description: [
         {
@@ -336,8 +326,8 @@ const HomeScreen = ({navigation}) => {
                       <Text style={styles.featuredText}>FEATURED</Text>
                     </View>
                     <Image
+                      source={FeaturedData[0].SectionImage[0]}
                       style={styles.sectionImage}
-                      source={section.SectionImage}
                     />
                     <View style={styles.textItems}>
                       <Text style={styles.sectionTitle}>{section.title}</Text>
@@ -366,8 +356,8 @@ const HomeScreen = ({navigation}) => {
                     style={styles.sectionContainer}
                     onPress={() => handleSectionPress(section, false)}>
                     <Image
-                      style={styles.Sectionimage}
-                      source={section.Sectionimage}
+                      source={latestData[0].Sectionimage[0]}
+                      style={styles.sectionImage}
                     />
                     <View style={styles.textItems}>
                       <Text style={styles.sectionTitle}>{section.title}</Text>
