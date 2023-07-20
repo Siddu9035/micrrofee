@@ -17,7 +17,8 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'Java',
       data: ['Central America', 'BalckCoffee'],
-      SectionImage: [
+      SectionImage: require('../assets/images/coffee_1.png'),
+      image: [
         require('../assets/images/coffee_1.png'),
         require('../assets/images/coffee_2.png'),
         require('../assets/images/coffee_3.png'),
@@ -40,9 +41,10 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'javaScript',
       data: ['America', 'BrownCoffee'],
-      SectionImage: [
-        require('../assets/images/coffee_2.png'),
+      SectionImage: require('../assets/images/coffee_2.png'),
+      image: [
         require('../assets/images/coffee_1.png'),
+        require('../assets/images/coffee_2.png'),
         require('../assets/images/coffee_3.png'),
       ],
       description: [
@@ -63,10 +65,11 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'python',
       data: ['North America', 'YellowCoffee'],
-      SectionImage: [
-        require('../assets/images/coffee_3.png'),
-        require('../assets/images/coffee_2.png'),
+      SectionImage: require('../assets/images/coffee_3.png'),
+      image: [
         require('../assets/images/coffee_1.png'),
+        require('../assets/images/coffee_2.png'),
+        require('../assets/images/coffee_3.png'),
       ],
       description: [
         {
@@ -86,10 +89,11 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'Swift',
       data: ['india', 'KesarCoffee'],
-      SectionImage: [
+      SectionImage: require('../assets/images/coffee_3.png'),
+      image: [
         require('../assets/images/coffee_1.png'),
-        require('../assets/images/coffee_3.png'),
         require('../assets/images/coffee_2.png'),
+        require('../assets/images/coffee_3.png'),
       ],
       description: [
         {
@@ -109,10 +113,11 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'AngularJs',
       data: ['Europe', 'RedCoffee'],
-      SectionImage: [
-        require('../assets/images/coffee_3.png'),
+      SectionImage: require('../assets/images/coffee_3.png'),
+      image: [
         require('../assets/images/coffee_1.png'),
         require('../assets/images/coffee_2.png'),
+        require('../assets/images/coffee_3.png'),
       ],
       description: [
         {
@@ -135,6 +140,11 @@ const HomeScreen = ({navigation}) => {
       title: 'Orange',
       data: ['Mumbai'],
       Sectionimage: require('../assets/images/latcoffee1.png'),
+      image: [
+        require('../assets/images/coffee_2.png'),
+        require('../assets/images/coffee_1.png'),
+        require('../assets/images/coffee_3.png'),
+      ],
       description: [
         {
           title: 'origins',
@@ -154,6 +164,11 @@ const HomeScreen = ({navigation}) => {
       title: 'Red',
       data: ['Karnataka'],
       Sectionimage: require('../assets/images/latcoffee2.png'),
+      image: [
+        require('../assets/images/coffee_3.png'),
+        require('../assets/images/coffee_2.png'),
+        require('../assets/images/coffee_1.png'),
+      ],
       description: [
         {
           title: 'origins',
@@ -173,6 +188,11 @@ const HomeScreen = ({navigation}) => {
       title: 'Brown',
       data: ['Kerala'],
       Sectionimage: require('../assets/images/latcoffee3.png'),
+      image: [
+        require('../assets/images/coffee_2.png'),
+        require('../assets/images/coffee_1.png'),
+        require('../assets/images/coffee_3.png'),
+      ],
       description: [
         {
           title: 'origins',
@@ -192,6 +212,11 @@ const HomeScreen = ({navigation}) => {
       title: 'Black',
       data: ['Goa'],
       Sectionimage: require('../assets/images/latcoffee1.png'),
+      image: [
+        require('../assets/images/coffee_1.png'),
+        require('../assets/images/coffee_2.png'),
+        require('../assets/images/coffee_3.png'),
+      ],
       description: [
         {
           title: 'origins',
@@ -211,6 +236,11 @@ const HomeScreen = ({navigation}) => {
       title: 'White',
       data: ['uttarPradesh'],
       Sectionimage: require('../assets/images/latcoffee2.png'),
+      image: [
+        require('../assets/images/coffee_3.png'),
+        require('../assets/images/coffee_1.png'),
+        require('../assets/images/coffee_2.png'),
+      ],
       description: [
         {
           title: 'origins',
@@ -305,25 +335,10 @@ const HomeScreen = ({navigation}) => {
                       />
                       <Text style={styles.featuredText}>FEATURED</Text>
                     </View>
-                    <View style={styles.mainImageContainer}>
-                      <Image
-                        style={styles.sectionImage}
-                        source={section.SectionImage[0]} // Main image is the first image in the array
-                      />
-                      <View style={styles.backsideImages}>
-                        {section.SectionImage.slice(1).map((image, index) => (
-                          <Image
-                            key={index}
-                            style={styles.backsideImage}
-                            source={image}
-                          />
-                        ))}
-                      </View>
-                    </View>
-                    {/* <Image
+                    <Image
                       style={styles.sectionImage}
                       source={section.SectionImage}
-                    /> */}
+                    />
                     <View style={styles.textItems}>
                       <Text style={styles.sectionTitle}>{section.title}</Text>
                       {section.data.map(item => (
@@ -461,7 +476,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   sectionContainer: {
-    // flexDirection: 'row',
     marginHorizontal: 8,
     elevation: 10,
     shadowColor: '#000',
@@ -545,25 +559,5 @@ const styles = StyleSheet.create({
   itemcontainer: {
     flexDirection: 'column',
     marginVertical: 10,
-  },
-  mainImageContainer: {
-    position: 'relative',
-    // Adjust the width and height of the main image container based on your preference
-  },
-  mainImage: {
-    width: 200, // Adjust the width of the main image as needed
-    height: 200, // Adjust the height of the main image as needed
-    borderRadius: 10, // Adjust the border radius as needed to round the corners of the main image
-  },
-  backsideImages: {
-    flexDirection: 'row',
-    marginTop: -10, // Add spacing between the main image and the backside images
-    marginBottom: 5, // Add spacing between the backside images and the text items
-  },
-  backsideImage: {
-    width: 100, // Adjust the width of the backside images as needed
-    height: 100, // Adjust the height of the backside images as needed
-    marginHorizontal: 10, // Adjust the spacing between backside images as needed
-    opacity: 0.7, // Adjust the opacity of the backside images to make them appear slightly faded
   },
 });

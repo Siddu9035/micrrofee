@@ -13,7 +13,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const ProductProfileScreen = ({route, navigation}) => {
   // Get the section data passed as a route parameter
   const {sectionData, sectionDescription, isFeatured} = route.params;
-  const imageSource = sectionData.SectionImage || sectionData.Sectionimage;
+  const imageSource = sectionData.image;
+  // || sectionData.Sectionimage;
   const [collapsed, setCollapsed] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -49,8 +50,7 @@ const ProductProfileScreen = ({route, navigation}) => {
     {title: 'Q Grade', data: '79.70'},
   ];
   const isLoggedInRef = useRef(isLoggedIn);
-  const [selectedLot, setSelectedLot] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [showErrorMessage, setShowErrorMessage] = useState('');
 
   const handleClick = () => {
     setCollapsed(!collapsed);
@@ -60,33 +60,24 @@ const ProductProfileScreen = ({route, navigation}) => {
     setIsLiked(!isLiked);
   };
   const handleAddToCart = async () => {
-    if (!isLoggedIn || selectedLot == '') {
+    if (!isLoggedIn) {
       // console.log('User is not logged in. Showing modal.');
       setIsModalVisible(true);
-      setErrorMessage('Please select Lot Before Adding to Cart');
-      try {
-        // Store the login status as 'false' in AsyncStorage
-        await AsyncStorage.setItem('isLoggedIn', 'false');
-      } catch (error) {
-        console.log('Error storing login status:', error);
-      }
+    } else if (selectedUnit == '') {
+      setShowErrorMessage('Please select Lot Before Adding to Cart');
     } else {
+      setShowErrorMessage('');
       setIsModalVisible(false);
-      setErrorMessage('');
     }
   };
 
   const handleBuyNow = async () => {
     if (!isLoggedIn) {
       setIsModalVisible(true);
-      setErrorMessage('');
-      try {
-        // Store the login status as 'false' in AsyncStorage
-        await AsyncStorage.setItem('isLoggedIn', 'false');
-      } catch (error) {
-        console.log('Error storing login status:', error);
-      }
+    } else if (selectedUnit == '') {
+      setShowErrorMessage('Please Select Lot before buying');
     } else {
+      setShowErrorMessage('');
       setIsModalVisible(false);
     }
   };
@@ -96,7 +87,7 @@ const ProductProfileScreen = ({route, navigation}) => {
   };
 
   const decrementCount = () => {
-    if (count > 0) {
+    if (count > 1) {
       setCount(count - 1);
     }
   };
@@ -104,14 +95,14 @@ const ProductProfileScreen = ({route, navigation}) => {
     setIsIcon1Clicked(!isIcon1Clicked);
     setIsIcon2Clicked(false); // Deselect the other icon
     setIsExpanded(true);
-    setErrorMessage('');
+    setShowErrorMessage('');
   };
 
   const handleIcon2Press = () => {
     setIsIcon2Clicked(!isIcon2Clicked);
     setIsIcon1Clicked(false); // Deselect the other icon
     setIsExpanded(true);
-    setErrorMessage('');
+    setShowErrorMessage('');
   };
   const closeModal = async () => {
     // navigation.navigate('login');
@@ -133,11 +124,12 @@ const ProductProfileScreen = ({route, navigation}) => {
         const isLoggedInValue = isLoggedInString === 'true'; // Convert string to boolean
         setIsLoggedIn(isLoggedInValue);
         isLoggedInRef.current = isLoggedInValue; // Update the ref with the current value
+        setShowErrorMessage('');
       } catch (error) {
         console.log('Error retrieving login status:', error);
       }
     };
-  
+
     checkLoginStatus();
   }, [setIsLoggedIn]);
 
@@ -164,7 +156,15 @@ const ProductProfileScreen = ({route, navigation}) => {
               <Text style={styles.featuredText}>FEATURED</Text>
             </View>
           ) : null}
-          <Image style={styles.sectionImage} source={imageSource} />
+          <ScrollView horizontal style={styles.sectionimg}>
+            {imageSource.map((imageUrl, index) => (
+              <Image
+                key={index}
+                source={imageUrl}
+                style={styles.img} // Adjust the style as needed
+              />
+            ))}
+          </ScrollView>
           <View style={styles.iconsContainer}>
             <TouchableOpacity
               onPress={handleIconPress}
@@ -192,122 +192,144 @@ const ProductProfileScreen = ({route, navigation}) => {
           <View style={styles.line} />
           <ScrollView style={styles.contentScroll}>
             {collapsed ? (
-              <View style={{flex: 1}}>
-                {isLoggedIn && (
-                  <View style={styles.selectedFlex}>
-                    <Text style={styles.selectLot}>Select A Lot</Text>
-                    <View style={styles.selectedIcon}>
-                      <TouchableOpacity onPress={handleIcon1Press}>
-                        <Icon
-                          name={isIcon1Clicked ? 'circle' : 'circle-thin'}
-                          size={25}
-                          color={isIcon1Clicked ? 'green' : 'black'}
-                          style={{marginHorizontal: 5}}
-                        />
-                      </TouchableOpacity>
-                      <Text style={styles.nano}>nano</Text>
-                    </View>
-                    <View style={styles.selectedIcon}>
-                      <TouchableOpacity onPress={handleIcon2Press}>
-                        <Icon
-                          name={isIcon2Clicked ? 'circle' : 'circle-thin'}
-                          size={25}
-                          color={isIcon2Clicked ? 'green' : 'black'}
-                          style={{marginHorizontal: 5}}
-                        />
-                      </TouchableOpacity>
-                      <Text style={styles.nano}>micro</Text>
-                    </View>
-                  </View>
-                )}
-
-                {errorMessage ? (
-                  <Text style={styles.errorMessage}>{errorMessage}</Text>
-                ) : null}
-                <View style={styles.chooseItem}>
-                  {isExpanded && (
-                    <>
-                      <View style={styles.choosingItem}>
-                        <Text style={styles.chooseUnit}>
-                          Choose unit by lbs
-                        </Text>
-                      </View>
-                      <View style={styles.dropDownContainer}>
-                        <TouchableOpacity
-                          style={styles.dropdownSelector}
-                          onPress={() => {
-                            setIsClicked(!isClicked);
-                          }}>
-                          <Text style={styles.dropdownText}>{selectitem}</Text>
+              <>
+                <View style={{flex: 1}}>
+                  {isLoggedIn && (
+                    <View style={styles.selectedFlex}>
+                      <Text style={styles.selectLot}>Select A Lot</Text>
+                      <View style={styles.selectedIcon}>
+                        <TouchableOpacity onPress={handleIcon1Press}>
                           <Icon
-                            name={isClicked ? 'chevron-up' : 'chevron-down'}
+                            name={isIcon1Clicked ? 'circle' : 'circle-thin'}
                             size={25}
-                            color="#9ACD32"
-                            style={{marginLeft: 45}}
+                            color={isIcon1Clicked ? 'green' : 'black'}
+                            style={{marginHorizontal: 5}}
                           />
                         </TouchableOpacity>
+                        <Text style={styles.nano}>nano</Text>
                       </View>
-                      {isClicked && (
-                        <View style={[styles.dropdownArea, {marginBottom: isClicked ? 50 : 0}]}>
-                          <View>
-                            {selectData.map((item, index) => (
-                              <TouchableOpacity
-                                key={index}
-                                style={[
-                                  styles.countryitem,
-                                  item.itemName == selectitem &&
-                                    styles.selectedItem,
-                                ]}
-                                onPress={() => {
-                                  setSelectItem(item.itemName);
-                                  setIsClicked(false);
-                                  setSelectedUnit(item.itemName);
-                                  setSelectedPrice(item.price);
-                                }}>
-                                <Text
-                                  style={[
-                                    styles.countryText,
-                                    item.itemName == selectitem &&
-                                      styles.selectItemText,
-                                  ]}>
-                                  {item.itemName}
-                                </Text>
-                              </TouchableOpacity>
-                            ))}
-                          </View>
-                        </View>
-                      )}
-                    </>
+                      <View style={styles.selectedIcon}>
+                        <TouchableOpacity onPress={handleIcon2Press}>
+                          <Icon
+                            name={isIcon2Clicked ? 'circle' : 'circle-thin'}
+                            size={25}
+                            color={isIcon2Clicked ? 'green' : 'black'}
+                            style={{marginHorizontal: 5}}
+                          />
+                        </TouchableOpacity>
+                        <Text style={styles.nano}>micro</Text>
+                      </View>
+                    </View>
                   )}
-                </View>
-                <View>
-                  <View style={[styles.quantityFlex, {marginTop: isClicked ? 80 : 0 }]}>
-                    {selectedUnit !== '' && (
+                  {showErrorMessage !== '' && (
+                    <Text
+                      style={{
+                        color: 'red',
+                        marginBottom: 10,
+                        textAlign: 'center',
+                      }}>
+                      {showErrorMessage}
+                    </Text>
+                  )}
+                  <View style={styles.chooseItem}>
+                    {isExpanded && (
                       <>
-                        <Text style={styles.quantityText}>Quantity</Text>
-                        <View style={styles.counter}>
-                          <TouchableOpacity
-                            style={styles.plusButton}
-                            onPress={incrementCount}>
-                            <Icon name="plus" size={20} color={'black'} />
-                          </TouchableOpacity>
-
-                          <Text style={{color: 'black'}}>{count}</Text>
-
-                          <TouchableOpacity onPress={decrementCount}>
-                            <Icon name="minus" size={20} color={'black'} />
-                          </TouchableOpacity>
-                        </View>
-                        <View style={styles.priceContainer}>
-                          <Text style={styles.priceText}>
-                            ${selectedPrice * count}
+                        <View style={styles.choosingItem}>
+                          <Text style={styles.chooseUnit}>
+                            Choose unit by lbs
                           </Text>
+                        </View>
+                        <View style={styles.dropDownContainer}>
+                          <TouchableOpacity
+                            style={styles.dropdownSelector}
+                            onPress={() => {
+                              setIsClicked(!isClicked);
+                            }}>
+                            <Text style={styles.dropdownText}>
+                              {selectitem}
+                            </Text>
+                            <Icon
+                              name={isClicked ? 'chevron-up' : 'chevron-down'}
+                              size={25}
+                              color="#9ACD32"
+                              style={{marginLeft: 45}}
+                            />
+                          </TouchableOpacity>
                         </View>
                       </>
                     )}
                   </View>
+                  {showErrorMessage !== '' && (
+                    <Text
+                      style={{
+                        color: 'red',
+                        marginBottom: 10,
+                        textAlign: 'center',
+                      }}>
+                      {showErrorMessage}
+                    </Text>
+                  )}
+                  <View>
+                    <View style={styles.quantityFlex}>
+                      {selectedUnit !== '' && (
+                        <>
+                          <Text style={styles.quantityText}>Quantity</Text>
+                          <View style={styles.counter}>
+                            <TouchableOpacity
+                              style={styles.plusButton}
+                              onPress={incrementCount}>
+                              <Icon name="plus" size={20} color={'black'} />
+                            </TouchableOpacity>
+
+                            <Text style={{color: 'black'}}>{count}</Text>
+
+                            <TouchableOpacity onPress={decrementCount}>
+                              <Icon name="minus" size={20} color={'black'} />
+                            </TouchableOpacity>
+                          </View>
+                          <View style={styles.priceContainer}>
+                            <Text style={styles.priceText}>
+                              ${selectedPrice * count}
+                            </Text>
+                          </View>
+                        </>
+                      )}
+                    </View>
+                  </View>
                 </View>
-              </View>
+                <View>
+                  {isClicked && (
+                    <View style={styles.dropdownArea}>
+                      <View>
+                        {selectData.map((item, index) => (
+                          <TouchableOpacity
+                            key={index}
+                            style={[
+                              styles.countryitem,
+                              item.itemName == selectitem &&
+                                styles.selectedItem,
+                            ]}
+                            onPress={() => {
+                              setSelectItem(item.itemName);
+                              setIsClicked(false);
+                              setSelectedUnit(item.itemName);
+                              setSelectedPrice(item.price);
+                            }}>
+                            <Text
+                              style={[
+                                styles.countryText,
+                                item.itemName == selectitem &&
+                                  styles.selectItemText,
+                              ]}>
+                              {item.itemName}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </View>
+                  )}
+                </View>
+              </>
             ) : (
               <>
                 <View>
@@ -365,6 +387,16 @@ const ProductProfileScreen = ({route, navigation}) => {
                       </View>
                     </View>
                   )}
+                  {showErrorMessage !== '' && (
+                    <Text
+                      style={{
+                        color: 'red',
+                        marginBottom: 10,
+                        textAlign: 'center',
+                      }}>
+                      {showErrorMessage}
+                    </Text>
+                  )}
                   <View style={styles.chooseItem}>
                     {isExpanded && (
                       <>
@@ -390,36 +422,6 @@ const ProductProfileScreen = ({route, navigation}) => {
                             />
                           </TouchableOpacity>
                         </View>
-                        {isClicked && (
-                          <View style={styles.dropdownArea}>
-                            <View>
-                              {selectData.map((item, index) => (
-                                <TouchableOpacity
-                                  key={index}
-                                  style={[
-                                    styles.countryitem,
-                                    item.itemName == selectitem &&
-                                      styles.selectedItem,
-                                  ]}
-                                  onPress={() => {
-                                    setSelectItem(item.itemName);
-                                    setIsClicked(false);
-                                    setSelectedUnit(item.itemName);
-                                    setSelectedPrice(item.price);
-                                  }}>
-                                  <Text
-                                    style={[
-                                      styles.countryText,
-                                      item.itemName == selectitem &&
-                                        styles.selectItemText,
-                                    ]}>
-                                    {item.itemName}
-                                  </Text>
-                                </TouchableOpacity>
-                              ))}
-                            </View>
-                          </View>
-                        )}
                       </>
                     )}
                   </View>
@@ -450,6 +452,36 @@ const ProductProfileScreen = ({route, navigation}) => {
                       )}
                     </View>
                   </View>
+                  {isClicked && (
+                    <View style={styles.dropdownArea}>
+                      <View>
+                        {selectData.map((item, index) => (
+                          <TouchableOpacity
+                            key={index}
+                            style={[
+                              styles.countryitem,
+                              item.itemName == selectitem &&
+                                styles.selectedItem,
+                            ]}
+                            onPress={() => {
+                              setSelectItem(item.itemName);
+                              setIsClicked(false);
+                              setSelectedUnit(item.itemName);
+                              setSelectedPrice(item.price);
+                            }}>
+                            <Text
+                              style={[
+                                styles.countryText,
+                                item.itemName == selectitem &&
+                                  styles.selectItemText,
+                              ]}>
+                              {item.itemName}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </View>
+                  )}
                 </View>
               </>
             )}
@@ -574,6 +606,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#DCDCDC',
     justifyContent: 'space-between',
     height: 50,
+    marginTop: -200,
   },
   line: {
     borderBottomWidth: 0.8,
@@ -704,7 +737,6 @@ const styles = StyleSheet.create({
   dropDownContainer: {
     backgroundColor: '#FFF',
     shadowColor: '#000',
-    
     elevation: 10,
     width: '40%',
     height: 40,
@@ -723,12 +755,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   dropdownArea: {
-    position: 'absolute',
-    left: '60%',
-    top: 35,
-    // bottom: 30,
+    // position: 'absolute',
+    left: '59.3%',
+    bottom: 100,
     flex: 1,
-    width: '40%',
+    width: '37%',
     borderLeftWidth: 1,
     borderRightWidth: 1,
     backgroundColor: 'white',
@@ -884,5 +915,15 @@ const styles = StyleSheet.create({
   errorMessage: {
     color: 'red',
     textAlign: 'center',
+  },
+  sectionimg: {
+    flexDirection: 'row',
+    flex: 1,
+    // paddingTop: 5,
+  },
+  img: {
+    width: 400,
+    height: 170,
+    // marginHorizontal: 10,
   },
 });

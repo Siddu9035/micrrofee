@@ -20,7 +20,6 @@ import Regions from './screens/Regions';
 import NewToOldest from './screens/NewToOldest';
 import Variety from './screens/Variety';
 import ProductProfileScreen from './screens/ProductProfileScreen';
-import TestScreen from './screens/TestScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -171,13 +170,6 @@ function StackNavigator() {
       <Stack.Screen
         name="ProductProfile"
         component={ProductProfileScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="TestScreen"
-        component={TestScreen}
         options={{
           headerShown: false,
         }}
