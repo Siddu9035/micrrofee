@@ -624,7 +624,7 @@ const styles = StyleSheet.create({
     borderColor: '#81C0EF',
     shadowColor: 'black',
     elevation: 8,
-    zIndex: 5,
+    zIndex: 1,
   },
   countryText: {
     fontSize: 20,
