@@ -196,7 +196,6 @@ function CustomDrawerContent(props) {
         console.log('Error retrieving user email from AsyncStorage:', error);
       }
     };
-    fetchUserEmail();
   }, []);
 
   const handleLogin = () => {

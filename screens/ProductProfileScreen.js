@@ -67,7 +67,7 @@ const ProductProfileScreen = ({route, navigation}) => {
   const handleAddToCart = () => {
     if (!isLoggedIn) {
       setIsModalVisible(true);
-    } else if (isLotSelected === '') {
+    } else if (!isLotSelected) {
       setLotError('Please select a lot before adding to cart.');
     } else if (selectedUnit === '') {
       setUnitError('Please select a unit before adding to cart.');
@@ -81,14 +81,14 @@ const ProductProfileScreen = ({route, navigation}) => {
   const handleBuyNow = () => {
     if (!isLoggedIn) {
       setIsModalVisible(true);
+    } else if (!isLotSelected) {
+      setLotError('Please select a lot before buying.');
+    } else if (selectedUnit === '') {
+      setUnitError('Please select a unit before buying.');
     } else {
-      if (isLotSelected === '') {
-        setLotError('Please select a lot before buying.');
-      } else {
-        // Add to cart logic
-        setIsModalVisible(false);
-        setLotError(''); // Clear the error message if a lot is selected
-      }
+      setLotError('');
+      setUnitError('');
+      setIsModalVisible(false);
     }
   };
 
@@ -127,22 +127,21 @@ const ProductProfileScreen = ({route, navigation}) => {
       console.log('Error storing login status:', error);
     }
   };
+  // Check if the user is logged in from AsyncStorage
+  const checkLoginStatus = async () => {
+    try {
+      const isLoggedInString = await AsyncStorage.getItem('isLoggedIn');
+      const isLoggedInValue = isLoggedInString === 'true'; // Convert string to boolean
+      setIsLoggedIn(isLoggedInValue);
+      isLoggedInRef.current = isLoggedInValue; // Update the ref with the current value
+    } catch (error) {
+      console.log('Error retrieving login status:', error);
+    }
+  };
   // This effect will be called when the component is mounted
   useEffect(() => {
-    // Check if the user is logged in from AsyncStorage
-    const checkLoginStatus = async () => {
-      try {
-        const isLoggedInString = await AsyncStorage.getItem('isLoggedIn');
-        const isLoggedInValue = isLoggedInString === 'true'; // Convert string to boolean
-        setIsLoggedIn(isLoggedInValue);
-        isLoggedInRef.current = isLoggedInValue; // Update the ref with the current value
-      } catch (error) {
-        console.log('Error retrieving login status:', error);
-      }
-    };
-
     checkLoginStatus();
-  }, [setIsLoggedIn]);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -280,7 +279,7 @@ const ProductProfileScreen = ({route, navigation}) => {
                         <Icon
                           name={isClicked ? 'chevron-up' : 'chevron-down'}
                           size={25}
-                          color="#9ACD32"
+                          color="green"
                           style={{marginLeft: 45}}
                         />
                       </TouchableOpacity>
@@ -347,6 +346,7 @@ const ProductProfileScreen = ({route, navigation}) => {
                   </>
                 )}
               </View>
+              <View style={styles.line4}></View>
             </View>
           </ScrollView>
           <View style={styles.buttons}>
@@ -364,7 +364,7 @@ const ProductProfileScreen = ({route, navigation}) => {
                 <Text style={styles.buyingText}>Buy Now</Text>
               </TouchableOpacity>
             </View>
-            {isLoggedIn ? null : (
+            {isLoggedIn && (
               <Modal visible={isModalVisible} transparent={true}>
                 <View style={styles.modalContainer}>
                   <View style={styles.modalContent}>
@@ -526,7 +526,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 25,
-    borderColor: '#6B8E23',
+    borderColor: 'green',
     marginLeft: 45,
   },
   addToCartText: {
@@ -536,7 +536,7 @@ const styles = StyleSheet.create({
   buyNowButton: {
     width: '65%',
     height: 50,
-    backgroundColor: '#9ACD32',
+    backgroundColor: 'green',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 25,
@@ -579,6 +579,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     elevation: 10,
     shadowColor: 'black',
+    borderRadius: 3,
   },
   selectedIcon: {
     flexDirection: 'row',
@@ -605,6 +606,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     justifyContent: 'space-evenly',
     zIndex: 1,
+    borderRadius: 3,
   },
   dropdownSelector: {
     flexDirection: 'row',
@@ -615,15 +617,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   dropdownArea: {
-    left: '59.3%',
-    bottom: 15,
+    left: '59%',
+    bottom: 13,
     width: '37%',
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
     backgroundColor: 'white',
     borderColor: '#81C0EF',
     shadowColor: 'black',
     elevation: 8,
+    borderBottomLeftRadius: 3,
+    borderBottomRightRadius: 3,
     zIndex: 1,
   },
   countryText: {
@@ -660,6 +662,7 @@ const styles = StyleSheet.create({
   },
   choosingItem: {
     backgroundColor: 'white',
+    borderRadius: 3,
     width: '50%',
     alignItems: 'center',
     elevation: 10,
@@ -681,6 +684,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
     width: '30%',
     marginVertical: 20,
+    borderRadius: 3,
   },
   plusButton: {},
   quantityText: {
@@ -696,6 +700,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     elevation: 10,
     shadowColor: 'black',
+    borderRadius: 3,
   },
   priceContainer: {
     backgroundColor: 'white',
@@ -708,7 +713,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     marginVertical: 20,
     borderWidth: 1,
-    borderColor: '#9ACD32',
+    borderColor: 'green',
     zIndex: 1,
   },
   priceText: {
@@ -776,10 +781,13 @@ const styles = StyleSheet.create({
   },
   error: {
     color: 'red',
-    // marginTop: -50,
+    textAlign: 'center',
   },
   img: {
     width: 360,
     height: 170,
+  },
+  line4: {
+    borderBottomWidth: 1,
   },
 });
