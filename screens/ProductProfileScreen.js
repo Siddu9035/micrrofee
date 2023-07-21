@@ -17,7 +17,7 @@ const ProductProfileScreen = ({route, navigation}) => {
   // Get the section data passed as a route parameter
   const {sectionData, isFeatured} = route.params;
   const imageSource = sectionData.SectionImage || sectionData.Sectionimage;
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [isLiked, setIsLiked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [count, setCount] = useState(1);
@@ -51,7 +51,9 @@ const ProductProfileScreen = ({route, navigation}) => {
     {title: 'Certification', data: 'test certiication'},
     {title: 'Q Grade', data: '79.70'},
   ];
+  const [isLotSelected, setLotSelected] = useState(false);
   const [lotError, setLotError] = useState('');
+  const [unitError, setUnitError] = useState('');
   const isLoggedInRef = useRef(isLoggedIn);
   const {width, height} = Dimensions.get('window');
 
@@ -65,14 +67,14 @@ const ProductProfileScreen = ({route, navigation}) => {
   const handleAddToCart = () => {
     if (!isLoggedIn) {
       setIsModalVisible(true);
+    } else if (isLotSelected === '') {
+      setLotError('Please select a lot before adding to cart.');
+    } else if (selectedUnit === '') {
+      setUnitError('Please select a unit before adding to cart.');
     } else {
-      if (selectedUnit === '') {
-        setLotError('Please select a lot before adding to cart.');
-      } else {
-        // Add to cart logic
-        setIsModalVisible(false);
-        setLotError(''); // Clear the error message if a lot is selected
-      }
+      setLotError('');
+      setUnitError('');
+      setIsModalVisible(false);
     }
   };
 
@@ -80,7 +82,7 @@ const ProductProfileScreen = ({route, navigation}) => {
     if (!isLoggedIn) {
       setIsModalVisible(true);
     } else {
-      if (selectedUnit === '') {
+      if (isLotSelected === '') {
         setLotError('Please select a lot before buying.');
       } else {
         // Add to cart logic
@@ -103,6 +105,7 @@ const ProductProfileScreen = ({route, navigation}) => {
     setIsIcon1Clicked(!isIcon1Clicked);
     setIsIcon2Clicked(false); // Deselect the other icon
     setIsExpanded(true);
+    setLotSelected(true);
     setLotError('');
   };
 
@@ -110,6 +113,7 @@ const ProductProfileScreen = ({route, navigation}) => {
     setIsIcon2Clicked(!isIcon2Clicked);
     setIsIcon1Clicked(false); // Deselect the other icon
     setIsExpanded(true);
+    setLotSelected(true);
     setLotError('');
   };
   const closeModal = async () => {
@@ -190,7 +194,7 @@ const ProductProfileScreen = ({route, navigation}) => {
             <Text style={styles.sectionTitle}>{sectionData.title}</Text>
             <TouchableOpacity onPress={handleClick}>
               <Icon
-                name={collapsed ? 'chevron-circle-down' : 'chevron-circle-up'}
+                name={collapsed ? 'chevron-circle-up' : 'chevron-circle-down'}
                 size={28}
                 color={'black'}
                 style={styles.iconUp}
@@ -218,19 +222,19 @@ const ProductProfileScreen = ({route, navigation}) => {
                   ))}
                 </View>
                 <View style={styles.line2} />
+                <View style={styles.aboutCoffee}>
+                  <Text style={styles.paragraph}>
+                    <Text style={styles.textBold}>About coffee: </Text>
+                    React Native UI Kitten is one of the most popular UI
+                    frameworks available in the React Native world. They provide
+                    so many tools and a drop-down component is one of them. They
+                    have named the component Select.
+                  </Text>
+                </View>
+                <View style={styles.line3} />
               </>
             )}
-            <View style={styles.aboutCoffee}>
-              <Text style={styles.paragraph}>
-                <Text style={styles.textBold}>About coffee: </Text>
-                React Native UI Kitten is one of the most popular UI frameworks
-                available in the React Native world. They provide so many tools
-                and a drop-down component is one of them. They have named the
-                component Select.
-              </Text>
-            </View>
-            <View style={styles.line3} />
-            <View>
+            <View style={{flex: 1}}>
               {isLoggedIn && (
                 <View style={styles.selectedFlex}>
                   <Text style={styles.selectLot}>Select A Lot</Text>
@@ -258,7 +262,7 @@ const ProductProfileScreen = ({route, navigation}) => {
                   </View>
                 </View>
               )}
-              {lotError && <Text style={styles.lotErrorText}>{lotError}</Text>}
+              {lotError !== '' && <Text style={styles.error}>{lotError}</Text>}
               <View style={styles.chooseItem}>
                 {isExpanded && (
                   <>
@@ -270,6 +274,7 @@ const ProductProfileScreen = ({route, navigation}) => {
                         style={styles.dropdownSelector}
                         onPress={() => {
                           setIsClicked(!isClicked);
+                          setUnitError('');
                         }}>
                         <Text style={styles.dropdownText}>{selectitem}</Text>
                         <Icon
@@ -284,63 +289,64 @@ const ProductProfileScreen = ({route, navigation}) => {
                 )}
               </View>
               <View>
-                <View style={styles.quantityFlex}>
-                  {selectedUnit !== '' && (
-                    <>
-                      <Text style={styles.quantityText}>Quantity</Text>
-                      <View style={styles.counter}>
+                {isClicked && (
+                  <View style={styles.dropdownArea}>
+                    <View>
+                      {selectData.map((item, index) => (
                         <TouchableOpacity
-                          style={styles.plusButton}
-                          onPress={incrementCount}>
-                          <Icon name="plus" size={20} color={'black'} />
-                        </TouchableOpacity>
-
-                        <Text style={{color: 'black'}}>{count}</Text>
-
-                        <TouchableOpacity onPress={decrementCount}>
-                          <Icon name="minus" size={20} color={'black'} />
-                        </TouchableOpacity>
-                      </View>
-                      <View style={styles.priceContainer}>
-                        <Text style={styles.priceText}>
-                          ${selectedPrice * count}
-                        </Text>
-                      </View>
-                    </>
-                  )}
-                </View>
-              </View>
-            </View>
-            <View>
-              {isClicked && (
-                <View style={styles.dropdownArea}>
-                  <View>
-                    {selectData.map((item, index) => (
-                      <TouchableOpacity
-                        key={index}
-                        style={[
-                          styles.countryitem,
-                          item.itemName == selectitem && styles.selectedItem,
-                        ]}
-                        onPress={() => {
-                          setSelectItem(item.itemName);
-                          setIsClicked(false);
-                          setSelectedUnit(item.itemName);
-                          setSelectedPrice(item.price);
-                        }}>
-                        <Text
+                          key={index}
                           style={[
-                            styles.countryText,
-                            item.itemName == selectitem &&
-                              styles.selectItemText,
-                          ]}>
-                          {item.itemName}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
+                            styles.countryitem,
+                            item.itemName == selectitem && styles.selectedItem,
+                          ]}
+                          onPress={() => {
+                            setSelectItem(item.itemName);
+                            setIsClicked(false);
+                            setSelectedUnit(item.itemName);
+                            setSelectedPrice(item.price);
+                          }}>
+                          <Text
+                            style={[
+                              styles.countryText,
+                              item.itemName == selectitem &&
+                                styles.selectItemText,
+                            ]}>
+                            {item.itemName}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
                   </View>
-                </View>
+                )}
+              </View>
+              {unitError !== '' && (
+                <Text style={styles.lotErrorText}>{unitError}</Text>
               )}
+              <View style={styles.quantityFlex}>
+                {selectedUnit !== '' && (
+                  <>
+                    <Text style={styles.quantityText}>Quantity</Text>
+                    <View style={styles.counter}>
+                      <TouchableOpacity
+                        style={styles.plusButton}
+                        onPress={incrementCount}>
+                        <Icon name="plus" size={20} color={'black'} />
+                      </TouchableOpacity>
+
+                      <Text style={{color: 'black'}}>{count}</Text>
+
+                      <TouchableOpacity onPress={decrementCount}>
+                        <Icon name="minus" size={20} color={'black'} />
+                      </TouchableOpacity>
+                    </View>
+                    <View style={styles.priceContainer}>
+                      <Text style={styles.priceText}>
+                        ${selectedPrice * count}
+                      </Text>
+                    </View>
+                  </>
+                )}
+              </View>
             </View>
           </ScrollView>
           <View style={styles.buttons}>
@@ -563,13 +569,14 @@ const styles = StyleSheet.create({
   },
   selectedFlex: {
     flexDirection: 'row',
-    flexGrow: 1,
+    // flexGrow: 1,
     justifyContent: 'space-evenly',
     backgroundColor: 'white',
     height: 40,
     alignItems: 'center',
     marginHorizontal: 14,
-    marginVertical: 20,
+    marginBottom: 10,
+    marginTop: 15,
     elevation: 10,
     shadowColor: 'black',
   },
@@ -608,10 +615,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   dropdownArea: {
-    // position: 'absolute',
     left: '59.3%',
-    bottom: 100,
-    flex: 1,
+    bottom: 15,
     width: '37%',
     borderLeftWidth: 1,
     borderRightWidth: 1,
@@ -619,8 +624,7 @@ const styles = StyleSheet.create({
     borderColor: '#81C0EF',
     shadowColor: 'black',
     elevation: 8,
-    zIndex: 1,
-    // marginTop: 130,
+    zIndex: 5,
   },
   countryText: {
     fontSize: 20,
@@ -769,6 +773,10 @@ const styles = StyleSheet.create({
   lotErrorText: {
     color: 'red',
     textAlign: 'center',
+  },
+  error: {
+    color: 'red',
+    // marginTop: -50,
   },
   img: {
     width: 360,

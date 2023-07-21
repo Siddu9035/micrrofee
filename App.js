@@ -206,27 +206,17 @@ function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
       {isLoggedIn && (
-        <DrawerItem
-          label={() => (
-            <View style={styles.afterLoginContainer}>
-              <Text style={styles.normalText}>Welcome back,</Text>
-              <Text style={styles.afterLogin}>{userEmail}</Text>
-            </View>
-          )}
-        />
+        <View style={styles.afterLoginContainer}>
+          <Text style={styles.normalText}>Welcome back,</Text>
+          <Text style={styles.afterLogin}>{userEmail}</Text>
+        </View>
       )}
       {!isLoggedIn && (
-        <DrawerItem
-          label={() => (
-            <View style={styles.loginButtonContainer}>
-              <TouchableOpacity
-                style={styles.loginButton}
-                onPress={handleLogin}>
-                <Text style={styles.loginText}>Login</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        />
+        <View style={styles.loginButtonContainer}>
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+            <Text style={styles.loginText}>Login</Text>
+          </TouchableOpacity>
+        </View>
       )}
       <View style={styles.line} />
       <DrawerItemList {...props} />
@@ -250,11 +240,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   loginButton: {
-    width: '90%',
+    width: '70%',
     height: 50,
     backgroundColor: 'green',
     borderRadius: 25,
-    marginTop: 20,
+    marginVertical: 15,
     justifyContent: 'center',
   },
   loginText: {
@@ -292,7 +282,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   afterLoginContainer: {
-    marginHorizontal: 5,
+    marginLeft: 15,
+    marginVertical: 15,
   },
 });
 // Define the root component
