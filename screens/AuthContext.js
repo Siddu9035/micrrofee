@@ -1,10 +1,10 @@
 // AuthContext.js
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, {createContext, useState, useEffect, useContext} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({children}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
 
@@ -23,18 +23,16 @@ export const AuthProvider = ({ children }) => {
         console.log('Error retrieving login status and user email:', error);
       }
     };
-
-    fetchLoginStatus();
   }, []);
 
-  const handleLogin = async (email) => {
+  const handleLogin = async email => {
     // Save the login status and user email to AsyncStorage
     try {
       await AsyncStorage.setItem('isLoggedIn', 'true');
       await AsyncStorage.setItem('userEmail', email);
       setIsLoggedIn(true);
       setUserEmail(email);
-    //   navigation.navigate('login');
+      //   navigation.navigate('login');
     } catch (error) {
       console.log('Error saving login status and user email:', error);
     }
@@ -55,7 +53,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, userEmail, handleLogin, handleLogout }}>
+      value={{isLoggedIn, userEmail, handleLogin, handleLogout}}>
       {children}
     </AuthContext.Provider>
   );

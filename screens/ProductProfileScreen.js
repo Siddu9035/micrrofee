@@ -9,6 +9,7 @@ import {
   Modal,
   FlatList,
   Dimensions,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -364,8 +365,8 @@ const ProductProfileScreen = ({route, navigation}) => {
                 <Text style={styles.buyingText}>Buy Now</Text>
               </TouchableOpacity>
             </View>
-            {isLoggedIn && (
-              <Modal visible={isModalVisible} transparent={true}>
+            <Modal visible={isModalVisible} transparent={true}>
+              <TouchableWithoutFeedback onPress={closeModal}>
                 <View style={styles.modalContainer}>
                   <View style={styles.modalContent}>
                     <View style={styles.modalHeader}>
@@ -383,8 +384,8 @@ const ProductProfileScreen = ({route, navigation}) => {
                     </View>
                   </View>
                 </View>
-              </Modal>
-            )}
+              </TouchableWithoutFeedback>
+            </Modal>
           </View>
         </View>
       </View>

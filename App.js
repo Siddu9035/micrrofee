@@ -185,19 +185,20 @@ function CustomDrawerContent(props) {
 
   useEffect(() => {
     // Fetch the email from AsyncStorage
-    const fetchUserEmail = async () => {
-      try {
-        const email = await AsyncStorage.getItem('userEmail');
-        if (email) {
-          setUserEmail(email);
-          setIsLoggedIn(true);
-        }
-      } catch (error) {
-        console.log('Error retrieving user email from AsyncStorage:', error);
-      }
-    };
+    fetchUserEmail();
   }, []);
 
+  const fetchUserEmail = async () => {
+    try {
+      const email = await AsyncStorage.getItem('userEmail');
+      if (email) {
+        setUserEmail(email);
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.log('Error retrieving user email from AsyncStorage:', error);
+    }
+  };
   const handleLogin = () => {
     navigation.navigate('login');
   };
