@@ -10,7 +10,7 @@ import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useAuth} from './AuthContext';
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({navigation, cartItems}) => {
   const {isLoggedIn} = useAuth();
 
   const FeaturedData = [
@@ -281,6 +281,10 @@ const HomeScreen = ({navigation}) => {
       isLoggedIn: isLoggedIn, // Pass the isLoggedIn status as a parameter
     });
   };
+  const handleCart = () => {
+    navigation.navigate('Cart', { cartItems });
+
+  }
   return (
     // <ScrollView>
     <View style={styles.container}>
@@ -294,6 +298,7 @@ const HomeScreen = ({navigation}) => {
           name="shopping-cart"
           size={25}
           color="white"
+          onPress={handleCart}
           style={styles.icon}
         />
       </View>
@@ -326,7 +331,7 @@ const HomeScreen = ({navigation}) => {
                       <Text style={styles.featuredText}>FEATURED</Text>
                     </View>
                     <Image
-                      source={FeaturedData[0].SectionImage[0]}
+                      source={section.SectionImage[0]}
                       style={styles.sectionImage}
                     />
                     <View style={styles.textItems}>
@@ -356,7 +361,7 @@ const HomeScreen = ({navigation}) => {
                     style={styles.sectionContainer}
                     onPress={() => handleSectionPress(section, false)}>
                     <Image
-                      source={latestData[0].Sectionimage[0]}
+                      source={section.Sectionimage[0]}
                       style={styles.sectionImage}
                     />
                     <View style={styles.textItems}>
@@ -382,10 +387,12 @@ const HomeScreen = ({navigation}) => {
               <View style={styles.itemscontainer}>
                 {originsData.map(section => (
                   <View key={section.title} style={styles.SectionContainer}>
-                    <Image
-                      style={styles.sectionimage}
-                      source={section.sectionimage}
-                    />
+                    <View>
+                      <Image
+                        style={styles.sectionimage}
+                        source={section.sectionimage}
+                      />
+                    </View>
                     <View style={styles.textItem}>
                       <Text style={styles.sectionTitle}>{section.title}</Text>
                     </View>

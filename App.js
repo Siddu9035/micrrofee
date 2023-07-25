@@ -19,6 +19,7 @@ import WishListScreen from './screens/WishListScreen';
 import Regions from './screens/Regions';
 import NewToOldest from './screens/NewToOldest';
 import Variety from './screens/Variety';
+import CartScreen from './screens/CartScreen';
 import ProductProfileScreen from './screens/ProductProfileScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
@@ -26,6 +27,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Text, TouchableOpacity, View, StyleSheet, Image} from 'react-native';
 import {AuthProvider} from './screens/AuthContext';
+import {CartProvider} from './screens/CartContext';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -174,6 +176,13 @@ function StackNavigator() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="Cart"
+        component={CartScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 }
@@ -182,11 +191,6 @@ function CustomDrawerContent(props) {
   const navigation = useNavigation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
-
-  useEffect(() => {
-    // Fetch the email from AsyncStorage
-    fetchUserEmail();
-  }, []);
 
   const fetchUserEmail = async () => {
     try {
@@ -199,6 +203,10 @@ function CustomDrawerContent(props) {
       console.log('Error retrieving user email from AsyncStorage:', error);
     }
   };
+  useEffect(() => {
+    // Fetch the email from AsyncStorage
+    fetchUserEmail();
+  }, []);
   const handleLogin = () => {
     navigation.navigate('login');
   };
@@ -289,6 +297,7 @@ const styles = StyleSheet.create({
 // Define the root component
 function App({userEmail}) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
 
   const handleLogin = () => {
     // Perform your login logic here
@@ -297,18 +306,20 @@ function App({userEmail}) {
   };
   return (
     <AuthProvider>
-      <NavigationContainer>
-        <StackNavigator>
-          <DrawerNavigator>
-            <CustomDrawerContent
-              isLoggedIn={isLoggedIn}
-              userEmail={userEmail}
-              handleLogin={handleLogin}
-            />
-            <ProductProfileScreen isLoggedIn={isLoggedIn} />
-          </DrawerNavigator>
-        </StackNavigator>
-      </NavigationContainer>
+      <CartProvider>
+        <NavigationContainer>
+          <StackNavigator cartItems={cartItems} setCartItems={setCartItems}>
+            <DrawerNavigator>
+              <CustomDrawerContent
+                isLoggedIn={isLoggedIn}
+                userEmail={userEmail}
+                handleLogin={handleLogin}
+              />
+              <ProductProfileScreen isLoggedIn={isLoggedIn} />
+            </DrawerNavigator>
+          </StackNavigator>
+        </NavigationContainer>
+      </CartProvider>
     </AuthProvider>
   );
 }

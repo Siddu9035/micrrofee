@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,13 +7,13 @@ import {
   ScrollView,
   Image,
   Modal,
-  FlatList,
   Dimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SwiperFlatList from 'react-native-swiper-flatlist';
+import {CartContext} from './CartContext';
 const ProductProfileScreen = ({route, navigation}) => {
   // Get the section data passed as a route parameter
   const {sectionData, isFeatured} = route.params;
@@ -57,6 +57,8 @@ const ProductProfileScreen = ({route, navigation}) => {
   const [unitError, setUnitError] = useState('');
   const isLoggedInRef = useRef(isLoggedIn);
   const {width, height} = Dimensions.get('window');
+  // const [cartItems, setCartItems] = useState([]);
+  const {cartItems, setCartItems} = useContext(CartContext);
 
   const handleClick = () => {
     setCollapsed(!collapsed);
@@ -70,12 +72,28 @@ const ProductProfileScreen = ({route, navigation}) => {
       setIsModalVisible(true);
     } else if (!isLotSelected) {
       setLotError('Please select a lot before adding to cart.');
-    } else if (selectedUnit === '') {
+    } else if (!selectedUnit) {
       setUnitError('Please select a unit before adding to cart.');
     } else {
       setLotError('');
       setUnitError('');
       setIsModalVisible(false);
+      const newItem = {
+        itemName: sectionData.title,
+        // lot: isIcon1Clicked ? 'nano' : 'micro',
+        // quantity: count,
+        price: selectedPrice * count,
+        image:
+          (sectionData.SectionImage && sectionData.SectionImage[0]) ||
+          (sectionData.Sectionimage && sectionData.Sectionimage[0]) ||
+          'default_image_url', // Replace 'default_image_url' with a default image URL if needed
+        description: [
+          sectionData.description[0],
+          sectionData.description[2], // Accessing the second element of the description array
+        ],
+      };
+      setCartItems([newItem]);
+      console.log('items added succesfully');
     }
   };
 
@@ -128,7 +146,7 @@ const ProductProfileScreen = ({route, navigation}) => {
       console.log('Error storing login status:', error);
     }
   };
-  // Check if the user is logged in from AsyncStorage
+  //Check if the user is logged in from AsyncStorage
   const checkLoginStatus = async () => {
     try {
       const isLoggedInString = await AsyncStorage.getItem('isLoggedIn');
@@ -365,27 +383,29 @@ const ProductProfileScreen = ({route, navigation}) => {
                 <Text style={styles.buyingText}>Buy Now</Text>
               </TouchableOpacity>
             </View>
-            <Modal visible={isModalVisible} transparent={true}>
-              <TouchableWithoutFeedback onPress={closeModal}>
-                <View style={styles.modalContainer}>
-                  <View style={styles.modalContent}>
-                    <View style={styles.modalHeader}>
-                      <TouchableOpacity onPress={closeModal}>
-                        <Icon name="close" size={24} color="black" />
-                      </TouchableOpacity>
-                    </View>
-                    <Text style={styles.loginText}>Please Login!!</Text>
-                    <View style={styles.loginSpace}>
-                      <TouchableOpacity
-                        style={styles.closeButton}
-                        onPress={() => navigation.navigate('login')}>
-                        <Text style={styles.closeButtonText}>Login</Text>
-                      </TouchableOpacity>
+            {!isLoggedIn && (
+              <Modal visible={isModalVisible} transparent={true}>
+                <TouchableWithoutFeedback onPress={closeModal}>
+                  <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                      <View style={styles.modalHeader}>
+                        <TouchableOpacity onPress={closeModal}>
+                          <Icon name="close" size={24} color="black" />
+                        </TouchableOpacity>
+                      </View>
+                      <Text style={styles.loginText}>Please Login!!</Text>
+                      <View style={styles.loginSpace}>
+                        <TouchableOpacity
+                          style={styles.closeButton}
+                          onPress={() => navigation.navigate('login')}>
+                          <Text style={styles.closeButtonText}>Login</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
-                </View>
-              </TouchableWithoutFeedback>
-            </Modal>
+                </TouchableWithoutFeedback>
+              </Modal>
+            )}
           </View>
         </View>
       </View>
