@@ -17,8 +17,9 @@ const CartScreen = ({navigation, route}) => {
   const {width, height} = Dimensions.get('window');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const isLoggedInRef = useRef(isLoggedIn);
-  const {cartItems} = useContext(CartContext);
+  const {cartItems, setCartItems} = useContext(CartContext);
   const [count, setCount] = useState(1);
+  const [selectedPrice, setSelectedPrice] = useState(cartItems[0]?.price || 0); // Use the first item's price as the initial selectedPrice, or set to 0 if cart is empty
 
   const [shippingAddress, setShippingAddress] = useState({
     name: 'Siddappa',
@@ -47,12 +48,22 @@ const CartScreen = ({navigation, route}) => {
 
   const incrementCount = () => {
     setCount(count + 1);
+    setSelectedPrice(prevPrice => prevPrice * 2);
   };
 
   const decrementCount = () => {
     if (count > 1) {
       setCount(count - 1);
+      setSelectedPrice(prevPrice => prevPrice / 2);
     }
+  };
+  const removeItem = itemToRemove => {
+    // Create a new copy of the cartItems array without the item to be removed
+    const updatedCartItems = cartItems.filter(
+      (_, index) => index !== itemToRemove,
+    );
+    // Update the cartItems state with the updated array
+    setCartItems(updatedCartItems);
   };
 
   return (
@@ -66,93 +77,118 @@ const CartScreen = ({navigation, route}) => {
         <Text style={styles.headerText}>Cart</Text>
       </View>
       <View style={styles.subContainer}>
-        {isLoggedIn ? (
+        {isLoggedIn && (
           <>
-            <ScrollView contentContainerStyle={styles.contentContainer}>
-              <View style={styles.itemContainer}>
-                {cartItems.map((item, index) => (
-                  <View key={index} style={styles.itemContainer}>
-                    {/* Render other cart item details (name, quantity, price, etc.) */}
-                    <View style={styles.itemDetails}>
-                      <Text style={styles.title}>{item.itemName}</Text>
-                      {item.description.map((item, index) => (
-                        <View key={index} style={styles.dataContainer}>
-                          <Text style={styles.data}>{item.des}</Text>
+            {cartItems.length > 0 ? (
+              <>
+                <ScrollView contentContainerStyle={styles.contentContainer}>
+                  <View style={styles.itemsContainer}>
+                    {cartItems.map((item, index) => (
+                      <>
+                        <View key={index} style={styles.itemContainer}>
+                          {/* Render other cart item details (name, quantity, price, etc.) */}
+                          <View style={styles.itemDetails}>
+                            <Text style={styles.title}>{item.itemName}</Text>
+                            {item.description.map((item, index) => (
+                              <View key={index} style={styles.dataContainer}>
+                                <Text style={styles.data}>{item.des}</Text>
+                              </View>
+                            ))}
+                            <View style={styles.quantityFlex}>
+                              <Text style={styles.quantityText}>Qty</Text>
+                              <View style={styles.counter}>
+                                <TouchableOpacity
+                                  style={styles.plusButton}
+                                  onPress={incrementCount}>
+                                  <Icon name="plus" size={20} color={'black'} />
+                                </TouchableOpacity>
+                                <Text style={{color: 'black'}}>{count}</Text>
+                                <TouchableOpacity onPress={decrementCount}>
+                                  <Icon
+                                    name="minus"
+                                    size={20}
+                                    color={'black'}
+                                  />
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                            <Text style={styles.selectedUnit}>
+                              Unit:{item.selectedUnit}lb
+                            </Text>
+                            <Text style={styles.unitprice}>
+                              Unit Price: ${item.price}
+                            </Text>
+                            {/* Add more details as needed */}
+                          </View>
+                          <Image source={item.image} style={styles.itemImage} />
                         </View>
-                      ))}
-                      <View style={styles.quantityFlex}>
-                        <Text style={styles.quantityText}>Qty</Text>
-                        <View style={styles.counter}>
+                        <View style={styles.line1} />
+                        <View style={styles.pricetext}>
+                          <Text style={styles.priceText}>
+                            ${selectedPrice.toFixed(2)}
+                          </Text>
+
                           <TouchableOpacity
-                            style={styles.plusButton}
-                            onPress={incrementCount}>
-                            <Icon name="plus" size={20} color={'black'} />
-                          </TouchableOpacity>
-
-                          <Text style={{color: 'black'}}>{count}</Text>
-
-                          <TouchableOpacity onPress={decrementCount}>
-                            <Icon name="minus" size={20} color={'black'} />
+                            style={styles.removeButton}
+                            onPress={() => removeItem(index)}>
+                            <Text style={{color: 'blue'}}>Remove Item</Text>
                           </TouchableOpacity>
                         </View>
-                      </View>
-                      <Text style={styles.unitprice}>
-                        Unit Price: ${item.price}
-                      </Text>
-                      {/* Add more details as needed */}
-                    </View>
-                    <Image source={item.image} style={styles.itemImage} />
+                      </>
+                    ))}
                   </View>
-                ))}
-              </View>
-              <View style={styles.pricetext}>
-                <Text style={styles.priceText}>$600.00</Text>
-                <TouchableOpacity style={styles.removeButton}>
-                  <Text style={{color: 'blue'}}>Remove Item</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.shippingAddressContainer}>
-                <View>
-                  <Text style={styles.shippingAddressTitle}>
-                    Shipping Address
-                  </Text>
-                  <Text style={styles.shippingAddressText}>
-                    {shippingAddress.name}
-                  </Text>
-                  <Text style={styles.shippingAddressText}>
-                    {shippingAddress.addressLine1}
-                    {shippingAddress.addressLine2
-                      ? ', ' + shippingAddress.addressLine2
-                      : ''}
-                  </Text>
-                  <Text style={styles.shippingAddressText}>
-                    {shippingAddress.city}, {shippingAddress.state},{' '}
-                    {shippingAddress.zipCode}
-                  </Text>
-                  <Text style={styles.shippingAddressText}>
-                    Contact Number : {shippingAddress.phoneNumber}
-                  </Text>
+                  <View style={styles.shippingAddressContainer}>
+                    <View>
+                      <Text style={styles.shippingAddressTitle}>
+                        Shipping Address
+                      </Text>
+                      <Text style={styles.shippingAddressText}>
+                        {shippingAddress.name}
+                      </Text>
+                      <Text style={styles.shippingAddressText}>
+                        {shippingAddress.addressLine1}
+                        {shippingAddress.addressLine2
+                          ? ', ' + shippingAddress.addressLine2
+                          : ''}
+                      </Text>
+                      <Text style={styles.shippingAddressText}>
+                        {shippingAddress.city}, {shippingAddress.state},{' '}
+                        {shippingAddress.zipCode}
+                      </Text>
+                      <Text style={styles.shippingAddressText}>
+                        Contact Number : {shippingAddress.phoneNumber}
+                      </Text>
+                    </View>
+                    <TouchableOpacity style={styles.editButton}>
+                      <Text style={styles.editButtonText}>Update Address</Text>
+                    </TouchableOpacity>
+                  </View>
+                </ScrollView>
+                <View style={styles.line} />
+                <View style={styles.bottomContainer}>
+                  <View>
+                    <Text style={styles.totalPrice}>
+                      ${selectedPrice.toFixed(2)}
+                    </Text>
+                    <Text style={styles.totalPrice}>Current Total</Text>
+                  </View>
+                  <TouchableOpacity style={styles.placeOrderButton}>
+                    <Text style={styles.placeOrderButtonText}>Place Order</Text>
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.editButton}>
-                  <Text style={styles.editButtonText}>Update Address</Text>
-                </TouchableOpacity>
-              </View>
-              {cartItems.length === 0 && (
+              </>
+            ) : (
+              <View style={styles.emptyCartContainer}>
+                <Image
+                  source={require('../assets/images/emptyCart.png')}
+                  style={styles.emptyCartImage}
+                />
                 <Text style={styles.emptyCartText}>Your cart is empty.</Text>
-              )}
-            </ScrollView>
-            <View style={styles.line} />
-            <View style={styles.bottomContainer}>
-              <View>
-                <Text style={styles.totalPrice}>$600.00</Text>
-                <Text style={styles.totalPrice}>Current Total</Text>
               </View>
-              <TouchableOpacity style={styles.placeOrderButton}>
-                <Text style={styles.placeOrderButtonText}>Place Order</Text>
-              </TouchableOpacity>
-            </View>
+            )}
           </>
-        ) : (
+        )}
+        {!isLoggedIn && (
           <View style={styles.withoutLogin}>
             <Text style={styles.loginText}>Please Login To See Your Cart</Text>
             <TouchableOpacity
@@ -195,7 +231,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   contentContainer: {
-    flex: 1,
+    flexGrow: 1,
   },
   withoutLogin: {
     flex: 1,
@@ -235,7 +271,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
     width: '55%',
-    marginVertical: 20,
+    marginVertical: 5,
     borderRadius: 3,
   },
   quantityText: {
@@ -245,16 +281,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 17,
   },
-  //   itemConatiner: {
-  //     // flexDirection: 'row',
-  //     width: '46.5%',
-  //     backgroundColor: 'white',
-  //     height: 200,
-  //     marginLeft: 10,
-  //     marginTop: 15,
-  //     elevation: 10,
-  //     borderRadius: 4,
-  //   },
   dataContainer: {
     paddingLeft: 10,
   },
@@ -269,13 +295,18 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     marginTop: 10,
   },
+  selectedUnit: {
+    color: 'black',
+    paddingLeft: 10,
+    marginTop: 10,
+  },
   data: {
     color: 'black',
     marginVertical: 2,
   },
   pricetext: {
     flexDirection: 'row',
-    marginTop: 3,
+    // marginTop: 3,
     justifyContent: 'space-between',
     marginHorizontal: 10,
   },
@@ -330,10 +361,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   editButton: {
-    marginTop: 40,
+    marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '29%',
+    width: '25%',
     height: 50,
     borderWidth: 1,
     borderRadius: 4,
@@ -369,12 +400,14 @@ const styles = StyleSheet.create({
   line: {
     borderBottomWidth: 1,
   },
+  line1: {
+    borderBottomWidth: 1,
+    marginHorizontal: 10,
+  },
   itemImage: {
     width: '47%',
     height: 200,
     marginRight: 9,
-    marginLeft: 2,
-    // resizeMode: 'stretch',
   },
   itemContainer: {
     flexDirection: 'row',
@@ -388,6 +421,24 @@ const styles = StyleSheet.create({
     height: 200,
     marginLeft: 10,
     elevation: 10,
-    borderRadius: 4,
+    borderTopLeftRadius: 4,
+    borderBottomLeftRadius: 4,
+  },
+  emptyCartContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyCartImage: {
+    width: '60%',
+    height: 190,
+    resizeMode: 'stretch',
+  },
+  emptyCartText: {
+    fontSize: 18,
+    color: 'black',
+    fontWeight: '500',
+    textAlign: 'center',
+    margin: 15,
   },
 });

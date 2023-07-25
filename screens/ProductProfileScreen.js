@@ -80,6 +80,7 @@ const ProductProfileScreen = ({route, navigation}) => {
       setIsModalVisible(false);
       const newItem = {
         itemName: sectionData.title,
+        selectedUnit: selectedUnit, // Include the selected unit in newItem
         // lot: isIcon1Clicked ? 'nano' : 'micro',
         // quantity: count,
         price: selectedPrice * count,
@@ -94,6 +95,7 @@ const ProductProfileScreen = ({route, navigation}) => {
       };
       setCartItems([newItem]);
       console.log('items added succesfully');
+      navigation.navigate('Cart');
     }
   };
 
