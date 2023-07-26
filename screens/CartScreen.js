@@ -19,8 +19,8 @@ const CartScreen = ({navigation, route}) => {
   const isLoggedInRef = useRef(isLoggedIn);
   const {cartItems, setCartItems} = useContext(CartContext);
   const [count, setCount] = useState(1);
-  const [selectedPrice, setSelectedPrice] = useState(cartItems[0]?.price || 0); // Use the first item's price as the initial selectedPrice, or set to 0 if cart is empty
-
+  // const [selectedPrice, setSelectedPrice] = useState(cartItems[0]?.price || 0); // Use the first item's price as the initial selectedPrice, or set to 0 if cart is empty
+  const [selectedUnitPrice, setSelectedUnitPrice] = useState(25);
   const [shippingAddress, setShippingAddress] = useState({
     name: 'Siddappa',
     addressLine1: '123 Main Street',
@@ -48,13 +48,13 @@ const CartScreen = ({navigation, route}) => {
 
   const incrementCount = () => {
     setCount(count + 1);
-    setSelectedPrice(prevPrice => prevPrice * 2);
+    // setSelectedUnitPrice(prevPrice => prevPrice * 2);
   };
 
   const decrementCount = () => {
     if (count > 1) {
       setCount(count - 1);
-      setSelectedPrice(prevPrice => prevPrice / 2);
+      // setSelectedUnitPrice(prevPrice => prevPrice / 2);
     }
   };
   const removeItem = itemToRemove => {
@@ -65,6 +65,7 @@ const CartScreen = ({navigation, route}) => {
     // Update the cartItems state with the updated array
     setCartItems(updatedCartItems);
   };
+  
 
   return (
     <View style={styles.container}>
@@ -102,7 +103,7 @@ const CartScreen = ({navigation, route}) => {
                                   onPress={incrementCount}>
                                   <Icon name="plus" size={20} color={'black'} />
                                 </TouchableOpacity>
-                                <Text style={{color: 'black'}}>{count}</Text>
+                                <Text style={{color: 'black'}}>{item.quantity * count}</Text>
                                 <TouchableOpacity onPress={decrementCount}>
                                   <Icon
                                     name="minus"
@@ -116,7 +117,7 @@ const CartScreen = ({navigation, route}) => {
                               Unit:{item.selectedUnit}lb
                             </Text>
                             <Text style={styles.unitprice}>
-                              Unit Price: ${item.price}
+                              Unit Price: ${selectedUnitPrice}
                             </Text>
                             {/* Add more details as needed */}
                           </View>
@@ -125,9 +126,8 @@ const CartScreen = ({navigation, route}) => {
                         <View style={styles.line1} />
                         <View style={styles.pricetext}>
                           <Text style={styles.priceText}>
-                            ${selectedPrice.toFixed(2)}
+                            ${item.selectedPrice * item.quantity * count}
                           </Text>
-
                           <TouchableOpacity
                             style={styles.removeButton}
                             onPress={() => removeItem(index)}>
@@ -168,7 +168,7 @@ const CartScreen = ({navigation, route}) => {
                 <View style={styles.bottomContainer}>
                   <View>
                     <Text style={styles.totalPrice}>
-                      ${selectedPrice.toFixed(2)}
+                      {/* ${selectedPrice.toFixed(2)} */}
                     </Text>
                     <Text style={styles.totalPrice}>Current Total</Text>
                   </View>

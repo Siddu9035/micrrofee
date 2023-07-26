@@ -9,8 +9,21 @@ const CartProvider = ({ children }) => {
   const updateCartItems = (newCartItems) => {
     setCartItems(newCartItems);
   };
+  const addToCart = (itemToAdd, quantity = 1) => {
+    const existingItemIndex = cartItems.findIndex((item) => item.id === itemToAdd.id);
+  
+    if (existingItemIndex !== -1) {
+      // If the item already exists, update its quantity
+      const updatedCartItems = [...cartItems];
+      updatedCartItems[existingItemIndex].quantity += quantity;
+      setCartItems(updatedCartItems);
+    } else {
+      // If the item doesn't exist, add it to the cart with the provided quantity
+      setCartItems([...cartItems, { ...itemToAdd, quantity }]);
+    }
+  };
   return (
-    <CartContext.Provider value={{ cartItems, setCartItems}}>
+    <CartContext.Provider value={{ cartItems, setCartItems, addToCart}}>
       {children}
     </CartContext.Provider>
   );

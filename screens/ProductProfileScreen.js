@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SwiperFlatList from 'react-native-swiper-flatlist';
 import {CartContext} from './CartContext';
+
 const ProductProfileScreen = ({route, navigation}) => {
   // Get the section data passed as a route parameter
   const {sectionData, isFeatured} = route.params;
@@ -78,23 +79,43 @@ const ProductProfileScreen = ({route, navigation}) => {
       setLotError('');
       setUnitError('');
       setIsModalVisible(false);
-      const newItem = {
-        itemName: sectionData.title,
-        selectedUnit: selectedUnit, // Include the selected unit in newItem
-        // lot: isIcon1Clicked ? 'nano' : 'micro',
-        // quantity: count,
-        price: selectedPrice * count,
-        image:
-          (sectionData.SectionImage && sectionData.SectionImage[0]) ||
-          (sectionData.Sectionimage && sectionData.Sectionimage[0]) ||
-          'default_image_url', // Replace 'default_image_url' with a default image URL if needed
-        description: [
-          sectionData.description[0],
-          sectionData.description[2], // Accessing the second element of the description array
-        ],
-      };
-      setCartItems([newItem]);
-      console.log('items added succesfully');
+
+      // Check if the item already exists in the cart
+      const existingItemIndex = cartItems.findIndex(
+        item =>
+          item.itemName === sectionData.title &&
+          item.selectedUnit === selectedUnit,
+      );
+
+      if (existingItemIndex !== -1) {
+        // If the item exists, update its quantity
+        const updatedCart = cartItems.map((item, index) =>
+          index === existingItemIndex
+            ? {
+                ...item,
+                price: item.price + selectedPrice * count,
+                quantity: item.quantity + count,
+              }
+            : item,
+        );
+        setCartItems(updatedCart);
+      } else {
+        // If the item does not exist, add it with quantity 1
+        const cartItem = {
+          itemName: sectionData.title,
+          selectedUnit,
+          // selectedPrice,
+          quantity: count,
+          image:
+            (sectionData.SectionImage && sectionData.SectionImage[0]) ||
+            (sectionData.Sectionimage && sectionData.Sectionimage[0]) ||
+            'default_image_url',
+          description: [sectionData.description[0], sectionData.description[2]],
+        };
+        setCartItems((prevItems) => [...prevItems, cartItem]);
+      }
+
+      console.log('items added successfully');
       navigation.navigate('Cart');
     }
   };
