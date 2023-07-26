@@ -18,8 +18,7 @@ const CartScreen = ({navigation, route, item}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const isLoggedInRef = useRef(isLoggedIn);
   const {cartItems, setCartItems} = useContext(CartContext);
-  // const [quantity, setQuantity] = useState(item.quantity || 0); // Initialize the quantity state to 0
-  // const [selectedPrice, setSelectedPrice] = useState(cartItems[0]?.price || 0); // Use the first item's price as the initial selectedPrice, or set to 0 if cart is empty
+  const [selectedPrice, setSelectedPrice] = useState(cartItems[0]?.price || 0); // Use the first item's price as the initial selectedPrice, or set to 0 if cart is empty
   const [selectedUnitPrice, setSelectedUnitPrice] = useState(25);
   const [itemQuantities, setItemQuantities] = useState(
     cartItems.map(item => item.quantity || 0),
