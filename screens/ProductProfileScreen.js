@@ -101,21 +101,24 @@ const ProductProfileScreen = ({route, navigation}) => {
         setCartItems(updatedCart);
       } else {
         // If the item does not exist, add it with quantity 1
-        const cartItem = {
+        const newItem = {
           itemName: sectionData.title,
           selectedUnit,
-          // selectedPrice,
+          selectedPrice,
+          // price: selectedPrice * count,
           quantity: count,
+          totalPrice: selectedPrice * count,
           image:
             (sectionData.SectionImage && sectionData.SectionImage[0]) ||
             (sectionData.Sectionimage && sectionData.Sectionimage[0]) ||
             'default_image_url',
           description: [sectionData.description[0], sectionData.description[2]],
         };
-        setCartItems((prevItems) => [...prevItems, cartItem]);
+        setCartItems((prevItems) => [...prevItems, newItem]);
       }
 
       console.log('items added successfully');
+      // navigation.navigate('Cart');
       navigation.navigate('Cart');
     }
   };

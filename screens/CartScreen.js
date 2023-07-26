@@ -13,14 +13,19 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {CartContext} from './CartContext';
 
-const CartScreen = ({navigation, route}) => {
+const CartScreen = ({navigation, route, item}) => {
   const {width, height} = Dimensions.get('window');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const isLoggedInRef = useRef(isLoggedIn);
   const {cartItems, setCartItems} = useContext(CartContext);
-  const [count, setCount] = useState(1);
+  // const [quantity, setQuantity] = useState(item.quantity || 0); // Initialize the quantity state to 0
   // const [selectedPrice, setSelectedPrice] = useState(cartItems[0]?.price || 0); // Use the first item's price as the initial selectedPrice, or set to 0 if cart is empty
   const [selectedUnitPrice, setSelectedUnitPrice] = useState(25);
+  const [itemQuantities, setItemQuantities] = useState(
+    cartItems.map(item => item.quantity || 0),
+  );
+  const [grandTotal, setGrandTotal] = useState(0);
+
   const [shippingAddress, setShippingAddress] = useState({
     name: 'Siddappa',
     addressLine1: '123 Main Street',
@@ -41,20 +46,34 @@ const CartScreen = ({navigation, route}) => {
       console.log('Error retrieving login status:', error);
     }
   };
+  const updateGrandTotal = () => {
+    const total = cartItems.reduce((accumulator, item, index) => {
+      return accumulator + item.selectedPrice * itemQuantities[index];
+    }, 0);
+
+    setGrandTotal(total);
+  };
   // This effect will be called when the component is mounted
   useEffect(() => {
     checkLoginStatus();
-  }, []);
+    updateGrandTotal();
+  }, [itemQuantities]);
 
-  const incrementCount = () => {
-    setCount(count + 1);
-    // setSelectedUnitPrice(prevPrice => prevPrice * 2);
+  const incrementCount = index => {
+    setItemQuantities(prevQuantities =>
+      prevQuantities.map((quantity, idx) =>
+        idx === index ? quantity + 1 : quantity,
+      ),
+    );
   };
 
-  const decrementCount = () => {
-    if (count > 1) {
-      setCount(count - 1);
-      // setSelectedUnitPrice(prevPrice => prevPrice / 2);
+  const decrementCount = index => {
+    if (itemQuantities[index] > 1) {
+      setItemQuantities(prevQuantities =>
+        prevQuantities.map((quantity, idx) =>
+          idx === index ? quantity - 1 : quantity,
+        ),
+      );
     }
   };
   const removeItem = itemToRemove => {
@@ -65,7 +84,6 @@ const CartScreen = ({navigation, route}) => {
     // Update the cartItems state with the updated array
     setCartItems(updatedCartItems);
   };
-  
 
   return (
     <View style={styles.container}>
@@ -100,11 +118,14 @@ const CartScreen = ({navigation, route}) => {
                               <View style={styles.counter}>
                                 <TouchableOpacity
                                   style={styles.plusButton}
-                                  onPress={incrementCount}>
+                                  onPress={() => incrementCount(index)}>
                                   <Icon name="plus" size={20} color={'black'} />
                                 </TouchableOpacity>
-                                <Text style={{color: 'black'}}>{item.quantity * count}</Text>
-                                <TouchableOpacity onPress={decrementCount}>
+                                <Text style={{color: 'black'}}>
+                                  {itemQuantities[index]}
+                                </Text>
+                                <TouchableOpacity
+                                  onPress={() => decrementCount(index)}>
                                   <Icon
                                     name="minus"
                                     size={20}
@@ -126,7 +147,7 @@ const CartScreen = ({navigation, route}) => {
                         <View style={styles.line1} />
                         <View style={styles.pricetext}>
                           <Text style={styles.priceText}>
-                            ${item.selectedPrice * item.quantity * count}
+                            ${item.selectedPrice * itemQuantities[index]}
                           </Text>
                           <TouchableOpacity
                             style={styles.removeButton}
@@ -168,7 +189,7 @@ const CartScreen = ({navigation, route}) => {
                 <View style={styles.bottomContainer}>
                   <View>
                     <Text style={styles.totalPrice}>
-                      {/* ${selectedPrice.toFixed(2)} */}
+                      ${grandTotal.toFixed(2)}
                     </Text>
                     <Text style={styles.totalPrice}>Current Total</Text>
                   </View>
@@ -369,6 +390,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     borderColor: 'green',
+    marginLeft: 18,
   },
   bottomContainer: {
     flexDirection: 'row',
