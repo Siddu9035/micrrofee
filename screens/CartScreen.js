@@ -6,7 +6,7 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
-  ScrollView,
+  FlatList,
   Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -21,6 +21,7 @@ const CartScreen = ({navigation, route}) => {
   const [itemQuantities, setItemQuantities] = useState(
     cartItems.map(item => item.quantity),
   );
+  
   const [grandTotal, setGrandTotal] = useState(0);
 
   const [shippingAddress, setShippingAddress] = useState({
@@ -92,143 +93,241 @@ const CartScreen = ({navigation, route}) => {
     setCartItems(updatedCartItems);
   };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.Header}>
-        <TouchableOpacity
-          style={styles.iconContainer}
-          onPress={() => navigation.goBack()}>
-          <Icon name="angle-left" size={40} color={'white'} />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>Cart</Text>
+  const renderCartItem = ({item, index}) => (
+    <>
+      <View style={styles.itemContainer}>
+        {/* Render other cart item details (name, quantity, price, etc.) */}
+        <View style={styles.itemDetails}>
+          <Text style={styles.title}>{item.itemName}</Text>
+          {item.description.map((item, index) => (
+            <View key={index} style={styles.dataContainer}>
+              <Text style={styles.data}>{item.des}</Text>
+            </View>
+          ))}
+          <View style={styles.quantityFlex}>
+            <Text style={styles.quantityText}>Qty</Text>
+            <View style={styles.counter}>
+              <TouchableOpacity
+                style={styles.plusButton}
+                onPress={() => incrementCount(index)}>
+                <Icon name="plus" size={20} color={'black'} />
+              </TouchableOpacity>
+              <Text style={{color: 'black'}}>{itemQuantities[index]}</Text>
+              <TouchableOpacity onPress={() => decrementCount(index)}>
+                <Icon name="minus" size={20} color={'black'} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <Text style={styles.selectedUnit}>Unit:{item.selectedUnit}lb</Text>
+          <Text style={styles.unitprice}>Unit Price: ${selectedUnitPrice}</Text>
+          {/* Add more details as needed */}
+        </View>
+        <Image source={item.image} style={styles.itemImage} />
       </View>
-      <View style={styles.subContainer}>
-        {isLoggedIn && (
-          <>
-            {cartItems.length > 0 ? (
-              <>
-                <ScrollView contentContainerStyle={styles.contentContainer}>
-                  <View style={styles.itemsContainer}>
-                    {cartItems.map((item, index) => (
-                      <>
-                        <View key={index} style={styles.itemContainer}>
-                          {/* Render other cart item details (name, quantity, price, etc.) */}
-                          <View style={styles.itemDetails}>
-                            <Text style={styles.title}>{item.itemName}</Text>
-                            {item.description.map((item, index) => (
-                              <View key={index} style={styles.dataContainer}>
-                                <Text style={styles.data}>{item.des}</Text>
-                              </View>
-                            ))}
-                            <View style={styles.quantityFlex}>
-                              <Text style={styles.quantityText}>Qty</Text>
-                              <View style={styles.counter}>
-                                <TouchableOpacity
-                                  style={styles.plusButton}
-                                  onPress={() => incrementCount(index)}>
-                                  <Icon name="plus" size={20} color={'black'} />
-                                </TouchableOpacity>
-                                <Text style={{color: 'black'}}>
-                                  {itemQuantities[index]}
-                                </Text>
-                                <TouchableOpacity
-                                  onPress={() => decrementCount(index)}>
-                                  <Icon
-                                    name="minus"
-                                    size={20}
-                                    color={'black'}
-                                  />
-                                </TouchableOpacity>
-                              </View>
-                            </View>
-                            <Text style={styles.selectedUnit}>
-                              Unit:{item.selectedUnit}lb
-                            </Text>
-                            <Text style={styles.unitprice}>
-                              Unit Price: ${selectedUnitPrice}
-                            </Text>
-                            {/* Add more details as needed */}
-                          </View>
-                          <Image source={item.image} style={styles.itemImage} />
-                        </View>
-                        <View style={styles.line1} />
-                        <View style={styles.pricetext}>
-                          <Text style={styles.priceText}>
-                            ${item.selectedPrice * itemQuantities[index]}
-                          </Text>
-                          <TouchableOpacity
-                            style={styles.removeButton}
-                            onPress={() => removeItem(index)}>
-                            <Text style={{color: 'blue'}}>Remove Item</Text>
-                          </TouchableOpacity>
-                        </View>
-                      </>
-                    ))}
-                  </View>
-                  <View style={styles.shippingAddressContainer}>
-                    <View>
-                      <Text style={styles.shippingAddressTitle}>
-                        Shipping Address
-                      </Text>
-                      <Text style={styles.shippingAddressText}>
-                        {shippingAddress.name}
-                      </Text>
-                      <Text style={styles.shippingAddressText}>
-                        {shippingAddress.addressLine1}
-                        {shippingAddress.addressLine2
-                          ? ', ' + shippingAddress.addressLine2
-                          : ''}
-                      </Text>
-                      <Text style={styles.shippingAddressText}>
-                        {shippingAddress.city}, {shippingAddress.state},{' '}
-                        {shippingAddress.zipCode}
-                      </Text>
-                      <Text style={styles.shippingAddressText}>
-                        Contact Number : {shippingAddress.phoneNumber}
-                      </Text>
-                    </View>
-                    <TouchableOpacity style={styles.editButton}>
-                      <Text style={styles.editButtonText}>Update Address</Text>
-                    </TouchableOpacity>
-                  </View>
-                </ScrollView>
-                <View style={styles.line} />
-                <View style={styles.bottomContainer}>
-                  <View>
-                    <Text style={styles.totalPrice}>
-                      ${grandTotal.toFixed(2)}
-                    </Text>
-                    <Text style={styles.totalPrice}>Current Total</Text>
-                  </View>
-                  <TouchableOpacity style={styles.placeOrderButton}>
-                    <Text style={styles.placeOrderButtonText}>Place Order</Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            ) : (
-              <View style={styles.emptyCartContainer}>
-                <Image
-                  source={require('../assets/images/emptyCart.png')}
-                  style={styles.emptyCartImage}
-                />
-                <Text style={styles.emptyCartText}>Your cart is empty.</Text>
-              </View>
-            )}
-          </>
-        )}
-        {!isLoggedIn && (
-          <View style={styles.withoutLogin}>
-            <Text style={styles.loginText}>Please Login To See Your Cart</Text>
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={() => navigation.navigate('login')}>
-              <Text style={styles.loginButtonText}>Login</Text>
+      <View style={styles.line1} />
+      <View style={styles.pricetext}>
+        <Text style={styles.priceText}>
+          ${item.selectedPrice * itemQuantities[index]}
+        </Text>
+        <TouchableOpacity
+          style={styles.removeButton}
+          onPress={() => removeItem(index)}>
+          <Text style={{color: 'blue'}}>Remove Item</Text>
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+
+  return (
+    <>
+      <View style={styles.container}>
+        <View style={styles.Header}>
+          <TouchableOpacity
+            style={styles.iconContainer}
+            onPress={() => navigation.goBack()}>
+            <Icon name="angle-left" size={40} color={'white'} />
+          </TouchableOpacity>
+          <Text style={styles.headerText}>Cart</Text>
+        </View>
+        <View style={styles.subContainer}>
+          <FlatList
+            data={cartItems}
+            renderItem={renderCartItem}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator={false}
+          />
+          <View style={styles.shippingAddressContainer}>
+            <View>
+              <Text style={styles.shippingAddressTitle}>Shipping Address</Text>
+              <Text style={styles.shippingAddressText}>
+                {shippingAddress.name}
+              </Text>
+              <Text style={styles.shippingAddressText}>
+                {shippingAddress.addressLine1}
+                {shippingAddress.addressLine2
+                  ? ', ' + shippingAddress.addressLine2
+                  : ''}
+              </Text>
+              <Text style={styles.shippingAddressText}>
+                {shippingAddress.city}, {shippingAddress.state},{' '}
+                {shippingAddress.zipCode}
+              </Text>
+              <Text style={styles.shippingAddressText}>
+                Contact Number : {shippingAddress.phoneNumber}
+              </Text>
+            </View>
+            <TouchableOpacity style={styles.editButton}>
+              <Text style={styles.editButtonText}>Update Address</Text>
             </TouchableOpacity>
           </View>
-        )}
+          <View style={styles.line} />
+          <View style={styles.bottomContainer}>
+            <View>
+              <Text style={styles.totalPrice}>${grandTotal.toFixed(2)}</Text>
+              <Text style={styles.totalPrice}>Current Total</Text>
+            </View>
+            <TouchableOpacity style={styles.placeOrderButton}>
+              <Text style={styles.placeOrderButtonText}>Place Order</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-    </View>
+    </>
   );
+  // return (
+  // <View style={styles.container}>
+  //   <View style={styles.Header}>
+  //     <TouchableOpacity
+  //       style={styles.iconContainer}
+  //       onPress={() => navigation.goBack()}>
+  //       <Icon name="angle-left" size={40} color={'white'} />
+  //     </TouchableOpacity>
+  //     <Text style={styles.headerText}>Cart</Text>
+  //   </View>
+  //   <View style={styles.subContainer}>
+  //     {isLoggedIn && (
+  //       <>
+  //         {cartItems.length > 0 ? (
+  //           <>
+  //             <ScrollView contentContainerStyle={styles.contentContainer}>
+  //               <View style={styles.itemsContainer}>
+  //                 {cartItems.map((item, index) => (
+  //                   <>
+  //                     <View key={index} style={styles.itemContainer}>
+  //                       {/* Render other cart item details (name, quantity, price, etc.) */}
+  //                       <View style={styles.itemDetails}>
+  //                         <Text style={styles.title}>{item.itemName}</Text>
+  //                         {item.description.map((item, index) => (
+  //                           <View key={index} style={styles.dataContainer}>
+  //                             <Text style={styles.data}>{item.des}</Text>
+  //                           </View>
+  //                         ))}
+  //                         <View style={styles.quantityFlex}>
+  //                           <Text style={styles.quantityText}>Qty</Text>
+  //                           <View style={styles.counter}>
+  //                             <TouchableOpacity
+  //                               style={styles.plusButton}
+  //                               onPress={() => incrementCount(index)}>
+  //                               <Icon name="plus" size={20} color={'black'} />
+  //                             </TouchableOpacity>
+  //                             <Text style={{color: 'black'}}>
+  //                               {itemQuantities[index]}
+  //                             </Text>
+  //                             <TouchableOpacity
+  //                               onPress={() => decrementCount(index)}>
+  //                               <Icon name="minus" size={20} color={'black'} />
+  //                             </TouchableOpacity>
+  //                           </View>
+  //                         </View>
+  //                         <Text style={styles.selectedUnit}>
+  //                           Unit:{item.selectedUnit}lb
+  //                         </Text>
+  //                         <Text style={styles.unitprice}>
+  //                           Unit Price: ${selectedUnitPrice}
+  //                         </Text>
+  //                         {/* Add more details as needed */}
+  //                       </View>
+  //                       <Image source={item.image} style={styles.itemImage} />
+  //                     </View>
+  //                     <View style={styles.line1} />
+  //                     <View style={styles.pricetext}>
+  //                       <Text style={styles.priceText}>
+  //                         ${item.selectedPrice * itemQuantities[index]}
+  //                       </Text>
+  //                       <TouchableOpacity
+  //                         style={styles.removeButton}
+  //                         onPress={() => removeItem(index)}>
+  //                         <Text style={{color: 'blue'}}>Remove Item</Text>
+  //                       </TouchableOpacity>
+  //                     </View>
+  //                   </>
+  //                 ))}
+  //               </View>
+  //               <View style={styles.shippingAddressContainer}>
+  //                 <View>
+  //                   <Text style={styles.shippingAddressTitle}>
+  //                     Shipping Address
+  //                   </Text>
+  //                   <Text style={styles.shippingAddressText}>
+  //                     {shippingAddress.name}
+  //                   </Text>
+  //                   <Text style={styles.shippingAddressText}>
+  //                     {shippingAddress.addressLine1}
+  //                     {shippingAddress.addressLine2
+  //                       ? ', ' + shippingAddress.addressLine2
+  //                       : ''}
+  //                   </Text>
+  //                   <Text style={styles.shippingAddressText}>
+  //                     {shippingAddress.city}, {shippingAddress.state},{' '}
+  //                     {shippingAddress.zipCode}
+  //                   </Text>
+  //                   <Text style={styles.shippingAddressText}>
+  //                     Contact Number : {shippingAddress.phoneNumber}
+  //                   </Text>
+  //                 </View>
+  //                 <TouchableOpacity style={styles.editButton}>
+  //                   <Text style={styles.editButtonText}>Update Address</Text>
+  //                 </TouchableOpacity>
+  //               </View>
+  //             </ScrollView>
+  //             <View style={styles.line} />
+  //             <View style={styles.bottomContainer}>
+  //               <View>
+  //                 <Text style={styles.totalPrice}>
+  //                   ${grandTotal.toFixed(2)}
+  //                 </Text>
+  //                 <Text style={styles.totalPrice}>Current Total</Text>
+  //               </View>
+  //               <TouchableOpacity style={styles.placeOrderButton}>
+  //                 <Text style={styles.placeOrderButtonText}>Place Order</Text>
+  //               </TouchableOpacity>
+  //             </View>
+  //           </>
+  //         ) : (
+  //           <View style={styles.emptyCartContainer}>
+  //             <Image
+  //               source={require('../assets/images/emptyCart.png')}
+  //               style={styles.emptyCartImage}
+  //             />
+  //             <Text style={styles.emptyCartText}>Your cart is empty.</Text>
+  //           </View>
+  //         )}
+  //       </>
+  //     )}
+  //     {!isLoggedIn && (
+  //       <View style={styles.withoutLogin}>
+  //         <Text style={styles.loginText}>Please Login To See Your Cart</Text>
+  //         <TouchableOpacity
+  //           style={styles.loginButton}
+  //           onPress={() => navigation.navigate('login')}>
+  //           <Text style={styles.loginButtonText}>Login</Text>
+  //         </TouchableOpacity>
+  //       </View>
+  //     )}
+  //   </View>
+  // </View>;
+  // );
 };
 export default CartScreen;
 const styles = StyleSheet.create({
@@ -370,6 +469,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     borderRadius: 4,
     flexDirection: 'row',
+    marginBottom: 10,
   },
   shippingAddressTitle: {
     color: 'black',
