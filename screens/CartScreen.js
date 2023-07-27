@@ -7,21 +7,19 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
-  FlatList,
   Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {CartContext} from './CartContext';
 
-const CartScreen = ({navigation, route, item}) => {
+const CartScreen = ({navigation, route}) => {
   const {width, height} = Dimensions.get('window');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const isLoggedInRef = useRef(isLoggedIn);
   const {cartItems, setCartItems} = useContext(CartContext);
-  const [selectedPrice, setSelectedPrice] = useState(cartItems[0]?.price || 0); // Use the first item's price as the initial selectedPrice, or set to 0 if cart is empty
   const [selectedUnitPrice, setSelectedUnitPrice] = useState(25);
   const [itemQuantities, setItemQuantities] = useState(
-    cartItems.map(item => item.quantity || 0),
+    cartItems.map(item => item.quantity),
   );
   const [grandTotal, setGrandTotal] = useState(0);
 
@@ -56,12 +54,17 @@ const CartScreen = ({navigation, route, item}) => {
   useEffect(() => {
     checkLoginStatus();
     updateGrandTotal();
-  }, [itemQuantities]);
+  }, [itemQuantities, cartItems]);
 
   const incrementCount = index => {
     setItemQuantities(prevQuantities =>
       prevQuantities.map((quantity, idx) =>
         idx === index ? quantity + 1 : quantity,
+      ),
+    );
+    setCartItems(prevCartItems =>
+      prevCartItems.map((item, idx) =>
+        idx === index ? {...item, quantity: item.quantity + 1} : item,
       ),
     );
   };
@@ -71,6 +74,11 @@ const CartScreen = ({navigation, route, item}) => {
       setItemQuantities(prevQuantities =>
         prevQuantities.map((quantity, idx) =>
           idx === index ? quantity - 1 : quantity,
+        ),
+      );
+      setCartItems(prevCartItems =>
+        prevCartItems.map((item, idx) =>
+          idx === index ? {...item, quantity: item.quantity - 1} : item,
         ),
       );
     }
@@ -355,6 +363,7 @@ const styles = StyleSheet.create({
   shippingAddressContainer: {
     width: '94%',
     height: 170,
+    justifyContent: 'space-between',
     backgroundColor: 'white',
     marginTop: 20,
     marginHorizontal: 10,
@@ -389,7 +398,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     borderColor: 'green',
-    marginLeft: 18,
+    marginRight: 10,
   },
   bottomContainer: {
     flexDirection: 'row',
@@ -429,6 +438,7 @@ const styles = StyleSheet.create({
     width: '47%',
     height: 200,
     marginRight: 9,
+    borderTopRightRadius: 4,
   },
   itemContainer: {
     flexDirection: 'row',

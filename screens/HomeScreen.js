@@ -9,9 +9,11 @@ import {
 import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useAuth} from './AuthContext';
+import {CartContext} from './CartContext';
 
-const HomeScreen = ({navigation, cartItems}) => {
+const HomeScreen = ({navigation}) => {
   const {isLoggedIn} = useAuth();
+  const {cartItems} = useState(CartContext);
 
   const FeaturedData = [
     {
@@ -282,9 +284,8 @@ const HomeScreen = ({navigation, cartItems}) => {
     });
   };
   const handleCart = () => {
-    navigation.navigate('Cart', { cartItems });
-
-  }
+    navigation.navigate('Cart', {cartItems});
+  };
   return (
     // <ScrollView>
     <View style={styles.container}>

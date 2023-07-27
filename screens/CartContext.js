@@ -6,9 +6,9 @@ const CartContext = createContext();
 const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
-  // const updateCartItems = (newCartItems) => {
-  //   setCartItems(newCartItems);
-  // };
+  const updateCartItems = (newCartItems) => {
+    setCartItems(newCartItems);
+  };
   // const addToCart = (itemToAdd, quantity = 1) => {
   //   const existingItemIndex = cartItems.findIndex((item) => item.id === itemToAdd.id);
   
@@ -23,7 +23,7 @@ const CartProvider = ({ children }) => {
   //   }
   // };
   return (
-    <CartContext.Provider value={{ cartItems, setCartItems}}>
+    <CartContext.Provider value={{ cartItems, setCartItems, updateCartItems}}>
       {children}
     </CartContext.Provider>
   );

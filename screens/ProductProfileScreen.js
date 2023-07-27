@@ -107,7 +107,7 @@ const ProductProfileScreen = ({route, navigation}) => {
           selectedPrice,
           // price: selectedPrice * count,
           quantity: count,
-          totalPrice: selectedPrice * count,
+          // totalPrice: selectedPrice * count,
           image:
             (sectionData.SectionImage && sectionData.SectionImage[0]) ||
             (sectionData.Sectionimage && sectionData.Sectionimage[0]) ||
