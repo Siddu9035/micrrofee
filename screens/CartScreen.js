@@ -21,7 +21,7 @@ const CartScreen = ({navigation, route}) => {
   const [itemQuantities, setItemQuantities] = useState(
     cartItems.map(item => item.quantity),
   );
-  
+
   const [grandTotal, setGrandTotal] = useState(0);
 
   const [shippingAddress, setShippingAddress] = useState({
@@ -139,61 +139,92 @@ const CartScreen = ({navigation, route}) => {
   );
 
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.Header}>
-          <TouchableOpacity
-            style={styles.iconContainer}
-            onPress={() => navigation.goBack()}>
-            <Icon name="angle-left" size={40} color={'white'} />
-          </TouchableOpacity>
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={() => navigation.goBack()}>
+          <Icon name="angle-left" size={40} color={'white'} />
+        </TouchableOpacity>
+        <View style={styles.header}>
           <Text style={styles.headerText}>Cart</Text>
         </View>
-        <View style={styles.subContainer}>
-          <FlatList
-            data={cartItems}
-            renderItem={renderCartItem}
-            keyExtractor={(item, index) => index.toString()}
-            contentContainerStyle={styles.contentContainer}
-            showsVerticalScrollIndicator={false}
-          />
-          <View style={styles.shippingAddressContainer}>
-            <View>
-              <Text style={styles.shippingAddressTitle}>Shipping Address</Text>
-              <Text style={styles.shippingAddressText}>
-                {shippingAddress.name}
-              </Text>
-              <Text style={styles.shippingAddressText}>
-                {shippingAddress.addressLine1}
-                {shippingAddress.addressLine2
-                  ? ', ' + shippingAddress.addressLine2
-                  : ''}
-              </Text>
-              <Text style={styles.shippingAddressText}>
-                {shippingAddress.city}, {shippingAddress.state},{' '}
-                {shippingAddress.zipCode}
-              </Text>
-              <Text style={styles.shippingAddressText}>
-                Contact Number : {shippingAddress.phoneNumber}
-              </Text>
-            </View>
-            <TouchableOpacity style={styles.editButton}>
-              <Text style={styles.editButtonText}>Update Address</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.line} />
-          <View style={styles.bottomContainer}>
-            <View>
-              <Text style={styles.totalPrice}>${grandTotal.toFixed(2)}</Text>
-              <Text style={styles.totalPrice}>Current Total</Text>
-            </View>
-            <TouchableOpacity style={styles.placeOrderButton}>
-              <Text style={styles.placeOrderButtonText}>Place Order</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
       </View>
-    </>
+      <View style={styles.subContainer}>
+        {isLoggedIn ? (
+          // If the user is logged in, show the cart content or the empty cart message
+          cartItems.length > 0 ? (
+            <FlatList
+              data={cartItems}
+              renderItem={renderCartItem}
+              keyExtractor={(item, index) => index.toString()}
+              contentContainerStyle={styles.contentContainer}
+              showsVerticalScrollIndicator={false}
+            />
+          ) : (
+            <View style={styles.emptyCartContainer}>
+              <Image
+                source={require('../assets/images/emptyCart.png')}
+                style={styles.emptyCartImage}
+              />
+              <Text style={styles.emptyCartText}>Your cart is empty.</Text>
+            </View>
+          )
+        ) : (
+          // If the user is not logged in, show the empty cart message
+          <View style={styles.withoutLogin}>
+            <Text style={styles.loginText}>Please Login To See Your Cart</Text>
+            <TouchableOpacity
+              style={styles.loginButton}
+              onPress={() => navigation.navigate('login')}>
+              <Text style={styles.loginButtonText}>Login</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {/* Display shipping address and total only if the cart is not empty */}
+        {cartItems.length > 0 && (
+          <>
+            <View style={styles.shippingAddressContainer}>
+              <View>
+                <Text style={styles.shippingAddressTitle}>
+                  Shipping Address
+                </Text>
+                <Text style={styles.shippingAddressText}>
+                  {shippingAddress.name}
+                </Text>
+                <Text style={styles.shippingAddressText}>
+                  {shippingAddress.addressLine1}
+                  {shippingAddress.addressLine2
+                    ? ', ' + shippingAddress.addressLine2
+                    : ''}
+                </Text>
+                <Text style={styles.shippingAddressText}>
+                  {shippingAddress.city}, {shippingAddress.state},{' '}
+                  {shippingAddress.zipCode}
+                </Text>
+                <Text style={styles.shippingAddressText}>
+                  Contact Number : {shippingAddress.phoneNumber}
+                </Text>
+              </View>
+              <TouchableOpacity style={styles.editButton}>
+                <Text style={styles.editButtonText}>Update Address</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.line} />
+            <View style={styles.bottomContainer}>
+              <View>
+                <Text style={styles.totalPrice}>${grandTotal.toFixed(2)}</Text>
+                <Text style={styles.totalPrice}>Current Total</Text>
+              </View>
+              <TouchableOpacity style={styles.placeOrderButton}>
+                <Text style={styles.placeOrderButtonText}>Place Order</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </View>
+    </View>
   );
   // return (
   // <View style={styles.container}>
@@ -335,20 +366,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'green',
   },
-  Header: {
+  headerContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     height: 60,
   },
   iconContainer: {
-    marginHorizontal: 20,
+    marginLeft: 25,
     alignSelf: 'center',
+  },
+  header: {
+    flex: 1,
+    alignItems: 'center',
+    marginRight: 20,
   },
   headerText: {
     color: 'white',
     alignSelf: 'center',
-    paddingLeft: 50,
-    marginLeft: 50,
-    fontSize: 18,
+    fontSize: 20,
   },
   subContainer: {
     backgroundColor: '#F5F5F5',
@@ -436,6 +472,7 @@ const styles = StyleSheet.create({
     // marginTop: 3,
     justifyContent: 'space-between',
     marginHorizontal: 10,
+    marginBottom: 10,
   },
   priceText: {
     color: 'black',
@@ -469,7 +506,8 @@ const styles = StyleSheet.create({
     elevation: 10,
     borderRadius: 4,
     flexDirection: 'row',
-    marginBottom: 10,
+    marginBottom: 70,
+    textAlignVertical: 'center',
   },
   shippingAddressTitle: {
     color: 'black',
