@@ -13,7 +13,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SwiperFlatList from 'react-native-swiper-flatlist';
-import {useCart} from './AppContext';
+import {useAppContext} from './AppContext';
 
 const ProductProfileScreen = ({route, navigation}) => {
   // Get the section data passed as a route parameter
@@ -59,7 +59,7 @@ const ProductProfileScreen = ({route, navigation}) => {
   const isLoggedInRef = useRef(isLoggedIn);
   const {width, height} = Dimensions.get('window');
   // const [cartItems, setCartItems] = useState([]);
-  const {cartItems, setCartItems} = useCart();
+  const {cartItems, setCartItems} = useAppContext();
 
   const handleClick = () => {
     setCollapsed(!collapsed);

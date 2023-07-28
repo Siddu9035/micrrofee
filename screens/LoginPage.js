@@ -11,10 +11,10 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useAuth} from './AppContext';
+import {useAppContext} from './AppContext';
 
 const Loginpage = ({navigation}) => {
-  const {handleLogout} = useAuth();
+  const {handleLogout} = useAppContext();
   const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hidePass, setHidePassword] = useState(false);

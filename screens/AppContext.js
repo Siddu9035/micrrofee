@@ -1,13 +1,12 @@
-// AppContext.js
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, {createContext, useState, useEffect, useContext} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const AuthContext = createContext();
-const CartContext = createContext();
+const AppContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const AppProvider = ({children}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+  const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
     // Fetch the login status and user email from AsyncStorage
@@ -28,14 +27,13 @@ export const AuthProvider = ({ children }) => {
     fetchLoginStatus();
   }, []);
 
-  const handleLogin = async (email) => {
+  const handleLogin = async email => {
     // Save the login status and user email to AsyncStorage
     try {
       await AsyncStorage.setItem('isLoggedIn', 'true');
       await AsyncStorage.setItem('userEmail', email);
       setIsLoggedIn(true);
       setUserEmail(email);
-      //   navigation.navigate('login');
     } catch (error) {
       console.log('Error saving login status and user email:', error);
     }
@@ -46,7 +44,6 @@ export const AuthProvider = ({ children }) => {
     try {
       await AsyncStorage.removeItem('isLoggedIn');
       await AsyncStorage.removeItem('userEmail');
-      console.log('user logged out');
       setIsLoggedIn(false);
       setUserEmail('');
     } catch (error) {
@@ -54,27 +51,24 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  return (
-    <AuthContext.Provider
-      value={{ isLoggedIn, userEmail, handleLogin, handleLogout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
-
-  const updateCartItems = (newCartItems) => {
+  const updateCartItems = newCartItems => {
     setCartItems(newCartItems);
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, setCartItems, updateCartItems }}>
+    <AppContext.Provider
+      value={{
+        isLoggedIn,
+        userEmail,
+        cartItems,
+        handleLogin,
+        handleLogout,
+        updateCartItems,
+        setCartItems,
+      }}>
       {children}
-    </CartContext.Provider>
+    </AppContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
-export const useCart = () => useContext(CartContext);
+export const useAppContext = () => useContext(AppContext);

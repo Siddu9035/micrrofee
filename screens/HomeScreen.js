@@ -6,13 +6,12 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useAuth, useCart } from "./AppContext";
+import {useAppContext} from './AppContext';
 
 const HomeScreen = ({navigation}) => {
-  const {isLoggedIn} = useAuth();
-  const {cartItems} = useCart();
+  const {isLoggedIn, cartItems} = useAppContext();
 
   const FeaturedData = [
     {

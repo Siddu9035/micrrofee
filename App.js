@@ -26,7 +26,7 @@ import {useNavigation} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Text, TouchableOpacity, View, StyleSheet, Image} from 'react-native';
-import { AuthProvider, CartProvider } from "./screens/AppContext";
+import { AppProvider } from "./screens/AppContext";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -304,8 +304,7 @@ function App({userEmail}) {
     setIsLoggedIn(true);
   };
   return (
-    <AuthProvider>
-      <CartProvider>
+    <AppProvider>
         <NavigationContainer>
           <StackNavigator cartItems={cartItems} setCartItems={setCartItems}>
             <DrawerNavigator>
@@ -318,8 +317,7 @@ function App({userEmail}) {
             </DrawerNavigator>
           </StackNavigator>
         </NavigationContainer>
-      </CartProvider>
-    </AuthProvider>
+    </AppProvider>
   );
 }
 const DrawerNavigator = () => {

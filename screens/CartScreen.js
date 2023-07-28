@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useState, useEffect, useRef, useContext} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,14 +7,15 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useCart } from './AppContext';
+import {useAppContext} from './AppContext';
 
 const CartScreen = ({navigation}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const isLoggedInRef = useRef(isLoggedIn);
-  const {cartItems, setCartItems} = useCart();
+  const {cartItems, setCartItems} = useAppContext();
   const [selectedUnitPrice, setSelectedUnitPrice] = useState(25);
   const [itemQuantities, setItemQuantities] = useState(
     cartItems.map(item => item.quantity),
@@ -114,9 +115,9 @@ const CartScreen = ({navigation}) => {
               Contact Number: {shippingAddress.phoneNumber}
             </Text>
           </View>
-          <TouchableOpacity style={styles.editButton}>
-            <Text style={styles.editButtonText}>Update Address</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.editButton}>
+              <Text style={styles.editButtonText}>Update Address</Text>
+            </TouchableOpacity>
         </View>
       </>
     );
@@ -303,8 +304,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     justifyContent: 'space-between',
-    height: 40,
-    padding: 10,
+    height: 35,
+    padding: 5,
     shadowColor: 'black',
     elevation: 10,
     marginLeft: 15,
@@ -332,16 +333,15 @@ const styles = StyleSheet.create({
   unitprice: {
     color: 'black',
     paddingLeft: 10,
-    marginTop: 10,
+    marginTop: 5,
   },
   selectedUnit: {
     color: 'black',
     paddingLeft: 10,
-    marginTop: 10,
+    marginTop: 5,
   },
   data: {
     color: 'black',
-    marginVertical: 2,
   },
   pricetext: {
     flexDirection: 'row',
@@ -384,6 +384,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 70,
     textAlignVertical: 'center',
+    // flex: 1,
   },
   shippingAddressTitle: {
     color: 'black',
@@ -413,6 +414,8 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderColor: 'green',
     marginRight: 10,
+    marginLeft: -15,
+    flex: 1,
   },
   bottomContainer: {
     flexDirection: 'row',
@@ -450,9 +453,10 @@ const styles = StyleSheet.create({
   },
   itemImage: {
     width: '47%',
-    height: 200,
+    height: 170,
     marginRight: 9,
     borderTopRightRadius: 4,
+    resizeMode: 'stretch',
   },
   itemContainer: {
     flexDirection: 'row',
@@ -463,7 +467,7 @@ const styles = StyleSheet.create({
   itemDetails: {
     width: '47%',
     backgroundColor: 'white',
-    height: 200,
+    height: 170,
     marginLeft: 10,
     elevation: 10,
     borderTopLeftRadius: 4,
