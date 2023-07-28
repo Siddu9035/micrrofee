@@ -26,7 +26,7 @@ import {useNavigation} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Text, TouchableOpacity, View, StyleSheet, Image} from 'react-native';
-import { AppProvider } from "./screens/AppContext";
+import {AppProvider} from './screens/AppContext';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -54,11 +54,13 @@ function TabNavigator({navigation}) {
             <TouchableOpacity
               onPress={() => navigation.navigate(route.name)}
               style={{alignSelf: 'center', justifyContent: 'center'}}>
-              <Icon
-                name={iconName}
-                size={focused ? 25 : 20}
-                color={focused ? '#9ACD32' : 'gray'}
-              />
+              <View style={{alignItems: 'center'}}>
+                <Icon
+                  name={iconName}
+                  size={focused ? 25 : 20}
+                  color={focused ? '#9ACD32' : 'gray'}
+                />
+              </View>
             </TouchableOpacity>
           );
         },
@@ -305,18 +307,18 @@ function App({userEmail}) {
   };
   return (
     <AppProvider>
-        <NavigationContainer>
-          <StackNavigator cartItems={cartItems} setCartItems={setCartItems}>
-            <DrawerNavigator>
-              <CustomDrawerContent
-                isLoggedIn={isLoggedIn}
-                userEmail={userEmail}
-                handleLogin={handleLogin}
-              />
-              <ProductProfileScreen isLoggedIn={isLoggedIn} />
-            </DrawerNavigator>
-          </StackNavigator>
-        </NavigationContainer>
+      <NavigationContainer>
+        <StackNavigator cartItems={cartItems} setCartItems={setCartItems}>
+          <DrawerNavigator>
+            <CustomDrawerContent
+              isLoggedIn={isLoggedIn}
+              userEmail={userEmail}
+              handleLogin={handleLogin}
+            />
+            <ProductProfileScreen isLoggedIn={isLoggedIn} />
+          </DrawerNavigator>
+        </StackNavigator>
+      </NavigationContainer>
     </AppProvider>
   );
 }

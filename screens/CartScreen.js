@@ -184,7 +184,7 @@ const CartScreen = ({navigation}) => {
                       <View style={styles.line1} />
                       <View style={styles.pricetext}>
                         <Text style={styles.priceText}>
-                          ${item.selectedPrice * itemQuantities[index]}
+                          ${(item.selectedPrice * itemQuantities[index]).toFixed(2)}
                         </Text>
                         <TouchableOpacity
                           style={styles.removeButton}
@@ -413,9 +413,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     borderColor: 'green',
-    marginRight: 10,
-    marginLeft: -15,
-    flex: 1,
+    marginRight: 15,
+    marginLeft: -25,
+    // flex: 1,
   },
   bottomContainer: {
     flexDirection: 'row',
@@ -454,7 +454,8 @@ const styles = StyleSheet.create({
   itemImage: {
     width: '47%',
     height: 170,
-    marginRight: 9,
+    marginRight: 10,
+    marginLeft: -5,
     borderTopRightRadius: 4,
     resizeMode: 'stretch',
   },
