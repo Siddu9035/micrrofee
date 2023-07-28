@@ -26,8 +26,7 @@ import {useNavigation} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Text, TouchableOpacity, View, StyleSheet, Image} from 'react-native';
-import {AuthProvider} from './screens/AuthContext';
-import {CartProvider} from './screens/CartContext';
+import { AuthProvider, CartProvider } from "./screens/AppContext";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();

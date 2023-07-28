@@ -8,12 +8,11 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useAuth} from './AuthContext';
-import {CartContext} from './CartContext';
+import { useAuth, useCart } from "./AppContext";
 
 const HomeScreen = ({navigation}) => {
   const {isLoggedIn} = useAuth();
-  const {cartItems} = useState(CartContext);
+  const {cartItems} = useCart();
 
   const FeaturedData = [
     {

@@ -13,7 +13,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SwiperFlatList from 'react-native-swiper-flatlist';
-import {CartContext} from './CartContext';
+import {useCart} from './AppContext';
 
 const ProductProfileScreen = ({route, navigation}) => {
   // Get the section data passed as a route parameter
@@ -59,7 +59,7 @@ const ProductProfileScreen = ({route, navigation}) => {
   const isLoggedInRef = useRef(isLoggedIn);
   const {width, height} = Dimensions.get('window');
   // const [cartItems, setCartItems] = useState([]);
-  const {cartItems, setCartItems} = useContext(CartContext);
+  const {cartItems, setCartItems} = useCart();
 
   const handleClick = () => {
     setCollapsed(!collapsed);
@@ -114,7 +114,7 @@ const ProductProfileScreen = ({route, navigation}) => {
             'default_image_url',
           description: [sectionData.description[0], sectionData.description[2]],
         };
-        setCartItems((prevItems) => [...prevItems, newItem]);
+        setCartItems(prevItems => [...prevItems, newItem]);
       }
 
       console.log('items added successfully');
@@ -831,7 +831,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   img: {
-    width: "100%",
+    width: '100%',
     height: 170,
   },
   line4: {

@@ -11,16 +11,14 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useAuth} from './AuthContext';
+import {useAuth} from './AppContext';
 
 const Loginpage = ({navigation}) => {
   const {handleLogout} = useAuth();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hidePass, setHidePassword] = useState(false);
   const [error, setError] = useState('');
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleLogin = async () => {
     if (userEmail == '' || password == '') {

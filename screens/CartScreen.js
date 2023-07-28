@@ -9,12 +9,12 @@ import {
   Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {CartContext} from './CartContext';
+import { useCart } from './AppContext';
 
 const CartScreen = ({navigation}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const isLoggedInRef = useRef(isLoggedIn);
-  const {cartItems, setCartItems} = useContext(CartContext);
+  const {cartItems, setCartItems} = useCart();
   const [selectedUnitPrice, setSelectedUnitPrice] = useState(25);
   const [itemQuantities, setItemQuantities] = useState(
     cartItems.map(item => item.quantity),
@@ -141,6 +141,7 @@ const CartScreen = ({navigation}) => {
               <>
                 <FlatList
                   data={cartItems}
+                  showsVerticalScrollIndicator={false}
                   renderItem={({item, index}) => (
                     <>
                       <View style={styles.itemContainer}>
@@ -252,7 +253,7 @@ const styles = StyleSheet.create({
   header: {
     flex: 1,
     alignItems: 'center',
-    marginRight: 30,
+    marginRight: 40,
   },
   headerText: {
     color: 'white',

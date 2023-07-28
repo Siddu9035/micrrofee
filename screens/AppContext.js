@@ -1,10 +1,11 @@
-// AuthContext.js
-import React, {createContext, useState, useEffect, useContext} from 'react';
+// AppContext.js
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthContext = createContext();
+const CartContext = createContext();
 
-export const AuthProvider = ({children}) => {
+export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
 
@@ -23,9 +24,11 @@ export const AuthProvider = ({children}) => {
         console.log('Error retrieving login status and user email:', error);
       }
     };
+
+    fetchLoginStatus();
   }, []);
 
-  const handleLogin = async email => {
+  const handleLogin = async (email) => {
     // Save the login status and user email to AsyncStorage
     try {
       await AsyncStorage.setItem('isLoggedIn', 'true');
@@ -53,10 +56,25 @@ export const AuthProvider = ({children}) => {
 
   return (
     <AuthContext.Provider
-      value={{isLoggedIn, userEmail, handleLogin, handleLogout}}>
+      value={{ isLoggedIn, userEmail, handleLogin, handleLogout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+export const CartProvider = ({ children }) => {
+  const [cartItems, setCartItems] = useState([]);
+
+  const updateCartItems = (newCartItems) => {
+    setCartItems(newCartItems);
+  };
+
+  return (
+    <CartContext.Provider value={{ cartItems, setCartItems, updateCartItems }}>
+      {children}
+    </CartContext.Provider>
+  );
+};
+
 export const useAuth = () => useContext(AuthContext);
+export const useCart = () => useContext(CartContext);
