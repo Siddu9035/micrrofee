@@ -5,15 +5,13 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Dimensions,
   FlatList,
   Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {CartContext} from './CartContext';
 
-const CartScreen = ({navigation, route}) => {
-  const {width, height} = Dimensions.get('window');
+const CartScreen = ({navigation}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const isLoggedInRef = useRef(isLoggedIn);
   const {cartItems, setCartItems} = useContext(CartContext);
@@ -93,50 +91,36 @@ const CartScreen = ({navigation, route}) => {
     setCartItems(updatedCartItems);
   };
 
-  const renderCartItem = ({item, index}) => (
-    <>
-      <View style={styles.itemContainer}>
-        {/* Render other cart item details (name, quantity, price, etc.) */}
-        <View style={styles.itemDetails}>
-          <Text style={styles.title}>{item.itemName}</Text>
-          {item.description.map((item, index) => (
-            <View key={index} style={styles.dataContainer}>
-              <Text style={styles.data}>{item.des}</Text>
-            </View>
-          ))}
-          <View style={styles.quantityFlex}>
-            <Text style={styles.quantityText}>Qty</Text>
-            <View style={styles.counter}>
-              <TouchableOpacity
-                style={styles.plusButton}
-                onPress={() => incrementCount(index)}>
-                <Icon name="plus" size={20} color={'black'} />
-              </TouchableOpacity>
-              <Text style={{color: 'black'}}>{itemQuantities[index]}</Text>
-              <TouchableOpacity onPress={() => decrementCount(index)}>
-                <Icon name="minus" size={20} color={'black'} />
-              </TouchableOpacity>
-            </View>
+  const renderShippingAddress = () => {
+    return (
+      <>
+        <View style={styles.shippingAddressContainer}>
+          <View>
+            <Text style={styles.shippingAddressTitle}>Shipping Address</Text>
+            <Text style={styles.shippingAddressText}>
+              {shippingAddress.name}
+            </Text>
+            <Text style={styles.shippingAddressText}>
+              {shippingAddress.addressLine1}
+              {shippingAddress.addressLine2
+                ? ', ' + shippingAddress.addressLine2
+                : ''}
+            </Text>
+            <Text style={styles.shippingAddressText}>
+              {shippingAddress.city}, {shippingAddress.state},{' '}
+              {shippingAddress.zipCode}
+            </Text>
+            <Text style={styles.shippingAddressText}>
+              Contact Number: {shippingAddress.phoneNumber}
+            </Text>
           </View>
-          <Text style={styles.selectedUnit}>Unit:{item.selectedUnit}lb</Text>
-          <Text style={styles.unitprice}>Unit Price: ${selectedUnitPrice}</Text>
-          {/* Add more details as needed */}
+          <TouchableOpacity style={styles.editButton}>
+            <Text style={styles.editButtonText}>Update Address</Text>
+          </TouchableOpacity>
         </View>
-        <Image source={item.image} style={styles.itemImage} />
-      </View>
-      <View style={styles.line1} />
-      <View style={styles.pricetext}>
-        <Text style={styles.priceText}>
-          ${item.selectedPrice * itemQuantities[index]}
-        </Text>
-        <TouchableOpacity
-          style={styles.removeButton}
-          onPress={() => removeItem(index)}>
-          <Text style={{color: 'blue'}}>Remove Item</Text>
-        </TouchableOpacity>
-      </View>
-    </>
-  );
+      </>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -152,26 +136,90 @@ const CartScreen = ({navigation, route}) => {
       </View>
       <View style={styles.subContainer}>
         {isLoggedIn ? (
-          // If the user is logged in, show the cart content or the empty cart message
-          cartItems.length > 0 ? (
-            <FlatList
-              data={cartItems}
-              renderItem={renderCartItem}
-              keyExtractor={(item, index) => index.toString()}
-              contentContainerStyle={styles.contentContainer}
-              showsVerticalScrollIndicator={false}
-            />
-          ) : (
-            <View style={styles.emptyCartContainer}>
-              <Image
-                source={require('../assets/images/emptyCart.png')}
-                style={styles.emptyCartImage}
-              />
-              <Text style={styles.emptyCartText}>Your cart is empty.</Text>
-            </View>
-          )
+          <>
+            {cartItems.length > 0 ? (
+              <>
+                <FlatList
+                  data={cartItems}
+                  renderItem={({item, index}) => (
+                    <>
+                      <View style={styles.itemContainer}>
+                        {/* Render other cart item details (name, quantity, price, etc.) */}
+                        <View style={styles.itemDetails}>
+                          <Text style={styles.title}>{item.itemName}</Text>
+                          {item.description.map((item, index) => (
+                            <View key={index} style={styles.dataContainer}>
+                              <Text style={styles.data}>{item.des}</Text>
+                            </View>
+                          ))}
+                          <View style={styles.quantityFlex}>
+                            <Text style={styles.quantityText}>Qty</Text>
+                            <View style={styles.counter}>
+                              <TouchableOpacity
+                                style={styles.plusButton}
+                                onPress={() => incrementCount(index)}>
+                                <Icon name="plus" size={20} color={'black'} />
+                              </TouchableOpacity>
+                              <Text style={{color: 'black'}}>
+                                {itemQuantities[index]}
+                              </Text>
+                              <TouchableOpacity
+                                onPress={() => decrementCount(index)}>
+                                <Icon name="minus" size={20} color={'black'} />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                          <Text style={styles.selectedUnit}>
+                            Unit:{item.selectedUnit}lb
+                          </Text>
+                          <Text style={styles.unitprice}>
+                            Unit Price: ${selectedUnitPrice}
+                          </Text>
+                          {/* Add more details as needed */}
+                        </View>
+                        <Image source={item.image} style={styles.itemImage} />
+                      </View>
+                      <View style={styles.line1} />
+                      <View style={styles.pricetext}>
+                        <Text style={styles.priceText}>
+                          ${item.selectedPrice * itemQuantities[index]}
+                        </Text>
+                        <TouchableOpacity
+                          style={styles.removeButton}
+                          onPress={() => removeItem(index)}>
+                          <Text style={{color: 'blue'}}>Remove Item</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </>
+                  )}
+                  keyExtractor={(item, index) => index.toString()}
+                  contentContainerStyle={styles.contentContainer}
+                  ListFooterComponent={renderShippingAddress}
+                />
+                <View style={styles.line} />
+                <View style={styles.bottomContainer}>
+                  <View>
+                    <Text style={styles.totalPrice}>
+                      ${grandTotal.toFixed(2)}
+                    </Text>
+                    <Text style={styles.totalPrice}>Current Total</Text>
+                  </View>
+                  <TouchableOpacity style={styles.placeOrderButton}>
+                    <Text style={styles.placeOrderButtonText}>Place Order</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            ) : (
+              <View style={styles.emptyCartContainer}>
+                <Image
+                  source={require('../assets/images/emptyCart.png')}
+                  style={styles.emptyCartImage}
+                />
+                <Text style={styles.emptyCartText}>Your cart is empty.</Text>
+              </View>
+            )}
+          </>
         ) : (
-          // If the user is not logged in, show the empty cart message
           <View style={styles.withoutLogin}>
             <Text style={styles.loginText}>Please Login To See Your Cart</Text>
             <TouchableOpacity
@@ -181,184 +229,9 @@ const CartScreen = ({navigation, route}) => {
             </TouchableOpacity>
           </View>
         )}
-
-        {/* Display shipping address and total only if the cart is not empty */}
-        {cartItems.length > 0 && (
-          <>
-            <View style={styles.shippingAddressContainer}>
-              <View>
-                <Text style={styles.shippingAddressTitle}>
-                  Shipping Address
-                </Text>
-                <Text style={styles.shippingAddressText}>
-                  {shippingAddress.name}
-                </Text>
-                <Text style={styles.shippingAddressText}>
-                  {shippingAddress.addressLine1}
-                  {shippingAddress.addressLine2
-                    ? ', ' + shippingAddress.addressLine2
-                    : ''}
-                </Text>
-                <Text style={styles.shippingAddressText}>
-                  {shippingAddress.city}, {shippingAddress.state},{' '}
-                  {shippingAddress.zipCode}
-                </Text>
-                <Text style={styles.shippingAddressText}>
-                  Contact Number : {shippingAddress.phoneNumber}
-                </Text>
-              </View>
-              <TouchableOpacity style={styles.editButton}>
-                <Text style={styles.editButtonText}>Update Address</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.line} />
-            <View style={styles.bottomContainer}>
-              <View>
-                <Text style={styles.totalPrice}>${grandTotal.toFixed(2)}</Text>
-                <Text style={styles.totalPrice}>Current Total</Text>
-              </View>
-              <TouchableOpacity style={styles.placeOrderButton}>
-                <Text style={styles.placeOrderButtonText}>Place Order</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
       </View>
     </View>
   );
-  // return (
-  // <View style={styles.container}>
-  //   <View style={styles.Header}>
-  //     <TouchableOpacity
-  //       style={styles.iconContainer}
-  //       onPress={() => navigation.goBack()}>
-  //       <Icon name="angle-left" size={40} color={'white'} />
-  //     </TouchableOpacity>
-  //     <Text style={styles.headerText}>Cart</Text>
-  //   </View>
-  //   <View style={styles.subContainer}>
-  //     {isLoggedIn && (
-  //       <>
-  //         {cartItems.length > 0 ? (
-  //           <>
-  //             <ScrollView contentContainerStyle={styles.contentContainer}>
-  //               <View style={styles.itemsContainer}>
-  //                 {cartItems.map((item, index) => (
-  //                   <>
-  //                     <View key={index} style={styles.itemContainer}>
-  //                       {/* Render other cart item details (name, quantity, price, etc.) */}
-  //                       <View style={styles.itemDetails}>
-  //                         <Text style={styles.title}>{item.itemName}</Text>
-  //                         {item.description.map((item, index) => (
-  //                           <View key={index} style={styles.dataContainer}>
-  //                             <Text style={styles.data}>{item.des}</Text>
-  //                           </View>
-  //                         ))}
-  //                         <View style={styles.quantityFlex}>
-  //                           <Text style={styles.quantityText}>Qty</Text>
-  //                           <View style={styles.counter}>
-  //                             <TouchableOpacity
-  //                               style={styles.plusButton}
-  //                               onPress={() => incrementCount(index)}>
-  //                               <Icon name="plus" size={20} color={'black'} />
-  //                             </TouchableOpacity>
-  //                             <Text style={{color: 'black'}}>
-  //                               {itemQuantities[index]}
-  //                             </Text>
-  //                             <TouchableOpacity
-  //                               onPress={() => decrementCount(index)}>
-  //                               <Icon name="minus" size={20} color={'black'} />
-  //                             </TouchableOpacity>
-  //                           </View>
-  //                         </View>
-  //                         <Text style={styles.selectedUnit}>
-  //                           Unit:{item.selectedUnit}lb
-  //                         </Text>
-  //                         <Text style={styles.unitprice}>
-  //                           Unit Price: ${selectedUnitPrice}
-  //                         </Text>
-  //                         {/* Add more details as needed */}
-  //                       </View>
-  //                       <Image source={item.image} style={styles.itemImage} />
-  //                     </View>
-  //                     <View style={styles.line1} />
-  //                     <View style={styles.pricetext}>
-  //                       <Text style={styles.priceText}>
-  //                         ${item.selectedPrice * itemQuantities[index]}
-  //                       </Text>
-  //                       <TouchableOpacity
-  //                         style={styles.removeButton}
-  //                         onPress={() => removeItem(index)}>
-  //                         <Text style={{color: 'blue'}}>Remove Item</Text>
-  //                       </TouchableOpacity>
-  //                     </View>
-  //                   </>
-  //                 ))}
-  //               </View>
-  //               <View style={styles.shippingAddressContainer}>
-  //                 <View>
-  //                   <Text style={styles.shippingAddressTitle}>
-  //                     Shipping Address
-  //                   </Text>
-  //                   <Text style={styles.shippingAddressText}>
-  //                     {shippingAddress.name}
-  //                   </Text>
-  //                   <Text style={styles.shippingAddressText}>
-  //                     {shippingAddress.addressLine1}
-  //                     {shippingAddress.addressLine2
-  //                       ? ', ' + shippingAddress.addressLine2
-  //                       : ''}
-  //                   </Text>
-  //                   <Text style={styles.shippingAddressText}>
-  //                     {shippingAddress.city}, {shippingAddress.state},{' '}
-  //                     {shippingAddress.zipCode}
-  //                   </Text>
-  //                   <Text style={styles.shippingAddressText}>
-  //                     Contact Number : {shippingAddress.phoneNumber}
-  //                   </Text>
-  //                 </View>
-  //                 <TouchableOpacity style={styles.editButton}>
-  //                   <Text style={styles.editButtonText}>Update Address</Text>
-  //                 </TouchableOpacity>
-  //               </View>
-  //             </ScrollView>
-  //             <View style={styles.line} />
-  //             <View style={styles.bottomContainer}>
-  //               <View>
-  //                 <Text style={styles.totalPrice}>
-  //                   ${grandTotal.toFixed(2)}
-  //                 </Text>
-  //                 <Text style={styles.totalPrice}>Current Total</Text>
-  //               </View>
-  //               <TouchableOpacity style={styles.placeOrderButton}>
-  //                 <Text style={styles.placeOrderButtonText}>Place Order</Text>
-  //               </TouchableOpacity>
-  //             </View>
-  //           </>
-  //         ) : (
-  //           <View style={styles.emptyCartContainer}>
-  //             <Image
-  //               source={require('../assets/images/emptyCart.png')}
-  //               style={styles.emptyCartImage}
-  //             />
-  //             <Text style={styles.emptyCartText}>Your cart is empty.</Text>
-  //           </View>
-  //         )}
-  //       </>
-  //     )}
-  //     {!isLoggedIn && (
-  //       <View style={styles.withoutLogin}>
-  //         <Text style={styles.loginText}>Please Login To See Your Cart</Text>
-  //         <TouchableOpacity
-  //           style={styles.loginButton}
-  //           onPress={() => navigation.navigate('login')}>
-  //           <Text style={styles.loginButtonText}>Login</Text>
-  //         </TouchableOpacity>
-  //       </View>
-  //     )}
-  //   </View>
-  // </View>;
-  // );
 };
 export default CartScreen;
 const styles = StyleSheet.create({
@@ -379,7 +252,7 @@ const styles = StyleSheet.create({
   header: {
     flex: 1,
     alignItems: 'center',
-    marginRight: 20,
+    marginRight: 30,
   },
   headerText: {
     color: 'white',
@@ -395,6 +268,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexGrow: 1,
+    paddingHorizontal: 15,
+    paddingBottom: 20,
   },
   withoutLogin: {
     flex: 1,
