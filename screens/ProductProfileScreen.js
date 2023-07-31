@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useContext} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -57,8 +57,7 @@ const ProductProfileScreen = ({route, navigation}) => {
   const [lotError, setLotError] = useState('');
   const [unitError, setUnitError] = useState('');
   const isLoggedInRef = useRef(isLoggedIn);
-  const {width, height} = Dimensions.get('window');
-  // const [cartItems, setCartItems] = useState([]);
+  const {width} = Dimensions.get('window');
   const {cartItems, setCartItems} = useAppContext();
 
   const handleClick = () => {
@@ -105,9 +104,7 @@ const ProductProfileScreen = ({route, navigation}) => {
           itemName: sectionData.title,
           selectedUnit,
           selectedPrice,
-          // price: selectedPrice * count,
           quantity: count,
-          // totalPrice: selectedPrice * count,
           image:
             (sectionData.SectionImage && sectionData.SectionImage[0]) ||
             (sectionData.Sectionimage && sectionData.Sectionimage[0]) ||
@@ -118,7 +115,6 @@ const ProductProfileScreen = ({route, navigation}) => {
       }
 
       console.log('items added successfully');
-      // navigation.navigate('Cart');
       navigation.navigate('Cart');
     }
   };
