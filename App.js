@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React, {useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {DrawerItem, createDrawerNavigator} from '@react-navigation/drawer';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -40,7 +40,7 @@ function TabNavigator({navigation}) {
         tabBarIcon: ({focused, color, size}) => {
           let iconName;
 
-          if (route.name === 'Home') {
+          if (route.name === 'Home ') {
             iconName = focused ? 'home' : 'home';
           } else if (route.name === 'Search') {
             iconName = focused ? 'search' : 'search';
@@ -84,7 +84,7 @@ function TabNavigator({navigation}) {
         },
         tabBarHideOnKeyboard: true,
       })}>
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Home " component={HomeScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="Wishlist" component={WishListScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />

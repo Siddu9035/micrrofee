@@ -251,27 +251,27 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'Orange',
       data: ['karnataka'],
-      sectionimage: require('../assets/images/latcoffee1.png'),
+      sectionimage: require('../assets/images/latcoffee2.png'),
     },
     {
       title: 'Red',
       data: ['karnataka'],
-      sectionimage: require('../assets/images/latcoffee2.png'),
+      sectionimage: require('../assets/images/latcoffee3.png'),
     },
     {
       title: 'Brown',
       data: ['karnataka'],
-      sectionimage: require('../assets/images/latcoffee3.png'),
+      sectionimage: require('../assets/images/latcoffee1.png'),
     },
     {
       title: 'Black',
       data: ['karnataka'],
-      sectionimage: require('../assets/images/latcoffee1.png'),
+      sectionimage: require('../assets/images/latcoffee2.png'),
     },
     {
       title: 'White',
       data: ['karnataka'],
-      sectionimage: require('../assets/images/latcoffee2.png'),
+      sectionimage: require('../assets/images/latcoffee3.png'),
     },
   ];
   const handleSectionPress = (section, isFeatured) => {
@@ -386,7 +386,7 @@ const HomeScreen = ({navigation}) => {
               <View style={styles.itemscontainer}>
                 {originsData.map(section => (
                   <View key={section.title} style={styles.SectionContainer}>
-                    <View>
+                    <View style={styles.imaging}>
                       <Image
                         style={styles.sectionimage}
                         source={section.sectionimage}
@@ -470,17 +470,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexGrow: 1,
     marginTop: 8,
+    elevation: 5,
   },
   sectionContainer: {
     marginHorizontal: 8,
     elevation: 10,
-    shadowColor: '#000',
-    borderRadius: 15,
-    shadowRadius: 3.84,
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
   },
   SectionContainer: {
     marginHorizontal: 8,
@@ -504,13 +498,6 @@ const styles = StyleSheet.create({
     width: 200,
     height: 85,
     borderRadius: 15,
-    shadowColor: 'black',
-    shadowOpacity: 0.9,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowRadius: 4,
   },
   sectionTitle: {
     fontWeight: '700',
@@ -532,6 +519,7 @@ const styles = StyleSheet.create({
   textItem: {
     paddingLeft: 15,
     marginBottom: 8,
+    marginTop: 5,
   },
   featuredContainer: {
     position: 'absolute',
@@ -555,5 +543,8 @@ const styles = StyleSheet.create({
   itemcontainer: {
     flexDirection: 'column',
     marginVertical: 10,
+  },
+  imaging: {
+    elevation: 10,
   },
 });
